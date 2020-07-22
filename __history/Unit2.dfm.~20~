@@ -186,6 +186,7 @@ object frmJabsSorts: TfrmJabsSorts
       Top = 90
       Width = 121
       Height = 29
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -231,7 +232,10 @@ object frmJabsSorts: TfrmJabsSorts
     Title.Text.Strings = (
       'TChart')
     AxisVisible = False
-    BottomAxis.Increment = 1.000000000000000000
+    BottomAxis.Automatic = False
+    BottomAxis.AutomaticMaximum = False
+    BottomAxis.AutomaticMinimum = False
+    BottomAxis.Maximum = 5.000000000000000000
     LeftAxis.Axis.JoinStyle = jsBevel
     LeftAxis.Visible = False
     View3D = False

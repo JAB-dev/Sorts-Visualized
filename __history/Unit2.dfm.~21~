@@ -231,7 +231,11 @@ object frmJabsSorts: TfrmJabsSorts
     Title.Text.Strings = (
       'TChart')
     AxisVisible = False
+    BottomAxis.Automatic = False
+    BottomAxis.AutomaticMaximum = False
+    BottomAxis.AutomaticMinimum = False
     BottomAxis.Increment = 1.000000000000000000
+    BottomAxis.Maximum = 5.000000000000000000
     LeftAxis.Axis.JoinStyle = jsBevel
     LeftAxis.Visible = False
     View3D = False

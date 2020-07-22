@@ -186,13 +186,14 @@ object frmJabsSorts: TfrmJabsSorts
       Top = 90
       Width = 121
       Height = 29
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
       Font.Name = 'Tahoma'
       Font.Style = []
-      MaxValue = 100000
-      MinValue = 10
+      MaxValue = 101
+      MinValue = 100
       ParentFont = False
       TabOrder = 5
       Value = 100
@@ -231,7 +232,6 @@ object frmJabsSorts: TfrmJabsSorts
     Title.Text.Strings = (
       'TChart')
     AxisVisible = False
-    BottomAxis.Increment = 1.000000000000000000
     LeftAxis.Axis.JoinStyle = jsBevel
     LeftAxis.Visible = False
     View3D = False

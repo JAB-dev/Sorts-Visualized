@@ -22,16 +22,16 @@ type
     seUpdateInterval: TSpinEdit;
     lblUpdateINterval: TLabel;
     chtSort: TChart;
-    barseriesSort: TBarSeries;
     seArrayLength: TSpinEdit;
     lblArrayLength: TLabel;
     seRange: TSpinEdit;
     lblRange: TLabel;
+    barseriesSort: TBarSeries;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
   private
     { Private declarations }
-    arrIntegers:array[1..100] of Integer;
+    arrIntegers:array of Integer;
     iCompareDelay:Integer;
     iSwapDelay:Integer;
     iArrayLength:Integer;
@@ -54,6 +54,7 @@ var
 X:Integer;
 begin
 //Decide what sort to use
+  //arrIntegers:=array[1..iarraylength] of Integer;
   with cbbSorts do
   begin
     //verify
@@ -64,13 +65,17 @@ begin
     end;
 
     //Depending on choice choose sort
-    iArrayLength:=Length(arrIntegers);  //TODO
+
+
+    iArrayLength:=seArrayLength.Value;  //TODO
+    SetLength(arrIntegers,iArrayLength);
     iCompareDelay:=seDelayOnCompare.Value;
     iSwapDelay:=seDelay.Value;
     iRange:=seRange.Value;
     iInterval:=seUpdateInterval.Value;
     tmrUpdate.Interval:=iInterval;
 
+    chtSort.BottomAxis.Maximum:=iArrayLength;
     //Filling the array randomly
     for X := 1 to iArrayLength do
     begin
@@ -201,13 +206,6 @@ begin
             j:=k;
             while (arrIntegers[j-1]<arrIntegers[j]) and (j>=2) do
             begin
-              TTask.Run(
-              procedure
-              begin
-                 Winapi.Windows.Beep(arrintegers[j-1]*1000,1000);
-              end
-              );
-
               itemp:=arrIntegers[j-1];
               arrintegers[j-1]:=arrIntegers[j];
               arrintegers[j]:=itemp;
