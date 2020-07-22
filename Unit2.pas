@@ -30,6 +30,7 @@ type
     lblTimeTaken: TLabel;
     tmrUpdate: TTimer;
     tmrTimeTaken: TTimer;
+    lblWarning: TLabel;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);

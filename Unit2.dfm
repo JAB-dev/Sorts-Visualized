@@ -14,11 +14,24 @@ object frmJabsSorts: TfrmJabsSorts
   PixelsPerInch = 96
   TextHeight = 13
   object lblTimeTaken: TLabel
-    Left = 776
-    Top = 90
+    Left = 777
+    Top = 114
     Width = 154
     Height = 19
     Caption = 'CurrentSortTimeInMS'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object lblWarning: TLabel
+    Left = 736
+    Top = 89
+    Width = 265
+    Height = 19
+    Caption = 'Timer is not accurate!!! But still useful'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -258,13 +271,12 @@ object frmJabsSorts: TfrmJabsSorts
     Margins.Top = 5
     Margins.Right = 5
     Margins.Bottom = 5
+    AllowPanning = pmNone
     Gradient.EndColor = 753908
     Gradient.MidColor = 16059031
     Gradient.StartColor = 14540754
     Gradient.SubGradient.Transparency = 100
     Legend.Visible = False
-    Title.Text.Strings = (
-      'TChart')
     AxisVisible = False
     BottomAxis.Increment = 1.000000000000000000
     LeftAxis.Axis.JoinStyle = jsBevel
@@ -277,14 +289,19 @@ object frmJabsSorts: TfrmJabsSorts
     Zoom.Brush.Gradient.EndColor = clGray
     Zoom.Brush.Gradient.MidColor = clWhite
     Zoom.Brush.Gradient.StartColor = clSilver
+    Zoom.KeepAspectRatio = True
+    Zoom.MouseButton = mbMiddle
     TabOrder = 1
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = 8
     object barseriesSort: TBarSeries
       Legend.Visible = False
+      BarPen.Visible = False
       ColorEachPoint = True
       Marks.Visible = False
       ShowInLegend = False
+      Dark3D = False
+      Sides = 3
       XValues.Name = 'X'
       XValues.Order = loNone
       YValues.Name = 'Bar'

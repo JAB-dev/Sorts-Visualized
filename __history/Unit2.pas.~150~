@@ -10,7 +10,6 @@ uses
 
 type
   TfrmJabsSorts = class(TForm)
-    tmrUpdate: TTimer;
     grpSettings: TGroupBox;
     cbbSorts: TComboBox;
     seDelay: TSpinEdit;
@@ -28,10 +27,12 @@ type
     lblRange: TLabel;
     barseriesSort: TBarSeries;
     chkReverseInput: TCheckBox;
-    chkTimeMode: TCheckBox;
     lblTimeTaken: TLabel;
+    tmrUpdate: TTimer;
+    tmrTimeTaken: TTimer;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
+    procedure tmrTimeTakenTimer(Sender: TObject);
   private
     { Private declarations }
     arrIntegers:array of Integer;
@@ -70,7 +71,7 @@ begin
 
     //Depending on choice choose sort
 
-
+    iTimeTaken:=0;
     iArrayLength:=seArrayLength.Value;
     SetLength(arrIntegers,iArrayLength);  //dynamic array length setting, way easier than I thought
     iCompareDelay:=seDelayOnCompare.Value;
@@ -78,6 +79,7 @@ begin
     iRange:=seRange.Value;
     iInterval:=seUpdateInterval.Value;
     tmrUpdate.Interval:=iInterval;
+    lblTimeTaken.Caption:='0ms-Unmeasureable with timer';
 
     chtSort.BottomAxis.Maximum:=iArrayLength;
     //Filling the array randomly or giving a reverse input
@@ -106,6 +108,7 @@ begin
     if ItemIndex=0 then
     begin
       ShowMessageUser(Items[ItemIndex]+' Has been selected');
+      tmrTimeTaken.Enabled:=True;
       tmrUpdate.Enabled:=True;
       TTask.Run(
         procedure
@@ -126,12 +129,14 @@ begin
               sleep(iCompareDelay);
             end;
           end;
+          tmrTimeTaken.Enabled:=False;
         end);
     end;
 
     if ItemIndex=1 then
     begin
       ShowMessageUser(Items[ItemIndex]+' Has been selected');
+      tmrTimeTaken.Enabled:=True;
       tmrUpdate.Enabled:=True;
       TTask.Run
       (
@@ -157,13 +162,14 @@ begin
               Sleep(iCompareDelay);
             end;
           end;
-          tmrUpdate.Enabled:=False;
+        tmrTimeTaken.Enabled:=False;
         end);
     end;
 
     if ItemIndex=2 then
     begin
       ShowMessageUser(Items[ItemIndex]+' Has been selected');
+      tmrTimeTaken.Enabled:=True;
       tmrUpdate.Enabled:=True;
       TTask.Run
       (
@@ -200,13 +206,14 @@ begin
               inc(k);
             end;
           end;
-          tmrUpdate.Enabled:=False;
+         tmrTimeTaken.Enabled:=False;
         end);
     end;
 
     if ItemIndex=3 then
     begin
       ShowMessageUser(Items[ItemIndex]+' Has been selected');
+      tmrTimeTaken.Enabled:=True;
       tmrUpdate.Enabled:=True;
       TTask.Run(
         procedure
@@ -225,13 +232,14 @@ begin
               dec(j)
             end;
           end;
-            tmrUpdate.Enabled:=False;
+            tmrTimeTaken.Enabled:=False;
         end);
     end;
 
      if ItemIndex=4 then
     begin
       ShowMessageUser(Items[ItemIndex]+' Has been selected');
+      tmrTimeTaken.Enabled:=True;
       tmrUpdate.Enabled:=True;
       TTask.Run(
         procedure
@@ -254,7 +262,7 @@ begin
             end;
 
           end;
-          tmrUpdate.Enabled:=False;
+          tmrTimeTaken.Enabled:=False;
         end);
     end;
 
@@ -269,6 +277,8 @@ begin
     if ItemIndex=6 then
     begin;
        ShowMessageUser(Items[ItemIndex]+' Has been selected');
+      tmrTimeTaken.Enabled:=True;
+
       tmrUpdate.Enabled:=True;
       TTask.Run(
       procedure
@@ -323,18 +333,22 @@ begin
             iitem:=itemp;
           end;
         end;
-        tmrUpdate.Enabled:=False;
+        tmrTimeTaken.Enabled:=False;
       end);
     end;
   end;
+end;
+
+procedure TfrmJabsSorts.tmrTimeTakenTimer(Sender: TObject);
+begin
+  Inc(iTimeTaken);
+  lblTimeTaken.Caption:=IntToStr(iTimeTaken)+'ms';
 end;
 
 procedure TfrmJabsSorts.tmrUpdateTimer(Sender: TObject);
 
 begin
   //Update the graph by reloading the array
-  Inc(iTimeTaken);
-  lblTimeTaken.Caption:=IntToStr(iTimeTaken)+'ms';
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
 end;

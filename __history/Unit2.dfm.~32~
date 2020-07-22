@@ -13,6 +13,19 @@ object frmJabsSorts: TfrmJabsSorts
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object lblTimeTaken: TLabel
+    Left = 776
+    Top = 90
+    Width = 154
+    Height = 19
+    Caption = 'CurrentSortTimeInMS'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
   object grpSettings: TGroupBox
     Left = 24
     Top = 14
@@ -113,7 +126,9 @@ object frmJabsSorts: TfrmJabsSorts
         'Bubble Sort (Faster)'
         'Comb Sort'
         'Insertion Sort'
-        'Selection Sort (Unoptimized)')
+        'Selection Sort (Unoptimized)'
+        'Odd Even Sort (Doesnt work 100%)'
+        'Cycle (Circle) Sort')
     end
     object seDelay: TSpinEdit
       Left = 179
@@ -149,9 +164,9 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object btnSort: TButton
       Left = 544
-      Top = 120
+      Top = 135
       Width = 121
-      Height = 65
+      Height = 52
       Margins.Left = 5
       Margins.Right = 5
       Margins.Bottom = 5
@@ -170,6 +185,9 @@ object frmJabsSorts: TfrmJabsSorts
       Top = 40
       Width = 121
       Height = 29
+      Hint = 
+        'How quickly the timer tries to update the screen (if time mode i' +
+        's on 1ms is forced)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -202,6 +220,9 @@ object frmJabsSorts: TfrmJabsSorts
       Top = 40
       Width = 121
       Height = 29
+      Hint = 
+        'The number to which the integers in the  array can rise,useless ' +
+        'if reverse input was selected'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -213,10 +234,24 @@ object frmJabsSorts: TfrmJabsSorts
       TabOrder = 6
       Value = 10
     end
+    object chkReverseInput: TCheckBox
+      Left = 376
+      Top = 92
+      Width = 203
+      Height = 24
+      Caption = 'Reverse Input (ascending)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 7
+    end
   end
   object chtSort: TChart
-    Left = 24
-    Top = 241
+    Left = 22
+    Top = 225
     Width = 977
     Height = 470
     Margins.Left = 5
@@ -264,6 +299,13 @@ object frmJabsSorts: TfrmJabsSorts
     Enabled = False
     OnTimer = tmrUpdateTimer
     Left = 848
+    Top = 32
+  end
+  object tmrTimeTaken: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = tmrTimeTakenTimer
+    Left = 784
     Top = 32
   end
 end
