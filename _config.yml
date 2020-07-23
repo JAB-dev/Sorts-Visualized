@@ -1,0 +1,8 @@
+title: Sorts-visualized
+description: "A 32bit multithreaded windows vlc delphi form that allows one to run sorting algorithms on random integers with other variables such as: swap delay,integer range,Graph Update INterval etc"
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-midnight
+
+gems:
+  - jekyll-mentions
