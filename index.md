@@ -1,5 +1,4 @@
 # Download 
-[Click here to download the Visual Sorter exe (you will have to click download again) ](https://github.com/JAB-dev/Sorts-Visualized/blob/master/Win32/Debug/Project1.exe)
 [Click here to download the Visual Sorter exe](https://github.com/JAB-dev/Sorts-Visualized/releases/download/1/JABsVisualSorts.exe)
 
 # Is this updated?
