@@ -140,7 +140,7 @@ object frmJabsSorts: TfrmJabsSorts
         'Comb Sort'
         'Insertion Sort'
         'Selection Sort (Unoptimized)'
-        'Odd Even Sort (Doesnt work 100%)'
+        'Quick Sort (Lomuto partition scheme)'
         'Cycle (Circle) Sort')
     end
     object seDelay: TSpinEdit
@@ -277,6 +277,8 @@ object frmJabsSorts: TfrmJabsSorts
     Gradient.StartColor = 14540754
     Gradient.SubGradient.Transparency = 100
     Legend.Visible = False
+    Title.Text.Strings = (
+      'TChart')
     AxisVisible = False
     BottomAxis.Increment = 1.000000000000000000
     LeftAxis.Axis.JoinStyle = jsBevel
