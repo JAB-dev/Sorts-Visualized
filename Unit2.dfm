@@ -141,7 +141,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Insertion Sort'
         'Selection Sort (Unoptimized)'
         'Quick Sort (Lomuto partition scheme)'
-        'Cycle (Circle) Sort')
+        'Cycle (Circle) Sort'
+        'Top Down Merge Sort')
     end
     object seDelay: TSpinEdit
       Left = 179

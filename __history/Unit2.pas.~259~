@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
-  Vcl.Samples.Spin, System.threading, System.Math,dateutils;
+  Vcl.Samples.Spin, System.threading, System.Math, dateutils;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -38,17 +38,24 @@ type
   private
     { Private declarations }
     arrIntegers: array of Integer;
+    arrWorkArray: array of integer;
     iCompareDelay: Integer;
     iSwapDelay: Integer;
     iArrayLength: Integer;
     iRange: Integer;
     iInterval: Integer;
     iTimeTaken: Integer;
-     rElapsedSeconds:extended;
+    rElapsedSeconds: extended;
+    dStart, dEnd: tdatetime;
   public
     { Public declarations }
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
+    procedure CombSort;
+    procedure TopDownMergeSort(var a: array of integer;var b: array of integer; n: integer);
+    procedure TopDownSplitMerge(var b: array of integer; iBegin, iEnd: integer;var a: array of integer);
+    procedure TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer;var b: array of integer);
+    procedure CopyArray(var A: array of integer; iBegin, iEnd: integer;var b: array of integer);
   end;
 
 var
@@ -60,8 +67,6 @@ implementation
 
 procedure TfrmJabsSorts.btnSortClick(Sender: TObject);
 var
-  dStart,dEnd:tdatetime;
-
   X: Integer;
 begin
 
@@ -111,13 +116,16 @@ begin
       Comb Sort                               2
       Insertion Sort                          3
       Selection Sort (Unoptimized)            4
-      Odd-Even Sort                           5
+                                               5
     }
   if cbbSorts.ItemIndex = 0 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
+    //CaptureTimeNow
+    dStart := now;
+    //captureTimeNOw
     TTask.Run(
       procedure
       var
@@ -138,8 +146,8 @@ begin
           end;
         end;
          //TIME TAKEN
-        dend:=now;
-        relapsedseconds:=(dStart-dEnd)*MSecsPerDay;
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
         //TIME TAKEN
       end);
   end;
@@ -149,17 +157,21 @@ begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
+    //CaptureTimeNow
+    dStart := now;
+    //captureTimeNOw
     TTask.Run(
       procedure
       var
-        itemp, k: Integer;
+        itemp, k, O: Integer;
         bSorted: Boolean;
       begin
         bSorted := False;
+        O := 0;
         while bSorted = False do
         begin
           bSorted := True;
-          for k := 0 to iArrayLength - 2 do
+          for k := 0 to iArrayLength - (2 + O) do
           begin
             if arrIntegers[k + 1] > arrIntegers[k] then
             begin
@@ -171,56 +183,31 @@ begin
             end;
             Sleep(iCompareDelay);
           end;
+          inc(O);
         end;
         //TIME TAKEN
-        dend:=now;
-        relapsedseconds:=(dStart-dEnd)*MSecsPerDay;
+
+
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
         //TIME TAKEN
       end);
   end;
 
+
+  //COMB SORT
   if cbbSorts.ItemIndex = 2 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
+   //CaptureTimeNow
+    dStart := now;
+    //captureTimeNOw
     TTask.Run(
       procedure
-      var
-        itemp, k, igap: Integer;
-        bSorted: Boolean;
       begin
-        bSorted := False;
-        igap := iArrayLength;
-        while bSorted = False do
-        begin
-          igap := Floor(igap / 1.3);
-          if igap <= 1 then
-          begin
-            igap := 1;
-            bSorted := True;
-          end;
-
-          k := 0;
-          while (igap + k) < iArrayLength do
-          begin
-            if arrIntegers[k + igap] > arrIntegers[k] then
-            begin
-              itemp := arrIntegers[k];
-              arrintegers[k] := arrIntegers[k + igap];
-              arrintegers[k + igap] := itemp;
-              bSorted := False;
-              sleep(iSwapDelay);
-
-            end;
-            sleep(iCompareDelay);
-            inc(k);
-          end;
-        end;
-         //TIME TAKEN
-        dend:=now;
-        relapsedseconds:=(dStart-dEnd)*MSecsPerDay;
-        //TIME TAKEN
+        CombSort;
       end);
   end;
 
@@ -229,6 +216,9 @@ begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
+    //CaptureTimeNow
+    dStart := now;
+    //captureTimeNOw
     TTask.Run(
       procedure
       var
@@ -247,8 +237,8 @@ begin
           end;
         end;
         //TIME TAKEN
-        dend:=now;
-        relapsedseconds:=(dStart-dEnd)*MSecsPerDay;
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
         //TIME TAKEN
       end);
   end;
@@ -258,6 +248,9 @@ begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
+   //CaptureTimeNow
+    dStart := now;
+    //captureTimeNOw
     TTask.Run(
       procedure
       var
@@ -280,11 +273,13 @@ begin
 
         end;
          //TIME TAKEN
-        dend:=now;
-        relapsedseconds:=(dStart-dEnd)*MSecsPerDay;
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
         //TIME TAKEN
       end);
   end;
+
+
   //QUICKSORT
   if cbbSorts.ItemIndex = 5 then
   begin
@@ -292,18 +287,17 @@ begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
-    dStart:=now;
+    dStart := now;
     //captureTimeNOw
     TTask.Run(
       procedure
       begin
-        quicksort(0,iArrayLength-1);
+        quicksort(0, iArrayLength - 1);
         //TIME TAKEN
-        dend:=now;
-        relapsedseconds:=(dStart-dEnd)*MSecsPerDay;
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
         //TIME TAKEN
-      end
-    );
+      end);
 
   end;
   //CYCLE SORT (CIRCLE) WHY SO MANY NAMES???
@@ -315,7 +309,7 @@ begin
 
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
-    dStart:=now;
+    dStart := now;
     //captureTimeNOw
     TTask.Run(
       procedure
@@ -371,50 +365,122 @@ begin
           end;
         end;
         //TIME TAKEN
-        dend:=now;
-        relapsedseconds:=(dStart-dEnd)*MSecsPerDay;
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
         //TIME TAKEN
 
       end);
 
   end;
+  //TOP DOWN MERGE SORT
+  if cbbSorts.ItemIndex = 7 then
+  begin
+    ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
+    tmrTimeTaken.Enabled := True;
+    SetLength(arrWorkArray, iArrayLength);
+    tmrUpdate.Enabled := True;
+    //CaptureTimeNow
+    dStart := now;
+    //captureTimeNOw
+    TTask.Run(
+      procedure
+      begin
+        topdownmergesort(arrIntegers,arrWorkArray,iArrayLength);
+          //TIME TAKEN
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
+        //TIME TAKEN
+      end);
+
+  end;
+
 end;
 
 //end;
 
+procedure TfrmJabsSorts.CombSort;
+var
+  itemp, k, igap: Integer;
+  bSorted: Boolean;
+begin
+  bSorted := False;
+  igap := iArrayLength;
+  while bSorted = False do
+  begin
+    igap := Floor(igap / 1.3);
+    if igap <= 1 then
+    begin
+      igap := 1;
+      bSorted := True;
+    end;
+
+    k := 0;
+    while (igap + k) < iArrayLength do
+    begin
+      if arrIntegers[k + igap] > arrIntegers[k] then
+      begin
+        itemp := arrIntegers[k];
+        arrintegers[k] := arrIntegers[k + igap];
+        arrintegers[k + igap] := itemp;
+        bSorted := False;
+        sleep(iSwapDelay);
+
+      end;
+      sleep(iCompareDelay);
+      inc(k);
+    end;
+  end;
+         //TIME TAKEN
+  dend := now;
+  relapsedseconds := (dEnd - dStart) * MSecsPerDay;
+        //TIME TAKEN
+end;
+
+procedure TfrmJabsSorts.CopyArray(var A: array of integer; iBegin, iEnd: integer;var b: array of integer);
+var
+  I: Integer;
+begin
+  for I := iBegin to iEnd do
+  begin
+    Sleep(iSwapDelay);
+    arrWorkArray[I] := arrIntegers[I];
+  end;
+
+end;
+
 function TfrmJabsSorts.Partition(lo, hi: integer): integer;
 var
-  iPivot,iTemp: integer;
+  iPivot, iTemp: integer;
   i, j: integer;
 begin
   iPivot := arrintegers[hi];
   i := lo;
-  for j := Lo to Hi do
+  for j := lo to hi do
   begin
-    if arrintegers[J]>ipivot then
+    if arrintegers[j] > iPivot then
     begin
-      itemp:=arrintegers[i];
-      arrintegers[i]:=arrintegers[j];
-      arrintegers[j]:=itemp;
-      inc(I);
+      iTemp := arrintegers[i];
+      arrintegers[i] := arrintegers[j];
+      arrintegers[j] := iTemp;
+      inc(i);
       sleep(iSwapDelay);
     end;
     sleep(iCompareDelay)
   end;
-  itemp:=arrintegers[i];
-  arrintegers[i]:=arrintegers[hi];
-  arrintegers[hi]:=itemp;
-  Result:=i;
-  end;
+  iTemp := arrintegers[i];
+  arrintegers[i] := arrintegers[hi];
+  arrintegers[hi] := iTemp;
+  Result := i;
+end;
 
 procedure TfrmJabsSorts.QuickSort(Lo, hi: integer);
 var
   p: integer;
 begin
-  if lo < hi then
+  if Lo < hi then
   begin
-    p := Partition(lo, hi);
-    QuickSort(lo, p - 1);
+    p := Partition(Lo, hi);
+    QuickSort(Lo, p - 1);
     QuickSort(p + 1, hi);
   end;
 end;
@@ -431,7 +497,71 @@ begin
   //Update the graph by reloading the array
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
-  lblTimeTaken.Caption:=FloatToStr(rElapsedSeconds)+'ms';
+  lblTimeTaken.Caption := FloatToStr(rElapsedSeconds) + 'ms';
+end;
+
+procedure TfrmJabsSorts.TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer;var b: array of integer);
+var
+  i, j, k: integer;
+  bOr:boolean;
+begin
+  if (j>=iend)or(a[i]<=a[j]) then
+  begin
+    bor:=true;
+  end else
+  begin
+    bor:=false;
+  end;
+  i := iBegin;
+  j := Imiddle;
+
+    // While there are elements in the left or right runs...
+  for k := iBegin to iEnd do
+  begin
+    Sleep(iCompareDelay);
+    if (j>=iend)or(a[i]<=a[j]) then
+    begin
+      bor:=true;
+    end else
+    begin
+      bor:=false;
+    end;
+        // If left run head exists and is <= existing right run head.
+    if (i < Imiddle) and (bor) then
+    begin
+      Sleep(iSwapDelay);
+      b[k] := a[i];
+      i := i + 1;
+    end
+    else
+    begin
+      Sleep(iSwapDelay);
+      b[j] := a[k];
+      j := j + 1;
+    end;
+  end;
+end;
+
+procedure TfrmJabsSorts.TopDownMergeSort(var a: array of integer;var b: array of integer; n: integer);
+begin
+  CopyArray(a, 0, n, b);
+  TopDownSplitMerge(b, 0, n, a);
+end;
+
+procedure TfrmJabsSorts.TopDownSplitMerge(var b: array of integer; iBegin, iEnd: integer;var a: array of integer);
+var
+  iMiddle: integer;
+begin
+  if (iEnd - iBegin <= 1) then
+  begin
+    exit;
+  end;
+  iMiddle := (iEnd + iBegin) div 2;              // iMiddle = mid point
+  // recursively sort both runs from array A[] into B[]
+  TopDownSplitMerge(a, iBegin, iMiddle, b);  // sort the left  run
+  TopDownSplitMerge(a, iMiddle, iEnd, b);  // sort the right run
+  // merge the resulting runs from array B[] into A[]
+  TopDownMerge(b, iBegin, iMiddle, iEnd, a);
 end;
 
 end.
