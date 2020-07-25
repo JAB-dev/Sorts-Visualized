@@ -11,6 +11,10 @@ object frmJabsSorts: TfrmJabsSorts
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
+  DesignSize = (
+    1009
+    719)
   PixelsPerInch = 96
   TextHeight = 13
   object lblTimeTaken: TLabel
@@ -121,6 +125,19 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Style = []
       ParentFont = False
     end
+    object lblVolume: TLabel
+      Left = 376
+      Top = 105
+      Width = 60
+      Height = 19
+      Caption = 'Volume:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
     object cbbSorts: TComboBox
       Left = 16
       Top = 144
@@ -142,7 +159,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Selection Sort (Unoptimized)'
         'Quick Sort (Lomuto partition scheme)'
         'Cycle (Circle) Sort'
-        'Top Down Merge Sort')
+        'Top Down Merge Sort'
+        'Vermenthruaxx sort')
     end
     object seDelay: TSpinEdit
       Left = 179
@@ -250,7 +268,7 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object chkReverseInput: TCheckBox
       Left = 376
-      Top = 92
+      Top = 75
       Width = 203
       Height = 24
       Caption = 'Reverse Input (ascending)'
@@ -261,6 +279,22 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Style = []
       ParentFont = False
       TabOrder = 7
+    end
+    object seVolume: TSpinEdit
+      Left = 456
+      Top = 105
+      Width = 57
+      Height = 28
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      MaxValue = 127
+      MinValue = 0
+      ParentFont = False
+      TabOrder = 8
+      Value = 100
     end
   end
   object chtSort: TChart
@@ -278,6 +312,7 @@ object frmJabsSorts: TfrmJabsSorts
     Gradient.StartColor = 14540754
     Gradient.SubGradient.Transparency = 100
     Legend.Visible = False
+    Title.Font.Height = -16
     Title.Text.Strings = (
       'TChart')
     AxisVisible = False
@@ -295,6 +330,7 @@ object frmJabsSorts: TfrmJabsSorts
     Zoom.KeepAspectRatio = True
     Zoom.MouseButton = mbMiddle
     TabOrder = 1
+    Anchors = [akLeft, akTop, akRight, akBottom]
     DefaultCanvas = 'TGDIPlusCanvas'
     ColorPaletteIndex = 8
     object barseriesSort: TBarSeries
@@ -302,8 +338,8 @@ object frmJabsSorts: TfrmJabsSorts
       BarPen.Visible = False
       ColorEachPoint = True
       Marks.Visible = False
+      SeriesColor = clRed
       ShowInLegend = False
-      Dark3D = False
       Sides = 3
       XValues.Name = 'X'
       XValues.Order = loNone

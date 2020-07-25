@@ -7,7 +7,7 @@ uses
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
-  Vcl.Samples.Spin, System.threading, System.Math, dateutils;
+  Vcl.Samples.Spin, System.threading, System.Math, dateutils,clssounds;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -32,9 +32,12 @@ type
     tmrUpdate: TTimer;
     tmrTimeTaken: TTimer;
     lblWarning: TLabel;
+    seVolume: TSpinEdit;
+    lblVolume: TLabel;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     arrIntegers: array of Integer;
@@ -47,6 +50,8 @@ type
     iTimeTaken: Integer;
     rElapsedSeconds: extended;
     dStart, dEnd: tdatetime;
+    Sounds:TJABSounds;
+    iVolume:integer;
   public
     { Public declarations }
     procedure QuickSort(Lo, hi: integer);
@@ -56,6 +61,7 @@ type
     procedure TopDownSplitMerge(var b: array of integer; iBegin, iEnd: integer;var a: array of integer);
     procedure TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer;var b: array of integer);
     procedure CopyArray(var A: array of integer; iBegin, iEnd: integer;var b: array of integer);
+    procedure VermenthruaxxSort(var a:array of integer);
   end;
 
 var
@@ -81,7 +87,7 @@ begin
 
 
     //Depending on choice choose sort
-
+  iVolume:=seVolume.Value;
   iTimeTaken := 0;
   iArrayLength := seArrayLength.Value;
   SetLength(arrIntegers, iArrayLength);  //dynamic array length setting, way easier than I thought
@@ -103,6 +109,7 @@ begin
   end
   else
   begin
+    iRange := iArrayLength-1;
     for X := 0 to iArrayLength do
     begin
       arrIntegers[X] := X;
@@ -119,6 +126,7 @@ begin
     Quick Sort (Lomuto partition scheme)      5
     Cycle (Circle) Sort                       6 SHould really make this one neater
     Top Down Merge Sort                       7
+    Vermenthruaxx sort (Joke)                 8
     }
   if cbbSorts.ItemIndex = 0 then
   begin
@@ -142,7 +150,12 @@ begin
               itemp := arrIntegers[J];
               arrintegers[J] := arrIntegers[J + 1];
               arrintegers[J + 1] := itemp;
+
+              sounds.NoteOn(round(arrintegers[j]/irange*127),iVolume);
+              sounds.NoteOn(round(arrintegers[j+1]/irange*127),iVolume);
               sleep(iSwapDelay);
+              sounds.Noteoff(round(arrintegers[j]/irange*127),iVolume);
+              sounds.Noteoff(round(arrintegers[j+1]/irange*127),iVolume);
             end;
             sleep(iCompareDelay);
           end;
@@ -180,7 +193,14 @@ begin
               itemp := arrIntegers[k];
               arrintegers[k] := arrIntegers[k + 1];
               arrintegers[k + 1] := itemp;
+
+
+              sounds.NoteOn(round(arrintegers[k]/irange*127),iVolume);
+              sounds.NoteOn(round(arrintegers[k+1]/irange*127),iVolume);
               sleep(iSwapDelay);
+              sounds.Noteoff(round(arrintegers[k]/irange*127),iVolume);
+              sounds.Noteoff(round(arrintegers[k+1]/irange*127),iVolume);
+
               bSorted := False;
             end;
             Sleep(iCompareDelay);
@@ -212,7 +232,7 @@ begin
         CombSort;
       end);
   end;
-
+  //INSERTION SORT
   if cbbSorts.ItemIndex = 3 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
@@ -226,7 +246,7 @@ begin
       var
         itemp, k, J: Integer;
       begin
-        for k := 1 to iArrayLength do
+        for k := 1 to iArrayLength-1 do
         begin
           J := k;
           while (arrIntegers[J - 1] < arrIntegers[J]) and (J >= 1) do
@@ -234,7 +254,13 @@ begin
             itemp := arrIntegers[J - 1];
             arrintegers[J - 1] := arrIntegers[J];
             arrintegers[J] := itemp;
+
+            sounds.NoteOn(round(arrintegers[j]/irange*127),iVolume);
+            sounds.NoteOn(round(arrintegers[j-1]/irange*127),iVolume);
             sleep(iSwapDelay);
+            sounds.Noteoff(round(arrintegers[j]/irange*127),iVolume);
+            sounds.Noteoff(round(arrintegers[j-1]/irange*127),iVolume);
+
             dec(J)
           end;
         end;
@@ -267,7 +293,11 @@ begin
               itemp := arrIntegers[J];
               arrintegers[J] := arrintegers[k];
               arrintegers[k] := itemp;
+              sounds.NoteOn(round(arrintegers[k]/irange*127),iVolume);
+              sounds.NoteOn(round(arrintegers[j]/irange*127),iVolume);
               sleep(iSwapDelay);
+              sounds.Noteoff(round(arrintegers[k]/irange*127),iVolume);
+              sounds.Noteoff(round(arrintegers[j]/irange*127),iVolume);
             end;
 
             sleep(iCompareDelay);
@@ -343,9 +373,16 @@ begin
             Inc(ipos);
           end;
           itemp := arrIntegers[ipos];
+
           arrIntegers[ipos] := iItem;
-          sleep(iSwapDelay);
           iItem := itemp;
+
+          sounds.NoteOn(round(arrintegers[ipos]/irange*127),iVolume);
+          sounds.NoteOn(round(iItem/irange*127),iVolume);
+          sleep(iSwapDelay);
+          sounds.Noteoff(round(arrintegers[ipos]/irange*127),iVolume);
+          sounds.Noteoff(round(iitem/irange*127),iVolume);
+
           while ipos <> k do
           begin
             ipos := k;
@@ -361,7 +398,13 @@ begin
               Inc(ipos);
             end;
             itemp := arrIntegers[ipos];
+            //SOUNDS
+            sounds.NoteOn(round(arrintegers[ipos]/irange*127),iVolume);
+            sounds.NoteOn(round(iItem/irange*127),iVolume);
             sleep(iSwapDelay);
+            sounds.Noteoff(round(arrintegers[ipos]/irange*127),iVolume);
+            sounds.Noteoff(round(iitem/irange*127),iVolume);
+            //SOUNDS
             arrIntegers[ipos] := iItem;
             iItem := itemp;
           end;
@@ -395,7 +438,13 @@ begin
       end);
 
   end;
-
+  //Joke sort
+  if cbbSorts.ItemIndex=8 then
+  begin
+    chtSort.Title.Caption:=cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected';
+    tmrUpdate.Enabled:=true;
+    VermenthruaxxSort(arrintegers);
+  end;
 end;
 
 //end;
@@ -425,8 +474,13 @@ begin
         arrintegers[k] := arrIntegers[k + igap];
         arrintegers[k + igap] := itemp;
         bSorted := False;
+        //Sounds
+        sounds.NoteOn(round(arrintegers[k]/irange*127),iVolume);
+        sounds.NoteOn(round(arrintegers[k+igap]/irange*127),iVolume);
         sleep(iSwapDelay);
-
+        sounds.Noteoff(round(arrintegers[k]/irange*127),iVolume);
+        sounds.Noteoff(round(arrintegers[k+igap]/irange*127),iVolume);
+        //SoundS
       end;
       sleep(iCompareDelay);
       inc(k);
@@ -450,6 +504,12 @@ begin
 
 end;
 
+procedure TfrmJabsSorts.FormCreate(Sender: TObject);
+begin
+  sounds:=TJABSounds.Create;
+  sounds.SetInstrument(24);
+end;
+
 function TfrmJabsSorts.Partition(lo, hi: integer): integer;
 var
   iPivot, iTemp: integer;
@@ -465,7 +525,13 @@ begin
       arrintegers[i] := arrintegers[j];
       arrintegers[j] := iTemp;
       inc(i);
+      //SOUNDS
+      sounds.NoteOn(round(arrintegers[j]/irange*127),iVolume);
+      sounds.NoteOn(round(arrintegers[i]/irange*127),iVolume);
       sleep(iSwapDelay);
+      sounds.Noteoff(round(arrintegers[j]/irange*127),iVolume);
+      sounds.Noteoff(round(arrintegers[i]/irange*127),iVolume);
+      //SOUNDS
     end;
     sleep(iCompareDelay)
   end;
@@ -524,13 +590,26 @@ begin
         // If left run head exists and is <= existing right run head.
     if (i < Imiddle) and (bor) then
     begin
-      Sleep(iSwapDelay);
+
+      //SOUNDS
+      sounds.NoteOn(round(b[k]/irange*127),iVolume);
+      sounds.NoteOn(round(a[i]/irange*127),iVolume);
+      sleep(iSwapDelay);
+      sounds.Noteoff(round(b[k]/irange*127),iVolume);
+      sounds.Noteoff(round(a[i]/irange*127),iVolume);
+      //SOUNDS
+
       b[k] := a[i];
       i := i + 1;
     end
     else
     begin
-      Sleep(iSwapDelay);
+     sounds.NoteOn(round(b[k]/irange*127),iVolume);
+      sounds.NoteOn(round(a[j]/irange*127),iVolume);
+      sleep(iSwapDelay);
+      sounds.Noteoff(round(b[k]/irange*127),iVolume);
+      sounds.Noteoff(round(a[j]/irange*127),iVolume);
+
       b[K] := a[j];
       j := j + 1;
     end;
@@ -557,6 +636,85 @@ begin
   TopDownSplitMerge(a, iMiddle, iEnd, b);  // sort the right run
   // merge the resulting runs from array B[] into A[]
   TopDownMerge(b, iBegin, iMiddle, iEnd, a);
+end;
+
+procedure TfrmJabsSorts.VermenthruaxxSort(var a: array of integer);
+var
+iRageInterations:integer;
+iRand1,iRand2:integer;
+bRageMode:boolean;
+rElapsedSeconds:extended;
+dBeforeRage,dAfterRage:tdatetime;
+begin
+  iRageInterations:=StrToInt(InputBox('Hello','Number of iterations for RAGE','15'));
+   TTask.Run(
+      procedure
+      var
+        itemp, k, J: Integer;
+      begin
+        for k := 1 to iArrayLength-1 do
+        begin
+          if (k mod iRageInterations )= 0 then
+          begin
+              chtSort.Title.Caption:='RAGE!!!';
+              dbeforerage:=now;
+              barseriesSort.ColorEachPoint:=false;
+            repeat
+              repeat
+                irand1:=RandomRange(1,iArrayLength);
+              until (irand1>=k);
+              repeat
+                irand2:=randomrange(1,iArrayLength);
+              until (irand2>=k);
+
+              itemp:=arrintegers[irand1];
+              arrintegers[irand1]:=arrintegers[irand2];
+              arrintegers[irand2]:=itemp;
+              //Sounds
+                sounds.NoteOn(round(arrintegers[iRand1]/irange*127),iVolume);
+                sounds.NoteOn(round(arrintegers[iRand2]/irange*127),iVolume);
+                sleep(iSwapDelay);
+                sounds.Noteoff(round(arrintegers[iRand1]/irange*127),iVolume);
+                sounds.Noteoff(round(arrintegers[iRand2]/irange*127),iVolume);
+              //sound end
+              dAfterrage:=now;
+              relapsedseconds:=SecondsBetween(dBeforeRage,dAfterRage);
+            until (rElapsedSeconds>=5);
+
+              chtSort.Title.caption:='Contemplating life...';
+              sleep(3000);
+            randomize;
+            if random()>1 then
+            begin
+              chtSort.title.Caption:='Yep its done, perfectly sorted';
+              barseriesSort.ColorEachPoint:=true;
+              exit;
+            end;
+          end;
+          chtSort.Title.Caption:='Sorting...';
+          barseriesSort.ColorEachPoint:=true;
+          J := k;
+          while (arrIntegers[J - 1] < arrIntegers[J]) and (J >= 1) do
+          begin
+            itemp := arrIntegers[J - 1];
+            arrintegers[J - 1] := arrIntegers[J];
+            arrintegers[J] := itemp;
+
+            sounds.NoteOn(round(arrintegers[j]/irange*127),iVolume);
+            sounds.NoteOn(round(arrintegers[j-1]/irange*127),iVolume);
+            sleep(iSwapDelay);
+            sounds.Noteoff(round(arrintegers[j]/irange*127),iVolume);
+            sounds.Noteoff(round(arrintegers[j-1]/irange*127),iVolume);
+
+            dec(J)
+          end;
+        end;
+        chtsort.title.Caption:='Sorted';
+        //TIME TAKEN
+        dend := now;
+        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
+        //TIME TAKEN
+      end);
 end;
 
 end.
