@@ -2,7 +2,4 @@
 [Click here to download the Visual Sorter exe](https://github.com/JAB-dev/Sorts-Visualized/raw/Executable/Win32/Debug/JABsVisualSorts.exe)
 
 # Is this updated?
-meh, If someone requests an update or I feel inclined to update the program I will
-
-# Why are there so many download buttons on pc?
-githubs defaults be like that. I don't, at the moment, want to do the css and html myself
+meh, If someone requests an update or I feel inclined to update the program I will, I will eventually make a sorting application in java to
