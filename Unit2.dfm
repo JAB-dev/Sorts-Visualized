@@ -160,7 +160,9 @@ object frmJabsSorts: TfrmJabsSorts
         'Quick Sort (Lomuto partition scheme)'
         'Cycle (Circle) Sort'
         'Top Down Merge Sort'
-        'Vermenthruaxx sort')
+        'Table Flip sort'
+        'CockTail Shaker Sort'
+        'ThatsOven Sort')
     end
     object seDelay: TSpinEdit
       Left = 179

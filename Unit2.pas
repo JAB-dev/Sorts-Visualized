@@ -62,6 +62,8 @@ type
     procedure TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer;var b: array of integer);
     procedure CopyArray(var A: array of integer; iBegin, iEnd: integer;var b: array of integer);
     procedure VermenthruaxxSort(var a:array of integer);
+    procedure CocktailShakerSort();
+    procedure ThatsOvenStaticSort();
   end;
 
 var
@@ -445,9 +447,74 @@ begin
     tmrUpdate.Enabled:=true;
     VermenthruaxxSort(arrintegers);
   end;
+  //Cocktail shaker sort
+  if cbbSorts.ItemIndex=9 then
+  begin
+    ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
+    tmrUpdate.Enabled := True;
+    TTask.Run(cocktailshakersort);
+  end;
 end;
 
 //end;
+
+procedure TfrmJabsSorts.CocktailShakerSort;
+var
+bSorted:boolean;
+k,itemp,iruns:integer;
+begin
+  dStart:=now;
+  iruns:=0;
+  repeat
+    bsorted:=true;
+    for k := 0+iruns to iArrayLength-2-iruns do
+    begin
+      sleep(iCompareDelay);
+      if arrIntegers[k+1]>arrIntegers[k] then
+      begin
+        itemp:=arrIntegers[k];
+        arrintegers[k]:=arrintegers[k+1];
+        arrIntegers[k+1]:=itemp;
+        bSorted:=false;
+
+         //SOUNDS
+        sounds.NoteOn(round(arrintegers[k]/irange*127),iVolume);
+        sounds.NoteOn(round(arrintegers[k+1]/irange*127),iVolume);
+        sleep(iSwapDelay);
+        sounds.Noteoff(round(arrintegers[k]/irange*127),iVolume);
+        sounds.Noteoff(round(arrintegers[k+1]/irange*127),iVolume);
+        //SOUNDS
+
+      end;
+    end;
+
+    for k := iArrayLength-2-iruns downto 0+iruns do
+    begin
+      Sleep(iCompareDelay);
+      if arrIntegers[k+1]>arrIntegers[k] then
+      begin
+        bSorted:=false;
+
+        itemp:=arrIntegers[k];
+        arrintegers[k]:=arrintegers[k+1];
+        arrIntegers[k+1]:=itemp;
+           //SOUNDS
+        sounds.NoteOn(round(arrintegers[k]/irange*127),iVolume);
+        sounds.NoteOn(round(arrintegers[k+1]/irange*127),iVolume);
+        sleep(iSwapDelay);
+        sounds.Noteoff(round(arrintegers[k]/irange*127),iVolume);
+        sounds.Noteoff(round(arrintegers[k+1]/irange*127),iVolume);
+        //SOUNDS
+
+      end;
+    end;
+
+    Inc(iruns);
+
+  until (bsorted);
+  dEnd:=now;
+  rElapsedSeconds:=(dend-dStart)*MSecsPerDay;
+end;
 
 procedure TfrmJabsSorts.CombSort;
 var
@@ -553,6 +620,16 @@ begin
   end;
 end;
 
+procedure TfrmJabsSorts.ThatsOvenStaticSort;
+var
+i:integer;
+
+begin
+//
+
+
+end;
+
 procedure TfrmJabsSorts.tmrTimeTakenTimer(Sender: TObject);
 begin
   Inc(iTimeTaken);
@@ -646,7 +723,7 @@ bRageMode:boolean;
 rElapsedSeconds:extended;
 dBeforeRage,dAfterRage:tdatetime;
 begin
-  iRageInterations:=StrToInt(InputBox('Hello','Number of iterations for RAGE','15'));
+  iRageInterations:=round(0.5*iarraylength);
    TTask.Run(
       procedure
       var
@@ -684,7 +761,7 @@ begin
               chtSort.Title.caption:='Contemplating life...';
               sleep(3000);
             randomize;
-            if random()>1 then
+            if random()>0.5 then
             begin
               chtSort.title.Caption:='Yep its done, perfectly sorted';
               barseriesSort.ColorEachPoint:=true;
