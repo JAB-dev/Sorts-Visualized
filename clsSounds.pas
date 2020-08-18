@@ -18,6 +18,7 @@ interface
     procedure NoteOff(NewNote, NewIntensity: byte);
     procedure SetInstrument(NewInstrument: byte);
     procedure InitMIDI;
+    procedure killmidi;
   end;
 
  var
@@ -40,6 +41,12 @@ procedure TJABSounds.InitMIDI;
 begin
   midiOutOpen(@mo, 0, 0, 0, CALLBACK_NULL);
   midiOutShortMsg(mo, MIDIEncodeMessage(MIDI_CHANGE_INSTRUMENT, 0, 0));
+
+end;
+
+procedure TJABSounds.killmidi;
+begin
+  midiOutClose(0);
 end;
 
 function TJABSounds.MIDIEncodeMessage(Msg, Param1, Param2: byte): integer;

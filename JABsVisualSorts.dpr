@@ -11,6 +11,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Windows10 Dark');
   Application.Title := 'JABs Sorts Visualizer';
   Application.CreateForm(TfrmJabsSorts, frmJabsSorts);
   Application.Run;
