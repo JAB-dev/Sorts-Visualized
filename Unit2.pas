@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons;
+  Vcl.Buttons, consolecontrol;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -27,7 +27,6 @@ type
     lblArrayLength: TLabel;
     seRange: TSpinEdit;
     lblRange: TLabel;
-    barseriesSort: TBarSeries;
     lblTimeTaken: TLabel;
     tmrUpdate: TTimer;
     tmrTimeTaken: TTimer;
@@ -35,13 +34,19 @@ type
     seVolume: TSpinEdit;
     lblVolume: TLabel;
     cbbInputStyle: TComboBox;
-    btnResetSounds: TBitBtn;
+    barseriesSort: TBarSeries;
+    cbbPythonSorts: TComboBox;
+    chkUsePython: TCheckBox;
+    btnHelpWithPython: TBitBtn;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure seVolumeChange(Sender: TObject);
     procedure btnResetSoundsClick(Sender: TObject);
+    procedure btn1Click(Sender: TObject);
+    procedure chkUsePythonClick(Sender: TObject);
+    procedure btnHelpWithPythonClick(Sender: TObject);
   private
     { Private declarations }
     arrIntegers: array of Integer;
@@ -56,6 +61,7 @@ type
     dStart, dEnd: tdatetime;
     Sounds: TJABSounds;
     iVolume: integer;
+    consoleControl: TJABConsole;
   public
     { Public declarations }
     procedure QuickSort(Lo, hi: integer);
@@ -67,9 +73,11 @@ type
     procedure CopyArray(var A: array of integer; iBegin, iEnd: integer; var b: array of integer);
     procedure VermenthruaxxSort(var a: array of integer);
     procedure CocktailShakerSort();
-    procedure ThatsOvenStaticSort();
     procedure FillArray();
-    procedure PlaySound(pnote: byte; iDuration: integer);
+    procedure PlaySound(inote, iDuration: integer);
+    procedure RainbowBar();
+    procedure LoadPythonSorts();
+    procedure PythonSort();
   end;
 
 var
@@ -78,6 +86,23 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmJabsSorts.btn1Click(Sender: TObject);
+begin
+  RainbowBar;
+end;
+
+procedure TfrmJabsSorts.btnHelpWithPythonClick(Sender: TObject);
+begin
+  ShowMessage('How to use custom sorts: '+#10
+  +'1. The sort must be coded in python in a .py'+#10
+  +'2. The sort must be placed in the "Custom Sorts" directory'+#10
+  +'3. The sort must get the input array from Sort.txt (its just a new number on each line) '+#10
+  +'4. Anytime a change is made to the array (I think python uses call it a list?) The full array must be appened to Sorted.txt with a /n '+#10
+  +'5. Thats it, shout out to ThatsOven for his sort to make this work!'+#10
+  +'I will make a better readme at some point...'
+  );
+end;
 
 procedure TfrmJabsSorts.btnResetSoundsClick(Sender: TObject);
 begin
@@ -92,6 +117,12 @@ begin
   //Decide what sort to use      cbbSorts.
   //arrIntegers:=array[1..iarraylength] of Integer;
     //validate
+  if chkUsePython.Checked = true then
+  begin
+    PythonSort;
+    exit;
+  end;
+
   if cbbSorts.ItemIndex = -1 then
   begin
     ShowMessage('A sorting algorithm was not selected');
@@ -119,7 +150,7 @@ begin
   tmrUpdate.Interval := iInterval;
   lblTimeTaken.Caption := '0ms-Unmeasureable with timer';
 
-  chtSort.BottomAxis.Maximum := iArrayLength;
+  //chtSort.BottomAxis.Maximum := iArrayLength;
     //Filling the array randomly or giving a reverse input
   FillArray;
 
@@ -157,11 +188,11 @@ begin
               arrintegers[J] := arrIntegers[J + 1];
               arrintegers[J + 1] := itemp;
 
-              sounds.NoteOn(round(arrintegers[J] / irange * 127), iVolume);
-              sounds.NoteOn(round(arrintegers[J + 1] / irange * 127), iVolume);
+              //Sounds BETTTER SYSTEM POG
+              PlaySound(round(arrintegers[J] / irange * 127), iSwapDelay);
+              playsound(round(arrintegers[J + 1] / irange * 127), iSwapDelay);
+              //SoundS
               sleep(iSwapDelay);
-              sounds.Noteoff(round(arrintegers[J] / irange * 127), iVolume);
-              sounds.Noteoff(round(arrintegers[J + 1] / irange * 127), iVolume);
             end;
             sleep(iCompareDelay);
           end;
@@ -200,12 +231,11 @@ begin
               arrintegers[k] := arrIntegers[k + 1];
               arrintegers[k + 1] := itemp;
 
-              sounds.NoteOn(round(arrintegers[k] / irange * 127), iVolume);
-              sounds.NoteOn(round(arrintegers[k + 1] / irange * 127), iVolume);
+              //Sounds BETTTER SYSTEM POG
+              PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
+              playsound(round(arrintegers[k + 1] / irange * 127), iSwapDelay);
+              //SoundS
               sleep(iSwapDelay);
-              sounds.Noteoff(round(arrintegers[k] / irange * 127), iVolume);
-              sounds.Noteoff(round(arrintegers[k + 1] / irange * 127), iVolume);
-
               bSorted := False;
             end;
             Sleep(iCompareDelay);
@@ -260,13 +290,11 @@ begin
             itemp := arrIntegers[J - 1];
             arrintegers[J - 1] := arrIntegers[J];
             arrintegers[J] := itemp;
-
-            sounds.NoteOn(round(arrintegers[J] / irange * 127), iVolume);
-            sounds.NoteOn(round(arrintegers[J - 1] / irange * 127), iVolume);
+            //Sounds BETTTER SYSTEM POG
+            PlaySound(round(arrintegers[J] / irange * 127), iSwapDelay);
+            playsound(round(arrintegers[J - 1] / irange * 127), iSwapDelay);
+            //SoundS
             sleep(iSwapDelay);
-            sounds.Noteoff(round(arrintegers[J] / irange * 127), iVolume);
-            sounds.Noteoff(round(arrintegers[J - 1] / irange * 127), iVolume);
-
             dec(J)
           end;
         end;
@@ -299,11 +327,12 @@ begin
               itemp := arrIntegers[J];
               arrintegers[J] := arrintegers[k];
               arrintegers[k] := itemp;
-              sounds.NoteOn(round(arrintegers[k] / irange * 127), iVolume);
-              sounds.NoteOn(round(arrintegers[J] / irange * 127), iVolume);
+
+              //Sounds BETTTER SYSTEM POG
+              PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
+              playsound(round(arrintegers[J] / irange * 127), iSwapDelay);
+              //SoundS
               sleep(iSwapDelay);
-              sounds.Noteoff(round(arrintegers[k] / irange * 127), iVolume);
-              sounds.Noteoff(round(arrintegers[J] / irange * 127), iVolume);
             end;
 
             sleep(iCompareDelay);
@@ -383,12 +412,11 @@ begin
           arrIntegers[ipos] := iItem;
           iItem := itemp;
 
-          sounds.NoteOn(round(arrintegers[ipos] / irange * 127), iVolume);
-          sounds.NoteOn(round(iItem / irange * 127), iVolume);
+          //Sounds BETTTER SYSTEM POG
+          PlaySound(round(arrintegers[ipos] / irange * 127), iSwapDelay);
+          playsound(round(iItem / irange * 127), iSwapDelay);
+          //SoundS
           sleep(iSwapDelay);
-          sounds.Noteoff(round(arrintegers[ipos] / irange * 127), iVolume);
-          sounds.Noteoff(round(iItem / irange * 127), iVolume);
-
           while ipos <> k do
           begin
             ipos := k;
@@ -404,13 +432,13 @@ begin
               Inc(ipos);
             end;
             itemp := arrIntegers[ipos];
-            //SOUNDS
-            sounds.NoteOn(round(arrintegers[ipos] / irange * 127), iVolume);
-            sounds.NoteOn(round(iItem / irange * 127), iVolume);
+
+            //Sounds BETTTER SYSTEM POG
+            PlaySound(round(arrintegers[ipos] / irange * 127), iSwapDelay);
+            playsound(round(iItem / irange * 127), iSwapDelay);
+            //SoundS
             sleep(iSwapDelay);
-            sounds.Noteoff(round(arrintegers[ipos] / irange * 127), iVolume);
-            sounds.Noteoff(round(iItem / irange * 127), iVolume);
-            //SOUNDS
+
             arrIntegers[ipos] := iItem;
             iItem := itemp;
           end;
@@ -460,6 +488,20 @@ begin
   end;
 end;
 
+procedure TfrmJabsSorts.chkUsePythonClick(Sender: TObject);
+begin
+  if chkUsePython.Checked = true then
+  begin
+    cbbSorts.Enabled := false;
+    cbbPythonSorts.Enabled := true;
+  end
+  else
+  begin
+    cbbSorts.Enabled := true;
+    cbbPythonSorts.Enabled := false;
+  end;
+end;
+
 //end;
 
 procedure TfrmJabsSorts.CocktailShakerSort;
@@ -481,13 +523,11 @@ begin
         arrIntegers[k + 1] := itemp;
         bSorted := false;
 
-         //SOUNDS
-        sounds.NoteOn(round(arrintegers[k] / irange * 127), iVolume);
-        sounds.NoteOn(round(arrintegers[k + 1] / irange * 127), iVolume);
+        //Sounds BETTTER SYSTEM POG
+        PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
+        playsound(round(arrintegers[k + 1] / irange * 127), iSwapDelay);
+        //SoundS
         sleep(iSwapDelay);
-        sounds.Noteoff(round(arrintegers[k] / irange * 127), iVolume);
-        sounds.Noteoff(round(arrintegers[k + 1] / irange * 127), iVolume);
-        //SOUNDS
 
       end;
     end;
@@ -502,14 +542,11 @@ begin
         itemp := arrIntegers[k];
         arrintegers[k] := arrintegers[k + 1];
         arrIntegers[k + 1] := itemp;
-           //SOUNDS
-        sounds.NoteOn(round(arrintegers[k] / irange * 127), iVolume);
-        sounds.NoteOn(round(arrintegers[k + 1] / irange * 127), iVolume);
+         //Sounds BETTTER SYSTEM POG
+        PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
+        playsound(round(arrintegers[k + 1] / irange * 127), iSwapDelay);
+        //SoundS
         sleep(iSwapDelay);
-        sounds.Noteoff(round(arrintegers[k] / irange * 127), iVolume);
-        sounds.Noteoff(round(arrintegers[k + 1] / irange * 127), iVolume);
-        //SOUNDS
-
       end;
     end;
 
@@ -545,13 +582,11 @@ begin
         arrintegers[k] := arrIntegers[k + igap];
         arrintegers[k + igap] := itemp;
         bSorted := False;
-        //Sounds
-        sounds.NoteOn(round(arrintegers[k] / irange * 127), iVolume);
-        sounds.NoteOn(round(arrintegers[k + igap] / irange * 127), iVolume);
-        sleep(iSwapDelay);
-        sounds.Noteoff(round(arrintegers[k] / irange * 127), iVolume);
-        sounds.Noteoff(round(arrintegers[k + igap] / irange * 127), iVolume);
+        //Sounds BETTTER SYSTEM POG
+        PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
+        playsound(round(arrintegers[k + igap] / irange * 127), iSwapDelay);
         //SoundS
+        sleep(iSwapDelay);
       end;
       sleep(iCompareDelay);
       inc(k);
@@ -615,41 +650,29 @@ begin
       end;
     4:
       begin
-        irange:=seRange.Value;
-        for X := 0 to iArrayLength-1 do
+        irange := seRange.Value;
+        for X := 0 to iArrayLength - 1 do
         begin
-          arrIntegers[x]:=round(-1*irange * cos(X * ((2 * pi) / (iarraylength - 1))));
+          arrIntegers[X] := round(-1 * irange * cos(X * ((2 * pi) / (iarraylength - 1))));
         end;
       end;
-    5:
+    5: //parabola
       begin
-        for X := 0 to iArrayLength-1 do
+        for X := 0 to iArrayLength - 1 do
         begin
-          irange:=seRange.Value;
-          if X<=floor( (iArrayLength-1)/2) then      //weird math to fake parabola,since we dont have negative index
-          begin
-            arrIntegers[x]:=irange*sqr((iArrayLength-1)-X);
-          end else
-          begin
-            arrIntegers[x]:=irange*sqr(x);
-          end;
+          irange := seRange.Value;
+          arrIntegers[X] := sqr(X - ((iArrayLength - 1) div 2));
         end;
-        irange:=sqr(iArrayLength-1)*irange;
+        irange := sqr((iArrayLength) div 2);
       end;
-    6:
+    6: //Parabola negative, shifted up so all values are >=0
       begin
-        for X := 0 to iArrayLength-1 do
+        for X := 0 to iArrayLength - 1 do
         begin
-          irange:=seRange.Value;
-          if X>=floor( (iArrayLength-1)/2) then      //weird math to fake parabola,since we dont have negative index
-          begin
-            arrIntegers[x]:=irange*sqr((iArrayLength-1)-X);
-          end else
-          begin
-            arrIntegers[x]:=irange*sqr(x);
-          end;
+          irange := seRange.Value;
+          arrIntegers[X] := (-1 * sqr(X - ((iArrayLength - 1) div 2))) + sqr((iArrayLength) div 2);
         end;
-        irange:=sqr(iArrayLength-1)*irange;
+        irange := sqr((iArrayLength) div 2);
       end;
   end;
 
@@ -660,6 +683,36 @@ begin
   sounds := TJABSounds.Create;
   sounds.SetInstrument(24);
   cbbSorts.ItemIndex := 0;
+  barseriesSort.Clear;
+  barseriesSort.AddArray(arrIntegers);
+  chtSort.Title.Text.Clear;
+  LoadPythonSorts;
+end;
+
+procedure TfrmJabsSorts.LoadPythonSorts;
+var
+  searchResult: TSearchRec;              //From delphi basics.uk How I learnt this awhile back
+begin
+  // Try to find any file with py at the end
+  if DirectoryExists('Custom Sorts') = false then
+  begin
+    CreateDir('Custom Sorts');
+  end;
+  SetCurrentDir('Custom Sorts');
+  if findfirst('*.py', faAnyFile, searchResult) = 0 then
+  begin
+    repeat
+      cbbPythonSorts.Items.Add(searchResult.Name);
+      //ShowMessage('File name = '+searchResult.Name);
+    until FindNext(searchResult) <> 0;
+    // Must free up resources used by these successful finds
+    FindClose(searchResult);
+  end;
+
+  if cbbPythonSorts.Items.Count = 0 then
+  begin
+    ShowMessage('it seems no custom sorts where found!');
+  end;
 end;
 
 function TfrmJabsSorts.Partition(lo, hi: integer): integer;
@@ -677,13 +730,11 @@ begin
       arrintegers[i] := arrintegers[j];
       arrintegers[j] := iTemp;
       inc(i);
-      //SOUNDS
-      sounds.NoteOn(round(arrintegers[j] / irange * 127), iVolume);
-      sounds.NoteOn(round(arrintegers[i] / irange * 127), iVolume);
+      //Sounds BETTTER SYSTEM POG
+      PlaySound(round(arrintegers[j] / irange * 127), iSwapDelay);
+      playsound(round(arrintegers[i] / irange * 127), iSwapDelay);
+      //SoundS
       sleep(iSwapDelay);
-      sounds.Noteoff(round(arrintegers[j] / irange * 127), iVolume);
-      sounds.Noteoff(round(arrintegers[i] / irange * 127), iVolume);
-      //SOUNDS
     end;
     sleep(iCompareDelay)
   end;
@@ -693,9 +744,111 @@ begin
   Result := i;
 end;
 
-procedure TfrmJabsSorts.PlaySound(pnote: byte; iDuration: integer);
+procedure TfrmJabsSorts.PlaySound(inote, iDuration: integer);//Play sound async, Should be better,should implement this into the class??
 begin
-//
+  TTask.Run(    //Start a new task for each sound
+    procedure
+    begin
+      Sounds.NoteOn(abs(inote), ivolume);
+      Sleep(iDuration);
+      Sounds.NoteOff(abs(inote), ivolume);
+    end);
+end;
+
+procedure TfrmJabsSorts.PythonSort;
+var
+  sline,sline2, sSortName: string;
+  k,x,ipos,ipos2,iarrayLengthComma: integer;
+  tfile: textfile;
+begin
+  //Python go brrrr
+  iVolume := seVolume.Value;
+  iTimeTaken := 0;
+  iArrayLength := seArrayLength.Value;
+  SetLength(arrIntegers, iArrayLength);  //dynamic array length setting, way easier than I thought
+  iCompareDelay := seDelayOnCompare.Value;
+  iSwapDelay := seDelay.Value;
+  iRange := seRange.Value;
+  iInterval := seUpdateInterval.Value;
+  tmrUpdate.Interval := iInterval;
+  FillArray;
+
+  if cbbPythonSorts.ItemIndex = -1 then
+  begin
+    ShowMessage('You did not select a custom sort!');
+    exit;
+  end;
+  //Fill the textfile to be sorted
+  AssignFile(tfile, 'Sort.txt');
+  Rewrite(tfile);
+  for k := 0 to iArrayLength - 1 do
+  begin
+    Writeln(tfile, IntToStr(arrintegers[k]));
+  end;
+  closefile(tfile);
+  //Filled
+  //Remove old sorts
+  AssignFile(tfile,'Sorted.txt');
+  Rewrite(tfile);
+  CloseFile(tfile);
+  //removed
+
+  barseriesSort.Clear;
+  barseriesSort.AddArray(arrIntegers);
+  sSortName := cbbPythonSorts.Text;
+  consoleControl.GetDosOutput('python ' + sSortName, GetCurrentDir);
+  ShowMessage('Will wait for sort to finish...');
+  Sleep(1000);
+
+  //Actually read
+  tmrUpdate.Enabled:=true;
+  ttask.Run(
+  procedure
+  var
+  k,x:integer;
+  begin
+    AssignFile(tfile,'Sorted.txt');
+    Reset(tfile);
+    while not(eof(tfile)) do
+    begin
+      Readln(tfile,sline);
+      Delete(sline,1,1);
+      k:=-1;
+      delete(sline,length(sline),1);
+      sline:=sline+',';
+      iarrayLengthComma:=0;
+      for x := 1 to Length(sline) do
+      begin
+        if pos(',',sline)>0 then
+        begin
+          Inc(iarrayLengthComma);
+          inc(k);
+          SetLength(arrIntegers,iarrayLength);
+          sline2:=copy(sline,1,pos(',',sline)-1); //sline gets everything in the comma
+          //ShowMessage(sline2); Debugging
+          Delete(sline,1,pos(',',sline));  //Clearing for the next read
+          if pos('[]',sline2)>0 then    //This appears for some reason?,Play sounds with these?
+          begin
+            arrIntegers[k]:=0; //0 is blank in our case
+          end
+          else
+          begin
+            delete(sline2,pos(' ',sline2),1);//Delete trash, thanks python
+            delete(sline2,pos(']',sline2),1);//Delete trash, thanks python
+            delete(sline2,pos('[',sline2),1);//Delete trash, thanks python
+            arrintegers[k]:=StrToInt(sline2);
+          end;
+        end;
+      end;
+      Sleep(iswapdelay);
+    end;
+    //end read
+    closefile(tfile);
+  end
+  );
+
+
+
 end;
 
 procedure TfrmJabsSorts.QuickSort(Lo, hi: integer);
@@ -710,33 +863,37 @@ begin
   end;
 end;
 
-procedure TfrmJabsSorts.seVolumeChange(Sender: TObject);
+procedure TfrmJabsSorts.RainbowBar;
+var
+  X: integer;
 begin
-  iVolume:=seVolume.Value;
+
+  FillArray;
+  for X := 0 to iArrayLength - 1 do
+  begin
+    chtSort.Series[1].SeriesColor := clred + X;
+    barseriesSort.ValueColor[X] := clred * X;
+    sleep(1);
+  end;
 end;
 
-procedure TfrmJabsSorts.ThatsOvenStaticSort;
-var
-  i: integer;
+procedure TfrmJabsSorts.seVolumeChange(Sender: TObject);
 begin
-//
-
-
+  iVolume := seVolume.Value;
 end;
 
 procedure TfrmJabsSorts.tmrTimeTakenTimer(Sender: TObject);
 begin
-  Inc(iTimeTaken);
-
-  lblTimeTaken.Caption := IntToStr(iTimeTaken) + 'ms';
+//  Inc(iTimeTaken);
+  //lblTimeTaken.Caption := IntToStr(iTimeTaken) + 'ms';
 end;
 
 procedure TfrmJabsSorts.tmrUpdateTimer(Sender: TObject);
 begin
-  //Update the graph by reloading the array
+  //Update the graph by reloading the array  (Hopefully there is a better way)
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
-  lblTimeTaken.Caption := FloatToStr(rElapsedSeconds) + 'ms';
+ //blTimeTaken.Caption := FloatToStr(rElapsedSeconds) + 'ms';
 end;
 
 procedure TfrmJabsSorts.TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer; var b: array of integer);
@@ -762,26 +919,21 @@ begin
         // If left run head exists and is <= existing right run head.
     if (i < Imiddle) and (bOr) then
     begin
-
-      //SOUNDS
-      sounds.NoteOn(round(b[k] / irange * 127), iVolume);
-      sounds.NoteOn(round(a[i] / irange * 127), iVolume);
+      //Sounds BETTTER SYSTEM POG
+      PlaySound(round(b[k] / irange * 127), iSwapDelay);
+      playsound(round(a[i] / irange * 127), iSwapDelay);
+      //SoundS
       sleep(iSwapDelay);
-      sounds.Noteoff(round(b[k] / irange * 127), iVolume);
-      sounds.Noteoff(round(a[i] / irange * 127), iVolume);
-      //SOUNDS
-
       b[k] := a[i];
       i := i + 1;
     end
     else
     begin
-      sounds.NoteOn(round(b[k] / irange * 127), iVolume);
-      sounds.NoteOn(round(a[j] / irange * 127), iVolume);
+      //Sounds BETTTER SYSTEM POG
+      PlaySound(round(b[k] / irange * 127), iSwapDelay);
+      playsound(round(a[j] / irange * 127), iSwapDelay);
+      //SoundS
       sleep(iSwapDelay);
-      sounds.Noteoff(round(b[k] / irange * 127), iVolume);
-      sounds.Noteoff(round(a[j] / irange * 127), iVolume);
-
       b[k] := a[j];
       j := j + 1;
     end;
@@ -842,19 +994,18 @@ begin
             itemp := arrintegers[iRand1];
             arrintegers[iRand1] := arrintegers[iRand2];
             arrintegers[iRand2] := itemp;
-              //Sounds
-            sounds.NoteOn(round(arrintegers[iRand1] / irange * 127), iVolume);
-            sounds.NoteOn(round(arrintegers[iRand2] / irange * 127), iVolume);
+            //Sounds BETTTER SYSTEM POG
+            PlaySound(round((arrintegers[iRand1] / irange) * 127), iSwapDelay);
+            playsound(round((arrintegers[iRand2] / irange) * 127), iSwapDelay);
+            //SoundS
             sleep(iSwapDelay);
-            sounds.Noteoff(round(arrintegers[iRand1] / irange * 127), iVolume);
-            sounds.Noteoff(round(arrintegers[iRand2] / irange * 127), iVolume);
-              //sound end
+
             dAfterRage := now;
             rElapsedSeconds := SecondsBetween(dBeforeRage, dAfterRage);
           until (rElapsedSeconds >= 5);
 
           chtSort.Title.caption := 'Contemplating life...';
-          sleep(3000);
+          sleep(2000);     //Shortened to 2000
           randomize;
           if random() > 0.5 then
           begin
@@ -871,13 +1022,11 @@ begin
           itemp := arrIntegers[J - 1];
           arrintegers[J - 1] := arrIntegers[J];
           arrintegers[J] := itemp;
-
-          sounds.NoteOn(round(arrintegers[J] / irange * 127), iVolume);
-          sounds.NoteOn(round(arrintegers[J - 1] / irange * 127), iVolume);
+          //Sounds BETTTER SYSTEM POG
+          PlaySound(round((arrintegers[J] / irange) * 127), iSwapDelay);
+          playsound(round((arrintegers[J - 1] / irange) * 127), iSwapDelay);
+          //SoundS
           sleep(iSwapDelay);
-          sounds.Noteoff(round(arrintegers[J] / irange * 127), iVolume);
-          sounds.Noteoff(round(arrintegers[J - 1] / irange * 127), iVolume);
-
           dec(J)
         end;
       end;

@@ -294,9 +294,10 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -19
       Font.Name = 'Tahoma'
       Font.Style = []
+      ItemIndex = 2
       ParentFont = False
       TabOrder = 8
-      Text = 'Input Style'
+      Text = 'Sin Graph'
       Items.Strings = (
         'Random'
         'Reverse Input'
@@ -306,21 +307,40 @@ object frmJabsSorts: TfrmJabsSorts
         'Parabola'
         'Parabola (Negative)')
     end
-    object btnResetSounds: TBitBtn
-      Left = 568
-      Top = 46
-      Width = 89
-      Height = 28
-      Caption = 'ResetAudio'
-      Kind = bkRetry
-      NumGlyphs = 2
+    object cbbPythonSorts: TComboBox
+      Left = 560
+      Top = 69
+      Width = 145
+      Height = 22
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 9
-      OnClick = btnResetSoundsClick
+      Text = 'cbbPythonSorts'
+    end
+    object chkUsePython: TCheckBox
+      Left = 560
+      Top = 46
+      Width = 121
+      Height = 17
+      Caption = 'Use Custom Sorts'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 10
+      OnClick = chkUsePythonClick
     end
   end
   object chtSort: TChart
     Left = 10
-    Top = 225
+    Top = 241
     Width = 989
     Height = 484
     Margins.Left = 5
@@ -334,6 +354,8 @@ object frmJabsSorts: TfrmJabsSorts
     Gradient.SubGradient.Transparency = 100
     Legend.Visible = False
     Title.Font.Height = -16
+    Title.Text.Strings = (
+      'TChart')
     AxisVisible = False
     BottomAxis.Increment = 1.000000000000000000
     LeftAxis.Axis.JoinStyle = jsBevel
@@ -971,15 +993,22 @@ object frmJabsSorts: TfrmJabsSorts
     TabOrder = 1
     Anchors = [akLeft, akTop, akRight, akBottom]
     DefaultCanvas = 'TGDIPlusCanvas'
+    PrintMargins = (
+      15
+      26
+      15
+      26)
     ColorPaletteIndex = 8
     object barseriesSort: TBarSeries
       Legend.Visible = False
       BarPen.Visible = False
       ColorEachPoint = True
+      ConePercent = 2
       Marks.Visible = False
-      SeriesColor = clRed
       ShowInLegend = False
-      Sides = 3
+      Transparency = 4
+      Dark3D = False
+      Sides = 110
       XValues.Name = 'X'
       XValues.Order = loNone
       YValues.Name = 'Bar'
@@ -987,8 +1016,17 @@ object frmJabsSorts: TfrmJabsSorts
       Data = {
         000600000000000000004C884000000000005089400000000000188A40000000
         0000A48A400000000000F48A400000000000A88B40}
-      Detail = {0000000000}
     end
+  end
+  object btnHelpWithPython: TBitBtn
+    Left = 602
+    Top = 106
+    Width = 73
+    Height = 25
+    Kind = bkHelp
+    NumGlyphs = 2
+    TabOrder = 2
+    OnClick = btnHelpWithPythonClick
   end
   object tmrUpdate: TTimer
     Enabled = False
