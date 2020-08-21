@@ -46,6 +46,7 @@ type
     procedure btnResetSoundsClick(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure chkUsePythonClick(Sender: TObject);
+    procedure btnHelpWithPythonClick(Sender: TObject);
   private
     { Private declarations }
     arrIntegers: array of Integer;
@@ -89,6 +90,18 @@ implementation
 procedure TfrmJabsSorts.btn1Click(Sender: TObject);
 begin
   RainbowBar;
+end;
+
+procedure TfrmJabsSorts.btnHelpWithPythonClick(Sender: TObject);
+begin
+  ShowMessage('How to use custom sorts: '+#10
+  +'1. The sort must be coded in python in a .py'+#10
+  +'2. The sort must be placed in the "Custom Sorts" directory'+#10
+  +'3. The sort must get the input array from Sort.txt (its just a new number on each line) '+#10
+  +'4. Anytime a change is made to the array (I think python uses call it a list?) The full array must be appened to Sorted.txt with a /n '+#10
+  +'5. Thats it, shout out to ThatsOven for his sort to make this work!'+#10
+  +'I will make a better readme at some point...'
+  );
 end;
 
 procedure TfrmJabsSorts.btnResetSoundsClick(Sender: TObject);
@@ -670,8 +683,8 @@ begin
   sounds := TJABSounds.Create;
   sounds.SetInstrument(24);
   cbbSorts.ItemIndex := 0;
-  barseriesSort.Clear;
-  barseriesSort.AddArray(arrIntegers);
+  //barseriesSort.Clear;
+  //barseriesSort.AddArray(arrIntegers);
   chtSort.Title.Text.Clear;
   LoadPythonSorts;
 end;
@@ -733,13 +746,11 @@ end;
 
 procedure TfrmJabsSorts.PlaySound(inote, iDuration: integer);//Play sound async, Should be better,should implement this into the class??
 begin
-  TTask.Run(    //Start a new task for each sound
-    procedure
-    begin
+ 
       Sounds.NoteOn(abs(inote), ivolume);
       Sleep(iDuration);
       Sounds.NoteOff(abs(inote), ivolume);
-    end);
+
 end;
 
 procedure TfrmJabsSorts.PythonSort;
@@ -791,6 +802,8 @@ begin
   tmrUpdate.Enabled:=true;
   ttask.Run(
   procedure
+  var
+  k,x:integer;
   begin
     AssignFile(tfile,'Sorted.txt');
     Reset(tfile);
@@ -806,9 +819,10 @@ begin
       begin
         if pos(',',sline)>0 then
         begin
+          sleep(iSwapDelay);
           Inc(iarrayLengthComma);
           inc(k);
-          SetLength(arrIntegers,iarrayLength);
+          SetLength(arrIntegers,iarrayLengthComma);
           sline2:=copy(sline,1,pos(',',sline)-1); //sline gets everything in the comma
           //ShowMessage(sline2); Debugging
           Delete(sline,1,pos(',',sline));  //Clearing for the next read
@@ -819,15 +833,26 @@ begin
           else
           begin
             delete(sline2,pos(' ',sline2),1);//Delete trash, thanks python
-            delete(sline2,pos(']',sline2),1);//Delete trash, thanks python
-            delete(sline2,pos('[',sline2),1);//Delete trash, thanks python
-            arrintegers[k]:=StrToInt(sline2);
+            if (pos(']',sline2)>0) or( pos('[',sline2)>0) then
+            begin
+              delete(sline2,pos(']',sline2),1);//Delete trash, thanks python
+              delete(sline2,pos('[',sline2),1);//Delete trash, thanks python
+              playsound(Round((StrToInt(sline2))/irange*127),Round(iswapdelay));
+            end;
+
+            try
+              arrintegers[k]:=StrToInt(sline2);
+            except;
+              ShowMessage('Sline 2 failed to load:'+sline2);
+            end;
+
           end;
         end;
-        Sleep(iswapdelay);
       end;
+      Sleep(iswapdelay);
     end;
     //end read
+    closefile(tfile);
   end
   );
 

@@ -18,11 +18,11 @@ object frmJabsSorts: TfrmJabsSorts
   PixelsPerInch = 96
   TextHeight = 13
   object lblTimeTaken: TLabel
-    Left = 785
-    Top = 134
-    Width = 154
+    Left = 873
+    Top = 107
+    Width = 92
     Height = 19
-    Caption = 'CurrentSortTimeInMS'
+    Caption = 'Disabled atm'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -31,8 +31,8 @@ object frmJabsSorts: TfrmJabsSorts
     ParentFont = False
   end
   object lblWarning: TLabel
-    Left = 729
-    Top = 109
+    Left = 825
+    Top = 82
     Width = 265
     Height = 19
     Caption = 'Timer is not accurate!!! But still useful'
@@ -45,8 +45,8 @@ object frmJabsSorts: TfrmJabsSorts
   end
   object grpSettings: TGroupBox
     Left = 10
-    Top = 14
-    Width = 711
+    Top = 8
+    Width = 759
     Height = 201
     Margins.Left = 5
     Margins.Right = 5
@@ -294,10 +294,10 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -19
       Font.Name = 'Tahoma'
       Font.Style = []
-      ItemIndex = 2
+      ItemIndex = 0
       ParentFont = False
       TabOrder = 8
-      Text = 'Sin Graph'
+      Text = 'Random'
       Items.Strings = (
         'Random'
         'Reverse Input'
@@ -311,16 +311,16 @@ object frmJabsSorts: TfrmJabsSorts
       Left = 560
       Top = 69
       Width = 145
-      Height = 22
+      Height = 24
       Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
       TabOrder = 9
-      Text = 'cbbPythonSorts'
+      Text = 'Select Python Sort'
     end
     object chkUsePython: TCheckBox
       Left = 560
@@ -330,7 +330,7 @@ object frmJabsSorts: TfrmJabsSorts
       Caption = 'Use Custom Sorts'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -12
+      Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
@@ -1008,6 +1008,7 @@ object frmJabsSorts: TfrmJabsSorts
       ShowInLegend = False
       Transparency = 4
       Dark3D = False
+      MultiBar = mbNone
       Sides = 110
       XValues.Name = 'X'
       XValues.Order = loNone
@@ -1016,6 +1017,7 @@ object frmJabsSorts: TfrmJabsSorts
       Data = {
         000600000000000000004C884000000000005089400000000000188A40000000
         0000A48A400000000000F48A400000000000A88B40}
+      Detail = {0000000000}
     end
   end
   object btnHelpWithPython: TBitBtn

@@ -307,16 +307,35 @@ object frmJabsSorts: TfrmJabsSorts
         'Parabola'
         'Parabola (Negative)')
     end
-    object btnResetSounds: TBitBtn
-      Left = 568
-      Top = 46
-      Width = 89
-      Height = 28
-      Caption = 'ResetAudio'
-      Kind = bkRetry
-      NumGlyphs = 2
+    object cbbPythonSorts: TComboBox
+      Left = 560
+      Top = 69
+      Width = 145
+      Height = 22
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 9
-      OnClick = btnResetSoundsClick
+      Text = 'cbbPythonSorts'
+    end
+    object chkUsePython: TCheckBox
+      Left = 560
+      Top = 46
+      Width = 121
+      Height = 17
+      Caption = 'Use Custom Sorts'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 10
+      OnClick = chkUsePythonClick
     end
   end
   object chtSort: TChart
@@ -999,14 +1018,15 @@ object frmJabsSorts: TfrmJabsSorts
         0000A48A400000000000F48A400000000000A88B40}
     end
   end
-  object btn1: TButton
-    Left = 760
-    Top = 168
-    Width = 75
+  object btnHelpWithPython: TBitBtn
+    Left = 602
+    Top = 106
+    Width = 73
     Height = 25
-    Caption = 'btn1'
+    Kind = bkHelp
+    NumGlyphs = 2
     TabOrder = 2
-    OnClick = btn1Click
+    OnClick = btnHelpWithPythonClick
   end
   object tmrUpdate: TTimer
     Enabled = False
