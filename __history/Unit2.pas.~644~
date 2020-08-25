@@ -672,6 +672,14 @@ begin
         end;
         irange := sqr((iArrayLength) div 2);
       end;
+      7://Negative sin wave
+      begin
+        iRange := seRange.Value;
+        for X := 0 to iArrayLength - 1 do
+        begin
+          arrIntegers[X] := -1*round(iRange * sin(X * ((2 * pi) / (iarraylength - 1)))); //Delphi sin uses Radians?why
+        end;
+      end;
   end;
 
 end;
@@ -804,10 +812,13 @@ begin
     end else
     begin
       //something went wrong along the lines of
-      ShowMessage(consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir));
+      ShowMessage('something went wrong along the lines of: '+consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir));
+      exit;
     end;
   end;
   btnSort.Enabled:=false;
+  ShowMessage('Waiting a second for sort to finish');
+  sleep(1000);
 
   //Actually read
   tmrUpdate.Enabled:=false;//falseLSE FOR NOW

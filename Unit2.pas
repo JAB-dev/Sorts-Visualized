@@ -47,6 +47,8 @@ type
     procedure btn1Click(Sender: TObject);
     procedure chkUsePythonClick(Sender: TObject);
     procedure btnHelpWithPythonClick(Sender: TObject);
+    procedure seDelayChange(Sender: TObject);
+    procedure seDelayOnCompareChange(Sender: TObject);
   private
     { Private declarations }
     arrIntegers: array of Integer;
@@ -615,6 +617,7 @@ begin
   case cbbInputStyle.ItemIndex of
     0:
       begin
+         iRange := seRange.Value;  //not really nesscary but you never know
         for X := 0 to iArrayLength - 1 do
         begin
           arrIntegers[X] := RandomRange(1, iRange + 1);
@@ -665,12 +668,20 @@ begin
       end;
     6: //Parabola negative, shifted up so all values are >=0
       begin
+      irange := seRange.Value;
         for X := 0 to iArrayLength - 1 do
         begin
-          irange := seRange.Value;
           arrIntegers[X] := (-1 * sqr(X - ((iArrayLength - 1) div 2))) + sqr((iArrayLength) div 2);
         end;
         irange := sqr((iArrayLength) div 2);
+      end;
+      7://Negative sin wave
+      begin
+        iRange := seRange.Value;
+        for X := 0 to iArrayLength - 1 do
+        begin
+          arrIntegers[X] := -1*round(iRange * sin(X * ((2 * pi) / (iarraylength - 1)))); //Delphi sin uses Radians?why
+        end;
       end;
   end;
 
@@ -767,6 +778,7 @@ begin
   iRange := seRange.Value;
   iInterval := seUpdateInterval.Value;
   tmrUpdate.Interval := iInterval;
+
   FillArray;
 
   if cbbPythonSorts.ItemIndex = -1 then
@@ -779,6 +791,8 @@ begin
   Rewrite(tfile);
   for k := 0 to iArrayLength - 1 do
   begin
+
+//    ShowMessage(IntToStr(arrintegers[k]));
     Writeln(tfile, IntToStr(arrintegers[k]));
   end;
   closefile(tfile);
@@ -809,15 +823,16 @@ begin
     end;
   end;
   btnSort.Enabled:=false;
+  ShowMessage('Waiting a second for sort to finish');
+  sleep(1000);
 
   //Actually read
   tmrUpdate.Enabled:=false;//falseLSE FOR NOW
-  ttask.Run(
-  procedure
-  var
-  k,x:integer;
-  begin
-    AssignFile(tfile,'Sorted.txt');
+    ttask.Run(
+    procedure
+    var k,x:integer;
+    begin
+      AssignFile(tfile,'Sorted.txt');
     Reset(tfile);
     while not(eof(tfile)) do
     begin
@@ -869,12 +884,14 @@ begin
       end
       );
       Sleep(iswapdelay);
+
     end;
     //end read
     ShowMessage('Done!');
     closefile(tfile);
     btnSort.Enabled:=true;
-  end
+
+    end
   );
 end;
 
@@ -902,6 +919,17 @@ begin
     barseriesSort.ValueColor[X] := clred * X;
     sleep(1);
   end;
+end;
+
+procedure TfrmJabsSorts.seDelayChange(Sender: TObject);
+begin
+  //Dynamic delay
+  iSwapDelay:=seDelay.Value;
+end;
+
+procedure TfrmJabsSorts.seDelayOnCompareChange(Sender: TObject);
+begin
+  iCompareDelay:=seDelayOnCompare.Value;
 end;
 
 procedure TfrmJabsSorts.seVolumeChange(Sender: TObject);

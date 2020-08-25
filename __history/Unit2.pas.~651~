@@ -47,6 +47,7 @@ type
     procedure btn1Click(Sender: TObject);
     procedure chkUsePythonClick(Sender: TObject);
     procedure btnHelpWithPythonClick(Sender: TObject);
+    procedure seDelayChange(Sender: TObject);
   private
     { Private declarations }
     arrIntegers: array of Integer;
@@ -346,11 +347,9 @@ begin
       end);
   end;
 
-
   //QUICKSORT
   if cbbSorts.ItemIndex = 5 then
   begin
-
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
@@ -367,7 +366,7 @@ begin
       end);
 
   end;
-  //CYCLE SORT (CIRCLE) WHY SO MANY NAMES???
+  //CYCLE SORT (CIRCLE), its only one of them but the wiki sited both
   if cbbSorts.ItemIndex = 6 then
   begin
     ;
@@ -617,6 +616,7 @@ begin
   case cbbInputStyle.ItemIndex of
     0:
       begin
+         iRange := seRange.Value;  //not really nesscary but you never know
         for X := 0 to iArrayLength - 1 do
         begin
           arrIntegers[X] := RandomRange(1, iRange + 1);
@@ -667,12 +667,20 @@ begin
       end;
     6: //Parabola negative, shifted up so all values are >=0
       begin
+      irange := seRange.Value;
         for X := 0 to iArrayLength - 1 do
         begin
-          irange := seRange.Value;
           arrIntegers[X] := (-1 * sqr(X - ((iArrayLength - 1) div 2))) + sqr((iArrayLength) div 2);
         end;
         irange := sqr((iArrayLength) div 2);
+      end;
+      7://Negative sin wave
+      begin
+        iRange := seRange.Value;
+        for X := 0 to iArrayLength - 1 do
+        begin
+          arrIntegers[X] := -1*round(iRange * sin(X * ((2 * pi) / (iarraylength - 1)))); //Delphi sin uses Radians?why
+        end;
       end;
   end;
 
@@ -769,6 +777,7 @@ begin
   iRange := seRange.Value;
   iInterval := seUpdateInterval.Value;
   tmrUpdate.Interval := iInterval;
+
   FillArray;
 
   if cbbPythonSorts.ItemIndex = -1 then
@@ -781,6 +790,8 @@ begin
   Rewrite(tfile);
   for k := 0 to iArrayLength - 1 do
   begin
+
+//    ShowMessage(IntToStr(arrintegers[k]));
     Writeln(tfile, IntToStr(arrintegers[k]));
   end;
   closefile(tfile);
@@ -794,18 +805,33 @@ begin
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
   sSortName := cbbPythonSorts.Text;
-  consoleControl.GetDosOutput('python ' + sSortName, GetCurrentDir);
-  ShowMessage('Will wait for sort to finish...');
-  Sleep(1000);
+  if consoleControl.GetDosOutput('python ' + sSortName, GetCurrentDir)='' then
+  begin
+    //If the output was blank it meant nothing went wrong
+  end else
+  begin
+    //If its not blank something went wrong, assume they are using a different version where you have to type py instead of python
+    if consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir)='' then
+    begin
+      //if the output was blank it meant nothing went wrong
+    end else
+    begin
+      //something went wrong along the lines of
+      ShowMessage('something went wrong along the lines of: '+consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir));
+      exit;
+    end;
+  end;
+  btnSort.Enabled:=false;
+  ShowMessage('Waiting a second for sort to finish');
+  sleep(1000);
 
   //Actually read
   tmrUpdate.Enabled:=false;//falseLSE FOR NOW
-  ttask.Run(
-  procedure
-  var
-  k,x:integer;
-  begin
-    AssignFile(tfile,'Sorted.txt');
+    ttask.Run(
+    procedure
+    var k,x:integer;
+    begin
+      AssignFile(tfile,'Sorted.txt');
     Reset(tfile);
     while not(eof(tfile)) do
     begin
@@ -849,23 +875,23 @@ begin
         end;
       end;
 
-      ttask.Run(
+      ttask.Run(            //Not really a point in doing it async but oh well
       procedure
       begin
-      barseriesSort.Clear;
-      barseriesSort.AddArray(arrIntegers);
+        barseriesSort.Clear;
+        barseriesSort.AddArray(arrIntegers);
       end
       );
       Sleep(iswapdelay);
+
     end;
     //end read
     ShowMessage('Done!');
     closefile(tfile);
-  end
+    btnSort.Enabled:=true;
+
+    end
   );
-
-
-
 end;
 
 procedure TfrmJabsSorts.QuickSort(Lo, hi: integer);
@@ -892,6 +918,11 @@ begin
     barseriesSort.ValueColor[X] := clred * X;
     sleep(1);
   end;
+end;
+
+procedure TfrmJabsSorts.seDelayChange(Sender: TObject);
+begin
+  iSwapDelay:=seDelay.Value;
 end;
 
 procedure TfrmJabsSorts.seVolumeChange(Sender: TObject);

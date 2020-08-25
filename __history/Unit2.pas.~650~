@@ -615,6 +615,7 @@ begin
   case cbbInputStyle.ItemIndex of
     0:
       begin
+         iRange := seRange.Value;  //not really nesscary but you never know
         for X := 0 to iArrayLength - 1 do
         begin
           arrIntegers[X] := RandomRange(1, iRange + 1);
@@ -665,12 +666,20 @@ begin
       end;
     6: //Parabola negative, shifted up so all values are >=0
       begin
+      irange := seRange.Value;
         for X := 0 to iArrayLength - 1 do
         begin
-          irange := seRange.Value;
           arrIntegers[X] := (-1 * sqr(X - ((iArrayLength - 1) div 2))) + sqr((iArrayLength) div 2);
         end;
         irange := sqr((iArrayLength) div 2);
+      end;
+      7://Negative sin wave
+      begin
+        iRange := seRange.Value;
+        for X := 0 to iArrayLength - 1 do
+        begin
+          arrIntegers[X] := -1*round(iRange * sin(X * ((2 * pi) / (iarraylength - 1)))); //Delphi sin uses Radians?why
+        end;
       end;
   end;
 
@@ -767,6 +776,7 @@ begin
   iRange := seRange.Value;
   iInterval := seUpdateInterval.Value;
   tmrUpdate.Interval := iInterval;
+
   FillArray;
 
   if cbbPythonSorts.ItemIndex = -1 then
@@ -779,6 +789,8 @@ begin
   Rewrite(tfile);
   for k := 0 to iArrayLength - 1 do
   begin
+
+//    ShowMessage(IntToStr(arrintegers[k]));
     Writeln(tfile, IntToStr(arrintegers[k]));
   end;
   closefile(tfile);
@@ -797,18 +809,28 @@ begin
     //If the output was blank it meant nothing went wrong
   end else
   begin
-    ShowMessage('Not blank');
+    //If its not blank something went wrong, assume they are using a different version where you have to type py instead of python
+    if consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir)='' then
+    begin
+      //if the output was blank it meant nothing went wrong
+    end else
+    begin
+      //something went wrong along the lines of
+      ShowMessage('something went wrong along the lines of: '+consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir));
+      exit;
+    end;
   end;
-
+  btnSort.Enabled:=false;
+  ShowMessage('Waiting a second for sort to finish');
+  sleep(1000);
 
   //Actually read
   tmrUpdate.Enabled:=false;//falseLSE FOR NOW
-  ttask.Run(
-  procedure
-  var
-  k,x:integer;
-  begin
-    AssignFile(tfile,'Sorted.txt');
+    ttask.Run(
+    procedure
+    var k,x:integer;
+    begin
+      AssignFile(tfile,'Sorted.txt');
     Reset(tfile);
     while not(eof(tfile)) do
     begin
@@ -852,19 +874,22 @@ begin
         end;
       end;
 
-      ttask.Run(
+      ttask.Run(            //Not really a point in doing it async but oh well
       procedure
       begin
-      barseriesSort.Clear;
-      barseriesSort.AddArray(arrIntegers);
+        barseriesSort.Clear;
+        barseriesSort.AddArray(arrIntegers);
       end
       );
       Sleep(iswapdelay);
+
     end;
     //end read
     ShowMessage('Done!');
     closefile(tfile);
-  end
+    btnSort.Enabled:=true;
+
+    end
   );
 end;
 
