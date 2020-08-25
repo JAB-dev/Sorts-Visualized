@@ -346,11 +346,9 @@ begin
       end);
   end;
 
-
   //QUICKSORT
   if cbbSorts.ItemIndex = 5 then
   begin
-
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
@@ -367,7 +365,7 @@ begin
       end);
 
   end;
-  //CYCLE SORT (CIRCLE) WHY SO MANY NAMES???
+  //CYCLE SORT (CIRCLE), its only one of them but the wiki sited both
   if cbbSorts.ItemIndex = 6 then
   begin
     ;
@@ -744,12 +742,12 @@ begin
   Result := i;
 end;
 
-procedure TfrmJabsSorts.PlaySound(inote, iDuration: integer);//Play sound async, Should be better,should implement this into the class??
+procedure TfrmJabsSorts.PlaySound(inote, iDuration: integer);//Play sound, not asnync since would cause stutters
 begin
  
-      Sounds.NoteOn(abs(inote), ivolume);
-      Sleep(iDuration);
-      Sounds.NoteOff(abs(inote), ivolume);
+  Sounds.NoteOn(abs(inote), ivolume);
+  Sleep(iDuration);
+  Sounds.NoteOff(abs(inote), ivolume);
 
 end;
 
@@ -794,9 +792,23 @@ begin
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
   sSortName := cbbPythonSorts.Text;
-  consoleControl.GetDosOutput('python ' + sSortName, GetCurrentDir);
-  ShowMessage('Will wait for sort to finish...');
-  Sleep(1000);
+  if consoleControl.GetDosOutput('python ' + sSortName, GetCurrentDir)='' then
+  begin
+    //If the output was blank it meant nothing went wrong
+  end else
+  begin
+    //If its not blank something went wrong, assume they are using a different version where you have to type py instead of python
+    if consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir)='' then
+    begin
+      //if the output was blank it meant nothing went wrong
+    end else
+    begin
+      //something went wrong along the lines of
+      ShowMessage('something went wrong along the lines of: '+consoleControl.GetDosOutput('py ' + sSortName, GetCurrentDir));
+      exit;
+    end;
+  end;
+  btnSort.Enabled:=false;
 
   //Actually read
   tmrUpdate.Enabled:=false;//falseLSE FOR NOW
@@ -849,22 +861,21 @@ begin
         end;
       end;
 
-      ttask.Run(
+      ttask.Run(            //Not really a point in doing it async but oh well
       procedure
       begin
-      barseriesSort.Clear;
-      barseriesSort.AddArray(arrIntegers);
+        barseriesSort.Clear;
+        barseriesSort.AddArray(arrIntegers);
       end
       );
       Sleep(iswapdelay);
     end;
     //end read
+    ShowMessage('Done!');
     closefile(tfile);
+    btnSort.Enabled:=true;
   end
   );
-
-
-
 end;
 
 procedure TfrmJabsSorts.QuickSort(Lo, hi: integer);
