@@ -161,7 +161,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Cycle Sort'
         'Top Down Merge Sort'
         'Table Flip sort'
-        'CockTail Shaker Sort')
+        'CockTail Shaker Sort'
+        'Simplest Sort')
     end
     object seDelay: TSpinEdit
       Left = 179
@@ -173,7 +174,7 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -16
       Font.Name = 'Tahoma'
       Font.Style = []
-      MaxValue = 0
+      MaxValue = 1000
       MinValue = 0
       ParentFont = False
       TabOrder = 1

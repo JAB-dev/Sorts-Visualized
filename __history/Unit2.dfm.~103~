@@ -115,9 +115,9 @@ object frmJabsSorts: TfrmJabsSorts
     object lblRange: TLabel
       Left = 179
       Top = 21
-      Width = 228
+      Width = 139
       Height = 19
-      Caption = 'Number Range Max (From zero)'
+      Caption = 'Number Range Max'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -158,10 +158,11 @@ object frmJabsSorts: TfrmJabsSorts
         'Insertion Sort'
         'Selection Sort (Unoptimized)'
         'Quick Sort (Lomuto partition scheme)'
-        'Cycle (Circle) Sort'
+        'Cycle Sort'
         'Top Down Merge Sort'
         'Table Flip sort'
-        'CockTail Shaker Sort')
+        'CockTail Shaker Sort'
+        'Simplest Sort')
     end
     object seDelay: TSpinEdit
       Left = 179
@@ -178,6 +179,7 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
       TabOrder = 1
       Value = 0
+      OnChange = seDelayChange
     end
     object seDelayOnCompare: TSpinEdit
       Left = 413
@@ -194,6 +196,7 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
       TabOrder = 2
       Value = 0
+      OnChange = seDelayOnCompareChange
     end
     object btnSort: TButton
       Left = 560
@@ -294,10 +297,10 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -19
       Font.Name = 'Tahoma'
       Font.Style = []
-      ItemIndex = 2
+      ItemIndex = 0
       ParentFont = False
       TabOrder = 8
-      Text = 'Sin Graph'
+      Text = 'Random'
       Items.Strings = (
         'Random'
         'Reverse Input'
@@ -305,7 +308,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Cos Graph'
         'Cos Graph (Negative)'
         'Parabola'
-        'Parabola (Negative)')
+        'Parabola (Negative)'
+        'Negative Sin Graph')
     end
     object cbbPythonSorts: TComboBox
       Left = 560
@@ -1004,9 +1008,11 @@ object frmJabsSorts: TfrmJabsSorts
       BarPen.Visible = False
       ColorEachPoint = True
       ConePercent = 2
+      Marks.Visible = False
       ShowInLegend = False
       Transparency = 4
       Dark3D = False
+      MultiBar = mbNone
       Sides = 110
       XValues.Name = 'X'
       XValues.Order = loNone
@@ -1015,12 +1021,13 @@ object frmJabsSorts: TfrmJabsSorts
       Data = {
         000600000000000000004C884000000000005089400000000000188A40000000
         0000A48A400000000000F48A400000000000A88B40}
+      Detail = {0000000000}
     end
   end
   object btnHelpWithPython: TBitBtn
-    Left = 602
-    Top = 106
-    Width = 73
+    Left = 586
+    Top = 107
+    Width = 81
     Height = 25
     Kind = bkHelp
     NumGlyphs = 2

@@ -48,6 +48,7 @@ type
     procedure chkUsePythonClick(Sender: TObject);
     procedure btnHelpWithPythonClick(Sender: TObject);
     procedure seDelayChange(Sender: TObject);
+    procedure seDelayOnCompareChange(Sender: TObject);
   private
     { Private declarations }
     arrIntegers: array of Integer;
@@ -64,7 +65,7 @@ type
     iVolume: integer;
     consoleControl: TJABConsole;
   public
-    { Public declarations }
+    { Public declarations }            //No reason for these to public, I just like it for formatting
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
     procedure CombSort;
@@ -79,6 +80,7 @@ type
     procedure RainbowBar();
     procedure LoadPythonSorts();
     procedure PythonSort();
+    procedure SimplestSort();
   end;
 
 var
@@ -484,6 +486,13 @@ begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrUpdate.Enabled := True;
     TTask.Run(cocktailshakersort);
+  end;
+  //Simplest sort NO I WONT CHANGE THESE TO USE A CASE STATEMENT
+  if cbbSorts.ItemIndex=10 then
+  begin
+    ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
+    tmrUpdate.Enabled := True;
+    TTask.Run(simplestsort);
   end;
 end;
 
@@ -922,12 +931,48 @@ end;
 
 procedure TfrmJabsSorts.seDelayChange(Sender: TObject);
 begin
+  //Dynamic delay
   iSwapDelay:=seDelay.Value;
+end;
+
+procedure TfrmJabsSorts.seDelayOnCompareChange(Sender: TObject);
+begin
+  iCompareDelay:=seDelayOnCompare.Value;
 end;
 
 procedure TfrmJabsSorts.seVolumeChange(Sender: TObject);
 begin
   iVolume := seVolume.Value;
+end;
+
+procedure TfrmJabsSorts.SimplestSort;
+var
+k,itemp:integer;
+begin
+  K:=-1; //1 less than where the array starts, usually thish would be 0
+                            //Usually only -1, but this is zero based array
+  while (k<iarraylength-2) do  //We have to use while loop
+  begin                                            //Because of delphi sucking
+    inc(k);
+    //Sound
+    PlaySound((arrIntegers[k+1]/iRange)*127,iCompareDelay);
+    PlaySound((arrIntegers[k]/iRange)*127,iCompareDelay);
+    //Sound
+    if arrIntegers[k+1]>arrIntegers[k] then
+    begin
+      //swap
+      itemp:=arrIntegers[k+1];
+      arrIntegers[k+1]:=arrIntegers[k];
+      arrIntegers[k]:=itemp;
+      //swap
+      k:=-1;   //Because we had to swap it means the array isnt sorted, so start again
+      //Sound
+      PlaySound((arrIntegers[k+1]/iRange)*127,iSwapDelay);
+      PlaySound((arrIntegers[k]/iRange)*127,iSwapDelay);
+      //Sound
+      sleep(iSwapDelay);
+    end;
+  end;
 end;
 
 procedure TfrmJabsSorts.tmrTimeTakenTimer(Sender: TObject);
