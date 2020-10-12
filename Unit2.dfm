@@ -3,7 +3,7 @@ object frmJabsSorts: TfrmJabsSorts
   Top = 0
   Caption = 'JABS Sort Visualizer'
   ClientHeight = 719
-  ClientWidth = 1009
+  ClientWidth = 987
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,29 +13,16 @@ object frmJabsSorts: TfrmJabsSorts
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
-    1009
+    987
     719)
   PixelsPerInch = 96
   TextHeight = 13
   object lblTimeTaken: TLabel
-    Left = 873
-    Top = 107
+    Left = 777
+    Top = 8
     Width = 92
     Height = 19
     Caption = 'Disabled atm'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    ParentFont = False
-  end
-  object lblWarning: TLabel
-    Left = 825
-    Top = 82
-    Width = 265
-    Height = 19
-    Caption = 'Timer is not accurate!!! But still useful'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -78,7 +65,7 @@ object frmJabsSorts: TfrmJabsSorts
       Top = 21
       Width = 166
       Height = 19
-      Caption = 'Delay on comapre (ms)'
+      Caption = 'Delay on compare (ms)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -178,7 +165,7 @@ object frmJabsSorts: TfrmJabsSorts
       MinValue = 0
       ParentFont = False
       TabOrder = 1
-      Value = 0
+      Value = 1
       OnChange = seDelayChange
     end
     object seDelayOnCompare: TSpinEdit
@@ -345,7 +332,7 @@ object frmJabsSorts: TfrmJabsSorts
   object chtSort: TChart
     Left = 10
     Top = 241
-    Width = 989
+    Width = 967
     Height = 484
     Margins.Left = 5
     Margins.Top = 5
@@ -996,6 +983,7 @@ object frmJabsSorts: TfrmJabsSorts
     Color = clBlack
     TabOrder = 1
     Anchors = [akLeft, akTop, akRight, akBottom]
+    ExplicitWidth = 989
     DefaultCanvas = 'TGDIPlusCanvas'
     PrintMargins = (
       15
@@ -1033,6 +1021,54 @@ object frmJabsSorts: TfrmJabsSorts
     NumGlyphs = 2
     TabOrder = 2
     OnClick = btnHelpWithPythonClick
+  end
+  object grpScoreBoard: TGroupBox
+    Left = 777
+    Top = 83
+    Width = 192
+    Height = 126
+    Anchors = [akLeft, akTop, akRight]
+    Caption = 'grpScoreBoard'
+    TabOrder = 3
+    object lblCompare: TLabel
+      Left = 15
+      Top = 52
+      Width = 103
+      Height = 19
+      Caption = 'Comparisons: '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblSwaps: TLabel
+      Left = 15
+      Top = 27
+      Width = 51
+      Height = 19
+      Caption = 'Swaps:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblTime: TLabel
+      Left = 15
+      Top = 77
+      Width = 150
+      Height = 19
+      Caption = 'Estimated Sort Time:'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
   end
   object tmrUpdate: TTimer
     Enabled = False

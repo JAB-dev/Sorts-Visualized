@@ -30,7 +30,6 @@ type
     lblTimeTaken: TLabel;
     tmrUpdate: TTimer;
     tmrTimeTaken: TTimer;
-    lblWarning: TLabel;
     seVolume: TSpinEdit;
     lblVolume: TLabel;
     cbbInputStyle: TComboBox;
@@ -38,6 +37,10 @@ type
     cbbPythonSorts: TComboBox;
     chkUsePython: TCheckBox;
     btnHelpWithPython: TBitBtn;
+    lblSwaps: TLabel;
+    lblCompare: TLabel;
+    grpScoreBoard: TGroupBox;
+    lblTime: TLabel;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -64,6 +67,7 @@ type
     Sounds: TJABSounds;
     iVolume: integer;
     consoleControl: TJABConsole;
+    iComparisons,iSwaps:uint32;
   public
     { Public declarations }            //No reason for these to public, I just like it for formatting
     procedure QuickSort(Lo, hi: integer);
@@ -81,6 +85,10 @@ type
     procedure LoadPythonSorts();
     procedure PythonSort();
     procedure SimplestSort();
+    procedure UpdateScoreBoard();
+    procedure ResetScoreBoard();
+    procedure SwapHappened(iSwap1,iSwap2:integer);
+    procedure CompareHappened(iCompare1,iComapare2:integer);
   end;
 
 var
@@ -153,6 +161,8 @@ begin
   tmrUpdate.Interval := iInterval;
   lblTimeTaken.Caption := '0ms-Unmeasureable with timer';
 
+
+
   //chtSort.BottomAxis.Maximum := iArrayLength;
     //Filling the array randomly or giving a reverse input
   FillArray;
@@ -168,10 +178,10 @@ begin
     Top Down Merge Sort                       7
     Vermenthruaxx sort (Joke)                 8
     }
+  ResetScoreBoard;
   if cbbSorts.ItemIndex = 0 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
-    tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
     dStart := now;
@@ -185,25 +195,19 @@ begin
         begin
           for J := 0 to iArrayLength - 2 do
           begin
+            comparehappened(arrIntegers[J + 1],arrIntegers[J] );
             if arrIntegers[J + 1] > arrIntegers[J] then
             begin
               itemp := arrIntegers[J];
               arrintegers[J] := arrIntegers[J + 1];
               arrintegers[J + 1] := itemp;
 
-              //Sounds BETTTER SYSTEM POG
-              PlaySound(round(arrintegers[J] / irange * 127), iSwapDelay);
-              playsound(round(arrintegers[J + 1] / irange * 127), iSwapDelay);
-              //SoundS
-              sleep(iSwapDelay);
+              swaphappened(arrintegers[J] ,arrintegers[J + 1]) ;
             end;
-            sleep(iCompareDelay);
+
           end;
         end;
-         //TIME TAKEN
-        dend := now;
-        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+       UpdateScoreBoard;
       end);
   end;
 
@@ -228,29 +232,22 @@ begin
           bSorted := True;
           for k := 0 to iArrayLength - (2 + O) do
           begin
+            comparehappened(arrIntegers[k + 1] ,arrIntegers[k] ) ;
             if arrIntegers[k + 1] > arrIntegers[k] then
             begin
               itemp := arrIntegers[k];
               arrintegers[k] := arrIntegers[k + 1];
               arrintegers[k + 1] := itemp;
 
-              //Sounds BETTTER SYSTEM POG
-              PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
-              playsound(round(arrintegers[k + 1] / irange * 127), iSwapDelay);
-              //SoundS
-              sleep(iSwapDelay);
+              swaphappened(arrintegers[k],arrintegers[k + 1]);
+
               bSorted := False;
             end;
-            Sleep(iCompareDelay);
+
           end;
           inc(O);
         end;
-        //TIME TAKEN
-
-
-        dend := now;
-        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+        UpdateScoreBoard;
       end);
   end;
 
@@ -259,7 +256,6 @@ begin
   if cbbSorts.ItemIndex = 2 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
-    tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
    //CaptureTimeNow
     dStart := now;
@@ -274,7 +270,6 @@ begin
   if cbbSorts.ItemIndex = 3 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
-    tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
     dStart := now;
@@ -287,65 +282,49 @@ begin
         for k := 1 to iArrayLength - 1 do
         begin
           J := k;
-          sleep(iCompareDelay);
           while (arrIntegers[J - 1] < arrIntegers[J]) and (J >= 1) do
           begin
             itemp := arrIntegers[J - 1];
             arrintegers[J - 1] := arrIntegers[J];
             arrintegers[J] := itemp;
-            //Sounds BETTTER SYSTEM POG
-            PlaySound(round(arrintegers[J] / irange * 127), iSwapDelay);
-            playsound(round(arrintegers[J - 1] / irange * 127), iSwapDelay);
-            //SoundS
-            sleep(iSwapDelay);
+
+            swaphappened(arrintegers[J],arrintegers[J - 1]);
             dec(J)
           end;
         end;
-        //TIME TAKEN
-        dend := now;
-        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+        updatescoreboard;
       end);
   end;
   //selection sort
   if cbbSorts.ItemIndex = 4 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
-    tmrTimeTaken.Enabled := True;
     tmrUpdate.Enabled := True;
-   //CaptureTimeNow
-    dStart := now;
-    //captureTimeNOw
+
     TTask.Run(
       procedure
       var
         itemp, k, J: Integer;
       begin
+         //CaptureTimeNow
+        dStart := now;
+        //captureTimeNOw
         for k := 0 to iArraylength - 2 do
         begin
           for J := k + 1 to iArrayLength - 1 do
           begin
+            comparehappened(arrIntegers[J],arrIntegers[k] );
             if arrIntegers[J] > arrIntegers[k] then
             begin
               itemp := arrIntegers[J];
               arrintegers[J] := arrintegers[k];
               arrintegers[k] := itemp;
 
-              //Sounds BETTTER SYSTEM POG
-              PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
-              playsound(round(arrintegers[J] / irange * 127), iSwapDelay);
-              //SoundS
-              sleep(iSwapDelay);
+              swaphappened(arrintegers[k] ,arrintegers[J] );
             end;
-
-            sleep(iCompareDelay);
           end;
-
         end;
-         //TIME TAKEN
-        dend := now;
-        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+       updatescoreboard;
       end);
   end;
 
@@ -361,10 +340,7 @@ begin
       procedure
       begin
         quicksort(0, iArrayLength - 1);
-        //TIME TAKEN
-        dend := now;
-        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+        updatescoreboard;
       end);
 
   end;
@@ -373,7 +349,6 @@ begin
   begin
     ;
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
-    tmrTimeTaken.Enabled := True;
 
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
@@ -394,6 +369,7 @@ begin
           ipos := k;
           for I := k + 1 to iArrayLength do
           begin
+            comparehappened(arrintegers[i],iitem);
             if arrIntegers[I] > iItem then
             begin
               Inc(ipos);
@@ -413,16 +389,14 @@ begin
           arrIntegers[ipos] := iItem;
           iItem := itemp;
 
-          //Sounds BETTTER SYSTEM POG
-          PlaySound(round(arrintegers[ipos] / irange * 127), iSwapDelay);
-          playsound(round(iItem / irange * 127), iSwapDelay);
-          //SoundS
-          sleep(iSwapDelay);
+          swaphappened(arrintegers[ipos],iItem);
+
           while ipos <> k do
           begin
             ipos := k;
             for I := k + 1 to iArrayLength do
             begin
+            comparehappened(arrintegers[i],iitem);
               if arrIntegers[I] > iItem then
               begin
                 Inc(ipos);
@@ -434,20 +408,13 @@ begin
             end;
             itemp := arrIntegers[ipos];
 
-            //Sounds BETTTER SYSTEM POG
-            PlaySound(round(arrintegers[ipos] / irange * 127), iSwapDelay);
-            playsound(round(iItem / irange * 127), iSwapDelay);
-            //SoundS
-            sleep(iSwapDelay);
+            swaphappened(arrintegers[ipos],iItem);
 
             arrIntegers[ipos] := iItem;
             iItem := itemp;
           end;
         end;
-        //TIME TAKEN
-        dend := now;
-        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+         updatescoreboard;
 
       end);
 
@@ -456,7 +423,6 @@ begin
   if cbbSorts.ItemIndex = 7 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
-    tmrTimeTaken.Enabled := True;
     SetLength(arrWorkArray, iArrayLength);
     tmrUpdate.Enabled := True;
     //CaptureTimeNow
@@ -466,10 +432,7 @@ begin
       procedure
       begin
         topdownmergesort(arrIntegers, arrWorkArray, iArrayLength);
-          //TIME TAKEN
-        dend := now;
-        relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+        UpdateScoreBoard;
       end);
 
   end;
@@ -523,7 +486,7 @@ begin
     bSorted := true;
     for k := 0 + iruns to iArrayLength - 2 - iruns do
     begin
-      sleep(iCompareDelay);
+       CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
       if arrIntegers[k + 1] > arrIntegers[k] then
       begin
         itemp := arrIntegers[k];
@@ -531,18 +494,13 @@ begin
         arrIntegers[k + 1] := itemp;
         bSorted := false;
 
-        //Sounds BETTTER SYSTEM POG
-        PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
-        playsound(round(arrintegers[k + 1] / irange * 127), iSwapDelay);
-        //SoundS
-        sleep(iSwapDelay);
-
+       SwapHappened(arrintegers[k] ,arrintegers[k+1] );
       end;
     end;
 
     for k := iArrayLength - 2 - iruns downto 0 + iruns do
     begin
-      Sleep(iCompareDelay);
+      CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
       if arrIntegers[k + 1] > arrIntegers[k] then
       begin
         bSorted := false;
@@ -550,19 +508,15 @@ begin
         itemp := arrIntegers[k];
         arrintegers[k] := arrintegers[k + 1];
         arrIntegers[k + 1] := itemp;
-         //Sounds BETTTER SYSTEM POG
-        PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
-        playsound(round(arrintegers[k + 1] / irange * 127), iSwapDelay);
-        //SoundS
-        sleep(iSwapDelay);
+
+        SwapHappened(arrintegers[k] ,arrintegers[k+1] );
       end;
     end;
 
     Inc(iruns);
 
   until (bSorted);
-  dEnd := now;
-  rElapsedSeconds := (dend - dStart) * MSecsPerDay;
+  UpdateScoreBoard;
 end;
 
 procedure TfrmJabsSorts.CombSort;
@@ -570,8 +524,12 @@ var
   itemp, k, igap: Integer;
   bSorted: Boolean;
 begin
+  dStart:=now;
+
   bSorted := False;
+
   igap := iArrayLength;
+
   while bSorted = False do
   begin
     igap := Floor(igap / 1.3);
@@ -584,26 +542,31 @@ begin
     k := 0;
     while (igap + k) < iArrayLength do
     begin
+      CompareHappened( arrIntegers[k + igap], arrIntegers[k] );
       if arrIntegers[k + igap] > arrIntegers[k] then
       begin
         itemp := arrIntegers[k];
         arrintegers[k] := arrIntegers[k + igap];
         arrintegers[k + igap] := itemp;
         bSorted := False;
-        //Sounds BETTTER SYSTEM POG
-        PlaySound(round(arrintegers[k] / irange * 127), iSwapDelay);
-        playsound(round(arrintegers[k + igap] / irange * 127), iSwapDelay);
-        //SoundS
-        sleep(iSwapDelay);
+        SwapHappened(arrintegers[k],arrintegers[k + igap]);
       end;
-      sleep(iCompareDelay);
       inc(k);
     end;
   end;
-         //TIME TAKEN
-  dend := now;
-  relapsedseconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+  UpdateScoreBoard;
+end;
+
+procedure TfrmJabsSorts.CompareHappened(iCompare1,iComapare2:integer);
+begin
+  //Now we have sound and scoreboard all in ONE!!! much neater code
+  sleep(iCompareDelay);
+  Inc(iComparisons);
+  if iCompareDelay>0 then
+  begin
+    PlaySound(round(iCompare1 / irange * 127), iCompareDelay);
+    playsound(round(iComapare2 / irange * 127), iCompareDelay);
+  end;
 end;
 
 procedure TfrmJabsSorts.CopyArray(var A: array of integer; iBegin, iEnd: integer; var b: array of integer);
@@ -612,7 +575,6 @@ var
 begin
   for K := iBegin to iEnd do
   begin
-    Sleep(iSwapDelay);
     b[K] := A[K];
   end;
 
@@ -747,13 +709,11 @@ begin
       arrintegers[i] := arrintegers[j];
       arrintegers[j] := iTemp;
       inc(i);
-      //Sounds BETTTER SYSTEM POG
-      PlaySound(round(arrintegers[j] / irange * 127), iSwapDelay);
-      playsound(round(arrintegers[i] / irange * 127), iSwapDelay);
-      //SoundS
-      sleep(iSwapDelay);
+
+      SwapHappened(arrintegers[j],arrintegers[i]);
+
     end;
-    sleep(iCompareDelay)
+    CompareHappened(arrintegers[j],iPivot);
   end;
   iTemp := arrintegers[i];
   arrintegers[i] := arrintegers[hi];
@@ -929,6 +889,18 @@ begin
   end;
 end;
 
+procedure TfrmJabsSorts.ResetScoreBoard;
+begin
+  //Scoreboard setup
+  iSwaps:=0;
+  iComparisons:=0;
+  rElapsedSeconds:=0;
+  lblSwaps.Caption:= 'Swaps: ';
+  lblCompare.Caption:='Comparisons: ';
+  lblTime.Caption:='Estimated Sort Time: ';
+  //Scoreboard setup
+end;
+
 procedure TfrmJabsSorts.seDelayChange(Sender: TObject);
 begin
   //Dynamic delay
@@ -949,15 +921,13 @@ procedure TfrmJabsSorts.SimplestSort;
 var
 k,itemp:integer;
 begin
+  dStart:=now;
   K:=-1; //1 less than where the array starts, usually thish would be 0
                             //Usually only -1, but this is zero based array
   while (k<iarraylength-2) do  //We have to use while loop
   begin                                            //Because of delphi sucking
     inc(k);
-    //Sound
-    PlaySound(Round((arrIntegers[k+1]/iRange)*127),iCompareDelay);
-    PlaySound(Round((arrIntegers[k+1]/iRange)*127),iCompareDelay);
-    //Sound
+    CompareHappened(arrIntegers[k],arrIntegers[k+1]);
     if arrIntegers[k+1]>arrIntegers[k] then
     begin
       //swap
@@ -966,13 +936,22 @@ begin
       arrIntegers[k]:=itemp;
       //swap
       k:=-1;   //Because we had to swap it means the array isnt sorted, so start again
-      //Sound
-      PlaySound(Round((arrIntegers[k+1]/iRange)*127),iSwapDelay);
-      PlaySound(Round((arrIntegers[k+1]/iRange)*127),iSwapDelay);
-      //Sound
-      sleep(iSwapDelay);
+      SwapHappened(arrIntegers[k],arrIntegers[k+1]);
     end;
-    sleep(icomparedelay);
+
+  end;
+  //scoreboard should be at the end always
+  UpdateScoreBoard;
+end;
+
+procedure TfrmJabsSorts.SwapHappened(iSwap1,iSwap2:integer);
+begin
+  sleep(iSwapDelay);
+  inc(iSwaps);
+  if iSwapDelay>0 then
+  begin
+    PlaySound(round(iswap1 / irange * 127), iSwapDelay);
+    playsound(round(iswap2 / irange * 127), iSwapDelay);
   end;
 end;
 
@@ -1001,7 +980,7 @@ begin
     // While there are elements in the left or right runs...
   for k := iBegin to iEnd do
   begin
-    Sleep(iCompareDelay);
+    CompareHappened(a[i],a[j]);
     if (j >= iEnd) or (a[i] >= a[j]) then
     begin
       bOr := true;
@@ -1013,21 +992,13 @@ begin
         // If left run head exists and is <= existing right run head.
     if (i < Imiddle) and (bOr) then
     begin
-      //Sounds BETTTER SYSTEM POG
-      PlaySound(round(b[k] / irange * 127), iSwapDelay);
-      playsound(round(a[i] / irange * 127), iSwapDelay);
-      //SoundS
-      sleep(iSwapDelay);
+      SwapHappened(b[k],a[i]);
       b[k] := a[i];
       i := i + 1;
     end
     else
     begin
-      //Sounds BETTTER SYSTEM POG
-      PlaySound(round(b[k] / irange * 127), iSwapDelay);
-      playsound(round(a[j] / irange * 127), iSwapDelay);
-      //SoundS
-      sleep(iSwapDelay);
+      SwapHappened(b[k],a[j]);
       b[k] := a[j];
       j := j + 1;
     end;
@@ -1056,12 +1027,21 @@ begin
   TopDownMerge(b, iBegin, iMiddle, iEnd, a);
 end;
 
+procedure TfrmJabsSorts.UpdateScoreBoard;
+begin
+  dEnd:=now;
+  rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+  lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps);
+  lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons);
+  lblTime.Caption:='Estimated Sort Time(ms): '+FloatToStrF(rElapsedSeconds,ffGeneral,10,2);
+end;
+
 procedure TfrmJabsSorts.VermenthruaxxSort(var a: array of integer);
 var
   iRageInterations: integer;
   iRand1, iRand2: integer;
   bRageMode: boolean;
-  rElapsedSeconds: extended;
+  rElapsedSecondsRage: extended;
   dBeforeRage, dAfterRage: tdatetime;
 begin
   iRageInterations := round(0.5 * iarraylength);
@@ -1070,6 +1050,7 @@ begin
     var
       itemp, k, J: Integer;
     begin
+      dstart:=now;
       for k := 1 to iArrayLength - 1 do
       begin
         if (k mod iRageInterations) = 0 then
@@ -1088,15 +1069,11 @@ begin
             itemp := arrintegers[iRand1];
             arrintegers[iRand1] := arrintegers[iRand2];
             arrintegers[iRand2] := itemp;
-            //Sounds BETTTER SYSTEM POG
-            PlaySound(round((arrintegers[iRand1] / irange) * 127), iSwapDelay);
-            playsound(round((arrintegers[iRand2] / irange) * 127), iSwapDelay);
-            //SoundS
-            sleep(iSwapDelay);
 
+            Swaphappened(arrintegers[iRand1],arrintegers[iRand2]);
             dAfterRage := now;
-            rElapsedSeconds := SecondsBetween(dBeforeRage, dAfterRage);
-          until (rElapsedSeconds >= 5);
+            rElapsedSecondsRage:=SecondsBetween(dBeforeRage, dAfterRage);
+          until (rElapsedSecondsRage>=5);
 
           chtSort.Title.caption := 'Contemplating life...';
           sleep(2000);     //Shortened to 2000
@@ -1116,19 +1093,14 @@ begin
           itemp := arrIntegers[J - 1];
           arrintegers[J - 1] := arrIntegers[J];
           arrintegers[J] := itemp;
-          //Sounds BETTTER SYSTEM POG
-          PlaySound(round((arrintegers[J] / irange) * 127), iSwapDelay);
-          playsound(round((arrintegers[J - 1] / irange) * 127), iSwapDelay);
-          //SoundS
-          sleep(iSwapDelay);
+
+          swaphappened(arrintegers[J],arrintegers[J - 1]);
+
           dec(J)
         end;
       end;
       chtsort.title.Caption := 'Sorted';
-        //TIME TAKEN
-      dend := now;
-      rElapsedSeconds := (dEnd - dStart) * MSecsPerDay;
-        //TIME TAKEN
+      UpdateScoreBoard;
     end);
 end;
 
