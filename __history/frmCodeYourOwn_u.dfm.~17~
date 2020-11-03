@@ -10,6 +10,7 @@ object frmPython: TfrmPython
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = mmPythonHelp
   OldCreateOrder = False
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -20,7 +21,7 @@ object frmPython: TfrmPython
     Width = 762
     Height = 75
     Align = alTop
-    Caption = 'grpControls'
+    Caption = 'Controls'
     TabOrder = 0
     object btnLoad: TButton
       Left = 77
@@ -28,7 +29,7 @@ object frmPython: TfrmPython
       Width = 75
       Height = 58
       Align = alLeft
-      Caption = 'btnLoad'
+      Caption = 'Load'
       TabOrder = 0
     end
     object btnSort: TButton
@@ -37,9 +38,18 @@ object frmPython: TfrmPython
       Width = 75
       Height = 58
       Align = alLeft
-      Caption = 'btnSort'
+      Caption = 'Sort'
       TabOrder = 1
       OnClick = btnSortClick
+    end
+    object btnSave: TButton
+      Left = 152
+      Top = 15
+      Width = 75
+      Height = 58
+      Align = alLeft
+      Caption = 'Save'
+      TabOrder = 2
     end
   end
   object GroupBox1: TGroupBox
@@ -82,7 +92,19 @@ object frmPython: TfrmPython
     Gutter.Font.Style = []
     Highlighter = SynPythonSyn1
     Lines.Strings = (
-      'from Sorting_Module import *')
+      'from Sorting_Module import * #Grab stuff we need'
+      'Delphi_Form.PrepareForSort() #Run this before sorting'
+      
+        'Delphi_Form.FillArray() #fill the array with the selected patter' +
+        'n'
+      'Delphi_Form.ResetScoreBoard()#Resets the scoreboard'
+      ''
+      ''
+      ''
+      ''
+      
+        'Delphi_Form.UpdateScoreboard()#To be run at the end of a sort to' +
+        ' update the scoreboard')
     WantTabs = True
   end
   object PyEng1: TPythonEngine
@@ -134,5 +156,23 @@ object frmPython: TfrmPython
     Errors = <>
     Left = 712
     Top = 24
+  end
+  object dlgOpenLoadPythonScript: TOpenDialog
+    Filter = 'Python Stuff|.py'
+    Left = 352
+    Top = 16
+  end
+  object dlgSavePythonScript: TSaveDialog
+    Left = 384
+    Top = 16
+  end
+  object mmPythonHelp: TMainMenu
+    Left = 392
+    object Help1: TMenuItem
+      Caption = 'Help'
+      object LoadExampleSort1: TMenuItem
+        Caption = 'Load Example Sort'
+      end
+    end
   end
 end

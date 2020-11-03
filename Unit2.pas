@@ -47,6 +47,7 @@ type
     Help1: TMenuItem;
     Checkforupdates1: TMenuItem;
     OldMethodofCustomSorts1: TMenuItem;
+    tmrCustom: TTimer;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -59,6 +60,8 @@ type
     procedure seDelayOnCompareChange(Sender: TObject);
     procedure btnCodeYourOwnSortClick(Sender: TObject);
     procedure OldMethodofCustomSorts1Click(Sender: TObject);
+    procedure seUpdateIntervalChange(Sender: TObject);
+    procedure tmrCustomTimer(Sender: TObject);
   private
     { Private declarations }
     arrWorkArray: array of integer;
@@ -642,6 +645,15 @@ begin
         end;
       end;
   end;
+  //This try is to fill the python variable
+  try
+    with frmPython do
+    begin
+      PyModule1.SetVarFromVariant('array',frmJabsSorts.arrIntegers);
+    end;
+    finally
+    //Nothing needed to put here
+  end;
 
 end;
 
@@ -741,8 +753,15 @@ begin
   iRange := seRange.Value;
   iInterval := seUpdateInterval.Value;
   tmrUpdate.Interval := iInterval;
-  lblTimeTaken.Caption := '0ms-Unmeasureable with timer';
-  tmrUpdate.Enabled := True;
+  //There is a different timer for when custom python sorts are likely in use
+  if frmPython.Showing then
+  begin
+    tmrCustom.Enabled:=true;
+  end else
+  begin
+    tmrUpdate.Enabled := True;
+  end;
+
 end;
 
 procedure TfrmJabsSorts.PythonSort;
@@ -914,17 +933,33 @@ begin
   lblCompare.Caption:='Comparisons: ';
   lblTime.Caption:='Estimated Sort Time: ';
   //Scoreboard setup
+  dStart:=now;
 end;
 
 procedure TfrmJabsSorts.seDelayChange(Sender: TObject);
 begin
   //Dynamic delay
-  iSwapDelay:=seDelay.Value;
+
+  try
+    with frmPython do
+    begin
+      PyModule1.SetVarFromVariant('compare_delay',vCompareDelay);
+      PyModule1.SetVarFromVariant('swap_delay',vSwapDelay);
+    end;
+  finally
+    iSwapDelay:=seDelay.Value;
+  end;
 end;
 
 procedure TfrmJabsSorts.seDelayOnCompareChange(Sender: TObject);
 begin
   iCompareDelay:=seDelayOnCompare.Value;
+end;
+
+procedure TfrmJabsSorts.seUpdateIntervalChange(Sender: TObject);
+begin
+  tmrUpdate.Interval:=seUpdateInterval.Value;
+  tmrCustom.Interval:=seUpdateInterval.Value;
 end;
 
 procedure TfrmJabsSorts.seVolumeChange(Sender: TObject);
@@ -968,6 +1003,22 @@ begin
     PlaySound(round(iswap1 / irange * 127), iSwapDelay);
     playsound(round(iswap2 / irange * 127), iSwapDelay);
   end;
+end;
+
+procedure TfrmJabsSorts.tmrCustomTimer(Sender: TObject);
+begin
+  try
+  TTask.Run(
+    procedure
+    begin
+      frmPython.UpdateMainArray;
+    end
+  );
+  finally
+    //
+  end;
+  barseriesSort.Clear;
+  barseriesSort.AddArray(arrIntegers);
 end;
 
 procedure TfrmJabsSorts.tmrTimeTakenTimer(Sender: TObject);
@@ -1045,7 +1096,14 @@ end;
 procedure TfrmJabsSorts.UpdateScoreBoard;
 begin
   dEnd:=now;
-  rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+  //Problem with this is that it only cares about the swap delay at the very end
+  if  not (frmPython.Showing) then
+  begin
+    rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+  end else
+  begin
+    rElapsedSeconds:= (dend-dstart)*MSecsPerDay;
+  end;
   lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps);
   lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons);
   lblTime.Caption:='Estimated Sort Time(ms): '+FloatToStrF(rElapsedSeconds,ffGeneral,10,2);

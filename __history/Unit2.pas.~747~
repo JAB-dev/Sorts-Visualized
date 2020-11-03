@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -36,11 +36,18 @@ type
     barseriesSort: TBarSeries;
     cbbPythonSorts: TComboBox;
     chkUsePython: TCheckBox;
-    btnHelpWithPython: TBitBtn;
     lblSwaps: TLabel;
     lblCompare: TLabel;
     grpScoreBoard: TGroupBox;
     lblTime: TLabel;
+    btnCodeYourOwnSort: TButton;
+    mmMenuOptions: TMainMenu;
+    Sound1: TMenuItem;
+    Instrament1: TMenuItem;
+    Help1: TMenuItem;
+    Checkforupdates1: TMenuItem;
+    OldMethodofCustomSorts1: TMenuItem;
+    tmrCustom: TTimer;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -49,17 +56,15 @@ type
     procedure btnResetSoundsClick(Sender: TObject);
     procedure btn1Click(Sender: TObject);
     procedure chkUsePythonClick(Sender: TObject);
-    procedure btnHelpWithPythonClick(Sender: TObject);
     procedure seDelayChange(Sender: TObject);
     procedure seDelayOnCompareChange(Sender: TObject);
+    procedure btnCodeYourOwnSortClick(Sender: TObject);
+    procedure OldMethodofCustomSorts1Click(Sender: TObject);
+    procedure seUpdateIntervalChange(Sender: TObject);
+    procedure tmrCustomTimer(Sender: TObject);
   private
     { Private declarations }
-    arrIntegers: array of Integer;
     arrWorkArray: array of integer;
-    iCompareDelay: Integer;
-    iSwapDelay: Integer;
-    iArrayLength: Integer;
-    iRange: Integer;
     iInterval: Integer;
     iTimeTaken: Integer;
     rElapsedSeconds: extended;
@@ -69,7 +74,12 @@ type
     consoleControl: TJABConsole;
     iComparisons,iSwaps:uint32;
   public
-    { Public declarations }            //No reason for these to public, I just like it for formatting
+    { Public declarations }
+    iCompareDelay: Integer;
+    iSwapDelay: Integer;
+    iArrayLength: Integer;
+    iRange: Integer;
+    arrIntegers: array of Integer;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
     procedure CombSort;
@@ -78,6 +88,7 @@ type
     procedure TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer; var b: array of integer);
     procedure CopyArray(var A: array of integer; iBegin, iEnd: integer; var b: array of integer);
     procedure VermenthruaxxSort(var a: array of integer);
+    procedure PrepareForSort();
     procedure CocktailShakerSort();
     procedure FillArray();
     procedure PlaySound(inote, iDuration: integer);
@@ -103,16 +114,9 @@ begin
   RainbowBar;
 end;
 
-procedure TfrmJabsSorts.btnHelpWithPythonClick(Sender: TObject);
+procedure TfrmJabsSorts.btnCodeYourOwnSortClick(Sender: TObject);
 begin
-  ShowMessage('How to use custom sorts: '+#10
-  +'1. The sort must be coded in python in a .py'+#10
-  +'2. The sort must be placed in the "Custom Sorts" directory'+#10
-  +'3. The sort must get the input array from Sort.txt (its just a new number on each line) '+#10
-  +'4. Anytime a change is made to the array (I think python uses call it a list?) The full array must be appened to Sorted.txt with a /n '+#10
-  +'5. Thats it, shout out to ThatsOven for his sort to make this work!'+#10
-  +'I will make a better readme at some point...'
-  );
+  frmPython.Show;
 end;
 
 procedure TfrmJabsSorts.btnResetSoundsClick(Sender: TObject);
@@ -148,20 +152,7 @@ begin
     exit;
   end;
 
-
-    //Depending on choice choose sort
-  iVolume := seVolume.Value;
-  iTimeTaken := 0;
-  iArrayLength := seArrayLength.Value;
-  SetLength(arrIntegers, iArrayLength);  //dynamic array length setting, way easier than I thought
-  iCompareDelay := seDelayOnCompare.Value;
-  iSwapDelay := seDelay.Value;
-  iRange := seRange.Value;
-  iInterval := seUpdateInterval.Value;
-  tmrUpdate.Interval := iInterval;
-  lblTimeTaken.Caption := '0ms-Unmeasureable with timer';
-
-
+  PrepareForSort;
 
   //chtSort.BottomAxis.Maximum := iArrayLength;
     //Filling the array randomly or giving a reverse input
@@ -654,6 +645,15 @@ begin
         end;
       end;
   end;
+  //This try is to fill the python variable
+  try
+    with frmPython do
+    begin
+      PyModule1.SetVarFromVariant('array',frmJabsSorts.arrIntegers);
+    end;
+    finally
+    //Nothing needed to put here
+  end;
 
 end;
 
@@ -694,6 +694,18 @@ begin
   end;
 end;
 
+procedure TfrmJabsSorts.OldMethodofCustomSorts1Click(Sender: TObject);
+begin
+ShowMessage('How to use custom sorts: '+#10
+  +'1. The sort must be coded in python in a .py'+#10
+  +'2. The sort must be placed in the "Custom Sorts" directory'+#10
+  +'3. The sort must get the input array from Sort.txt (its just a new number on each line) '+#10
+  +'4. Anytime a change is made to the array (I think python uses call it a list?) The full array must be appened to Sorted.txt with a /n '+#10
+  +'5. Thats it, shout out to ThatsOven for his sort to make this work!'+#10
+  +'I will make a better readme at some point...'
+  );
+end;
+
 function TfrmJabsSorts.Partition(lo, hi: integer): integer;
 var
   iPivot, iTemp: integer;
@@ -727,6 +739,28 @@ begin
   Sounds.NoteOn(abs(inote), ivolume);
   Sleep(iDuration);
   Sounds.NoteOff(abs(inote), ivolume);
+
+end;
+
+procedure TfrmJabsSorts.PrepareForSort;
+begin
+  iVolume := seVolume.Value;
+  iTimeTaken := 0;
+  iArrayLength := seArrayLength.Value;
+  SetLength(arrIntegers, iArrayLength);  //dynamic array length setting, way easier than I thought
+  iCompareDelay := seDelayOnCompare.Value;
+  iSwapDelay := seDelay.Value;
+  iRange := seRange.Value;
+  iInterval := seUpdateInterval.Value;
+  tmrUpdate.Interval := iInterval;
+  //There is a different timer for when custom python sorts are likely in use
+  if frmPython.Showing then
+  begin
+    tmrCustom.Enabled:=true;
+  end else
+  begin
+    tmrUpdate.Enabled := True;
+  end;
 
 end;
 
@@ -904,12 +938,27 @@ end;
 procedure TfrmJabsSorts.seDelayChange(Sender: TObject);
 begin
   //Dynamic delay
-  iSwapDelay:=seDelay.Value;
+
+  try
+    with frmPython do
+    begin
+      PyModule1.SetVarFromVariant('compare_delay',vCompareDelay);
+      PyModule1.SetVarFromVariant('swap_delay',vSwapDelay);
+    end;
+  finally
+    iSwapDelay:=seDelay.Value;
+  end;
 end;
 
 procedure TfrmJabsSorts.seDelayOnCompareChange(Sender: TObject);
 begin
   iCompareDelay:=seDelayOnCompare.Value;
+end;
+
+procedure TfrmJabsSorts.seUpdateIntervalChange(Sender: TObject);
+begin
+  tmrUpdate.Interval:=seUpdateInterval.Value;
+  tmrCustom.Interval:=seUpdateInterval.Value;
 end;
 
 procedure TfrmJabsSorts.seVolumeChange(Sender: TObject);
@@ -955,6 +1004,22 @@ begin
   end;
 end;
 
+procedure TfrmJabsSorts.tmrCustomTimer(Sender: TObject);
+begin
+  try
+  TTask.Run(
+    procedure
+    begin
+      frmPython.UpdateMainArray;
+    end
+  );
+  finally
+    //
+  end;
+  barseriesSort.Clear;
+  barseriesSort.AddArray(arrIntegers);
+end;
+
 procedure TfrmJabsSorts.tmrTimeTakenTimer(Sender: TObject);
 begin
 //  Inc(iTimeTaken);
@@ -966,7 +1031,7 @@ begin
   //Update the graph by reloading the array  (Hopefully there is a better way)
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
- //blTimeTaken.Caption := FloatToStr(rElapsedSeconds) + 'ms';
+
 end;
 
 procedure TfrmJabsSorts.TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer; var b: array of integer);
@@ -1030,7 +1095,14 @@ end;
 procedure TfrmJabsSorts.UpdateScoreBoard;
 begin
   dEnd:=now;
-  rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+  //Problem with this is that it only cares about the swap delay at the very end
+  if  not (frmPython.Showing) then
+  begin
+    rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+  end else
+  begin
+
+  end;
   lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps);
   lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons);
   lblTime.Caption:='Estimated Sort Time(ms): '+FloatToStrF(rElapsedSeconds,ffGeneral,10,2);

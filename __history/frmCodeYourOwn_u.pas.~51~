@@ -59,9 +59,6 @@ uses unit2; //we need the array and such
 
 procedure TfrmPython.btnSortClick(Sender: TObject);
 begin
-  frmJabsSorts.PrepareForSort;
-  frmJabsSorts.FillArray;
-  PyModule1.SetVarFromVariant('array',frmJabsSorts.arrIntegers);
   //Assign values from the other from to values in python
   vCompareDelay:=frmJabsSorts.iComparedelay;
   vSwapDelay:=frmJabsSorts.iSwapdelay;
@@ -69,23 +66,24 @@ begin
   vRange:=frmJabsSorts.irange;
   //End Values
 
-  PyModule1.SetVarFromVariant('compare_delay',vCompareDelay/1000);
-  PyModule1.SetVarFromVariant('swap_delay',vSwapDelay/1000);
+  PyModule1.SetVarFromVariant('compare_delay',vCompareDelay);
+  PyModule1.SetVarFromVariant('swap_delay',vSwapDelay);
   PyModule1.SetVarFromVariant('array_length',vArrayLength);
   PyModule1.SetVarFromVariant('value_range',vRange);
-  if chkDebugMode.Checked then
+  PyModule1.SetVarFromVariant('array',frmJabsSorts.arrIntegers);
+
+  if bDebugMode then
   begin
     PyEng1.ExecString(syndt1.Text);
   end else
+  //Run in the background so it can actually update and sort
+  TTask.Run(
+  procedure
   begin
-    //Run in the background so it can actually update and sort
-    TTask.Run(
-    procedure
-    begin
-      PyEng1.ExecString(syndt1.Text);
-    end
-    );
-  end;
+    PyEng1.ExecString(syndt1.Text);
+  end
+  );
+
 end;
 
 procedure TfrmPython.chkDebugModeClick(Sender: TObject);

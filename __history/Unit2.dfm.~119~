@@ -2,7 +2,7 @@ object frmJabsSorts: TfrmJabsSorts
   Left = 0
   Top = 0
   Caption = 'JABS Sort Visualizer'
-  ClientHeight = 719
+  ClientHeight = 739
   ClientWidth = 987
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,11 +10,12 @@ object frmJabsSorts: TfrmJabsSorts
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = mmMenuOptions
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
     987
-    719)
+    739)
   PixelsPerInch = 96
   TextHeight = 13
   object lblTimeTaken: TLabel
@@ -299,8 +300,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Negative Sin Graph')
     end
     object cbbPythonSorts: TComboBox
-      Left = 560
-      Top = 69
+      Left = 585
+      Top = 43
       Width = 145
       Height = 24
       Enabled = False
@@ -314,8 +315,8 @@ object frmJabsSorts: TfrmJabsSorts
       Text = 'Select Python Sort'
     end
     object chkUsePython: TCheckBox
-      Left = 560
-      Top = 46
+      Left = 585
+      Top = 20
       Width = 121
       Height = 17
       Caption = 'Use Custom Sorts'
@@ -328,12 +329,21 @@ object frmJabsSorts: TfrmJabsSorts
       TabOrder = 10
       OnClick = chkUsePythonClick
     end
+    object btnCodeYourOwnSort: TButton
+      Left = 585
+      Top = 73
+      Width = 145
+      Height = 25
+      Caption = 'Code your own sort'
+      TabOrder = 11
+      OnClick = btnCodeYourOwnSortClick
+    end
   end
   object chtSort: TChart
     Left = 10
     Top = 241
     Width = 967
-    Height = 484
+    Height = 504
     Margins.Left = 5
     Margins.Top = 5
     Margins.Right = 5
@@ -1011,16 +1021,6 @@ object frmJabsSorts: TfrmJabsSorts
       Detail = {0000000000}
     end
   end
-  object btnHelpWithPython: TBitBtn
-    Left = 570
-    Top = 100
-    Width = 81
-    Height = 25
-    Kind = bkHelp
-    NumGlyphs = 2
-    TabOrder = 2
-    OnClick = btnHelpWithPythonClick
-  end
   object grpScoreBoard: TGroupBox
     Left = 777
     Top = 83
@@ -1028,7 +1028,7 @@ object frmJabsSorts: TfrmJabsSorts
     Height = 126
     Anchors = [akLeft, akTop, akRight]
     Caption = 'grpScoreBoard'
-    TabOrder = 3
+    TabOrder = 2
     object lblCompare: TLabel
       Left = 15
       Top = 52
@@ -1081,5 +1081,24 @@ object frmJabsSorts: TfrmJabsSorts
     OnTimer = tmrTimeTakenTimer
     Left = 784
     Top = 32
+  end
+  object mmMenuOptions: TMainMenu
+    Left = 360
+    object Sound1: TMenuItem
+      Caption = 'Sound'
+      object Instrament1: TMenuItem
+        Caption = 'Instrament'
+      end
+    end
+    object Help1: TMenuItem
+      Caption = 'Help'
+      object Checkforupdates1: TMenuItem
+        Caption = 'Check for updates'
+      end
+      object OldMethodofCustomSorts1: TMenuItem
+        Caption = 'Old Method of Custom Sorts'
+        OnClick = OldMethodofCustomSorts1Click
+      end
+    end
   end
 end

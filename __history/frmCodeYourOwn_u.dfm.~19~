@@ -10,7 +10,9 @@ object frmPython: TfrmPython
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = mmPythonHelp
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object grpControls: TGroupBox
@@ -19,7 +21,7 @@ object frmPython: TfrmPython
     Width = 762
     Height = 75
     Align = alTop
-    Caption = 'grpControls'
+    Caption = 'Controls'
     TabOrder = 0
     object btnLoad: TButton
       Left = 77
@@ -27,7 +29,7 @@ object frmPython: TfrmPython
       Width = 75
       Height = 58
       Align = alLeft
-      Caption = 'btnLoad'
+      Caption = 'Load'
       TabOrder = 0
     end
     object btnSort: TButton
@@ -36,9 +38,27 @@ object frmPython: TfrmPython
       Width = 75
       Height = 58
       Align = alLeft
-      Caption = 'btnSort'
+      Caption = 'Sort'
       TabOrder = 1
       OnClick = btnSortClick
+    end
+    object btnSave: TButton
+      Left = 152
+      Top = 15
+      Width = 75
+      Height = 58
+      Align = alLeft
+      Caption = 'Save'
+      TabOrder = 2
+    end
+    object chkDebugMode: TCheckBox
+      Left = 240
+      Top = 15
+      Width = 185
+      Height = 17
+      Caption = 'Debug Mode (Wont sort correctly)'
+      TabOrder = 3
+      OnClick = chkDebugModeClick
     end
   end
   object GroupBox1: TGroupBox
@@ -81,50 +101,89 @@ object frmPython: TfrmPython
     Gutter.Font.Style = []
     Highlighter = SynPythonSyn1
     Lines.Strings = (
-      'print(2+2)')
+      'from Sorting_Module import * #Grab stuff we need'
+      'Delphi_Form.PrepareForSort() #Run this before sorting'
+      
+        'Delphi_Form.FillArray() #fill the array with the selected patter' +
+        'n'
+      'Delphi_Form.ResetScoreBoard()#Resets the scoreboard'
+      ''
+      ''
+      ''
+      ''
+      
+        'Delphi_Form.UpdateScoreboard()#To be run at the end of a sort to' +
+        ' update the scoreboard')
     WantTabs = True
   end
   object PyEng1: TPythonEngine
     IO = pyGuiInputOutput1
-    Left = 440
-    Top = 65528
+    Left = 664
+    Top = 280
   end
   object PyDelphiVar1: TPythonDelphiVar
     Engine = PyEng1
     Module = '_Sorts_'
     VarName = 'varname1'
-    Left = 448
-    Top = 64
+    Left = 656
+    Top = 376
   end
   object PyInputOutput1: TPythonInputOutput
     OnReceiveData = PyInputOutput1ReceiveData
     UnicodeIO = False
     RawOutput = False
-    Left = 496
-    Top = 65520
+    Left = 656
+    Top = 232
   end
   object pyGuiInputOutput1: TPythonGUIInputOutput
     UnicodeIO = True
     RawOutput = False
     Output = mmoOutput
-    Left = 480
-    Top = 75
+    Left = 664
+    Top = 187
   end
   object SynPythonSyn1: TSynPythonSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 248
+    Left = 592
     Top = 16
   end
   object SynEditPythonBehaviour1: TSynEditPythonBehaviour
     Editor = syndt1
-    Left = 280
+    Left = 624
     Top = 16
   end
   object PyDelWrap1: TPyDelphiWrapper
     Engine = PyEng1
-    Left = 437
-    Top = 35
+    Module = PyModule1
+    Left = 653
+    Top = 427
+  end
+  object PyModule1: TPythonModule
+    Engine = PyEng1
+    ModuleName = 'Sorting_Module'
+    Errors = <>
+    Left = 664
+    Top = 328
+  end
+  object dlgOpenLoadPythonScript: TOpenDialog
+    Filter = 'Python Stuff|.py'
+    Left = 696
+    Top = 16
+  end
+  object dlgSavePythonScript: TSaveDialog
+    Left = 728
+    Top = 16
+  end
+  object mmPythonHelp: TMainMenu
+    Left = 552
+    Top = 16
+    object Help1: TMenuItem
+      Caption = 'Help'
+      object LoadExampleSort1: TMenuItem
+        Caption = 'Load Example Sort'
+      end
+    end
   end
 end

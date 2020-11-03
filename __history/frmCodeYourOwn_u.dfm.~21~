@@ -102,7 +102,7 @@ object frmPython: TfrmPython
     Highlighter = SynPythonSyn1
     Lines.Strings = (
       'from Sorting_Module import * #Grab stuff we need'
-      'from time import *'
+      'Delphi_Form.PrepareForSort() #Run this before sorting'
       'Delphi_Form.ResetScoreBoard()#Resets the scoreboard'
       '# Python program for implementation of Bubble Sort '
       ''
@@ -133,7 +133,7 @@ object frmPython: TfrmPython
       '            # traverse the array from 0 to n-i-1 '
       '            # Swap if the element found is greater '
       '            # than the next element '
-      '            if arr[j] > arr[j+1] :'
+      '            if arr[j] > arr[j+1] : '
       '                arr[j], arr[j+1] = arr[j+1], arr[j] '
       ''
       ''

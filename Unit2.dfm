@@ -222,6 +222,7 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
       TabOrder = 4
       Value = 1
+      OnChange = seUpdateIntervalChange
     end
     object seArrayLength: TSpinEdit
       Left = 16
@@ -1100,5 +1101,12 @@ object frmJabsSorts: TfrmJabsSorts
         OnClick = OldMethodofCustomSorts1Click
       end
     end
+  end
+  object tmrCustom: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = tmrCustomTimer
+    Left = 912
+    Top = 32
   end
 end
