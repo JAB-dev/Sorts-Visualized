@@ -150,7 +150,9 @@ object frmJabsSorts: TfrmJabsSorts
         'Top Down Merge Sort'
         'Table Flip sort'
         'CockTail Shaker Sort'
-        'Simplest Sort')
+        'Simplest Sort'
+        'Parallel Bubble'
+        'Parralel Comb')
     end
     object seDelay: TSpinEdit
       Left = 179
@@ -286,7 +288,6 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -19
       Font.Name = 'Tahoma'
       Font.Style = []
-      ItemIndex = 0
       ParentFont = False
       TabOrder = 8
       Text = 'Random'
@@ -298,7 +299,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Cos Graph (Negative)'
         'Parabola'
         'Parabola (Negative)'
-        'Negative Sin Graph')
+        'Negative Sin Graph'
+        'Shuffle')
     end
     object cbbPythonSorts: TComboBox
       Left = 585

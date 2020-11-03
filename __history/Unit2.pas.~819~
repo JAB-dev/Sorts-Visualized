@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -48,6 +48,8 @@ type
     Checkforupdates1: TMenuItem;
     OldMethodofCustomSorts1: TMenuItem;
     tmrCustom: TTimer;
+    View1: TMenuItem;
+    StyleOptions1: TMenuItem;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -64,6 +66,7 @@ type
     procedure tmrCustomTimer(Sender: TObject);
     procedure Instrament1Click(Sender: TObject);
     procedure Checkforupdates1Click(Sender: TObject);
+    procedure StyleOptions1Click(Sender: TObject);
   private
     { Private declarations }
     arrWorkArray: array of integer;
@@ -75,6 +78,7 @@ type
     iVolume: integer;
     consoleControl: TJABConsole;
     iComparisons,iSwaps:uint32;
+    fdefaultStyleName:String;
   public
     { Public declarations }
     iCompareDelay: Integer;
@@ -104,6 +108,7 @@ type
     procedure CompareHappened(iCompare1,iComapare2:integer);
     procedure sHappened(iSwap1,iSwap2:integer);
     procedure cHappened(iCompare1,iComapare2:integer);
+    procedure ParralelBubble();
   end;
 
 var
@@ -453,6 +458,19 @@ begin
     tmrUpdate.Enabled := True;
     TTask.Run(simplestsort);
   end;
+  if cbbSorts.Text='Parallel Bubble' then
+  begin
+    ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
+    tmrUpdate.Enabled := True;
+    TTask.Run(
+    procedure
+    begin
+      ParralelBubble();
+    end
+    );
+  end;
+
+
 end;
 
 procedure TfrmJabsSorts.cHappened(iCompare1, iComapare2: integer);
@@ -602,6 +620,8 @@ end;
 procedure TfrmJabsSorts.FillArray;
 var
   X: integer;
+  iRandom:integer;
+  iSwap:integer;
 begin
   case cbbInputStyle.ItemIndex of
     0:
@@ -672,7 +692,25 @@ begin
           arrIntegers[X] := -1*round(iRange * sin(X * ((2 * pi) / (iarraylength - 1)))); //Delphi sin uses Radians?why
         end;
       end;
+      8: //Shuffle
+      begin
+        iRange:=iArrayLength-1;
+        seRange.Value:=irange;
+        TParallel.&For(0,iArrayLength-1,
+        procedure(C:integer)
+        begin
+          arrintegers[C]:=C;
+        end);
+        for X := 0 to iArrayLength-1 do
+        begin
+          iRandom:=RandomRange(0,iArrayLength-1);
+          iswap:=arrintegers[x];
+          arrintegers[X]:=arrIntegers[irandom];
+          arrintegers[irandom]:=iswap;
+        end;
+      end;
   end;
+
   //This try is to fill the python variable
   try
     with frmPython do
@@ -739,6 +777,55 @@ ShowMessage('How to use custom sorts: '+#10
   +'5. Thats it, shout out to ThatsOven for his sort to make this work!'+#10
   +'I will make a better readme at some point...'
   );
+end;
+
+procedure TfrmJabsSorts.ParralelBubble();
+var
+bsorted:boolean;
+begin
+  ResetScoreBoard;
+  dStart:=now;
+
+  bsorted:=false;
+  while bsorted=false do
+  begin
+    bsorted:=true;
+    TParallel.&For(0,iarraylength-1,procedure(K:Integer)
+    var
+    iswap:integer;
+    begin
+      Comparehappened(arrIntegers[k],arrIntegers[k+1]);
+      if arrIntegers[k+1]>arrIntegers[k] then
+      begin
+        bsorted:=false;
+        Swaphappened(arrIntegers[k],arrIntegers[k+1]);
+        iswap:=arrIntegers[k];
+        arrintegers[k]:=arrIntegers[k+1];
+        arrintegers[k+1]:=iswap;
+      end;
+    end);
+  end;
+
+
+//  TParallel.&For(0,iArrayLength,
+//  procedure(J:integer)
+//  begin
+//    TParallel.&For(0,iarraylength-1,procedure(K:Integer)
+//    var
+//    iswap:integer;
+//    begin
+//      Comparehappened(arrIntegers[k],arrIntegers[k+1]);
+//      if arrIntegers[k+1]>arrIntegers[k] then
+//      begin
+//        Swaphappened(arrIntegers[k],arrIntegers[k+1]);
+//        iswap:=arrIntegers[k];
+//        arrintegers[k]:=arrIntegers[k+1];
+//        arrintegers[k+1]:=iswap;
+//      end;
+//    end);
+//  end
+//  );
+  UpdateScoreBoard;
 end;
 
 function TfrmJabsSorts.Partition(lo, hi: integer): integer;
@@ -1042,6 +1129,11 @@ begin
   end;
   //scoreboard should be at the end always
   UpdateScoreBoard;
+end;
+
+procedure TfrmJabsSorts.StyleOptions1Click(Sender: TObject);
+begin
+  frmStyleChanger.Show;
 end;
 
 procedure TfrmJabsSorts.SwapHappened(iSwap1,iSwap2:integer);

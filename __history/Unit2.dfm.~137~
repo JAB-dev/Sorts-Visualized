@@ -39,7 +39,7 @@ object frmJabsSorts: TfrmJabsSorts
     Margins.Left = 5
     Margins.Right = 5
     Margins.Bottom = 5
-    Caption = 'grpSettings'
+    Caption = 'Settings'
     TabOrder = 0
     object lblSorts: TLabel
       Left = 16
@@ -150,7 +150,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Top Down Merge Sort'
         'Table Flip sort'
         'CockTail Shaker Sort'
-        'Simplest Sort')
+        'Simplest Sort'
+        'Parallel Bubble')
     end
     object seDelay: TSpinEdit
       Left = 179
@@ -286,7 +287,6 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -19
       Font.Name = 'Tahoma'
       Font.Style = []
-      ItemIndex = 0
       ParentFont = False
       TabOrder = 8
       Text = 'Random'
@@ -298,7 +298,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Cos Graph (Negative)'
         'Parabola'
         'Parabola (Negative)'
-        'Negative Sin Graph')
+        'Negative Sin Graph'
+        'Shuffle')
     end
     object cbbPythonSorts: TComboBox
       Left = 585
@@ -994,7 +995,6 @@ object frmJabsSorts: TfrmJabsSorts
     Color = clBlack
     TabOrder = 1
     Anchors = [akLeft, akTop, akRight, akBottom]
-    ExplicitWidth = 967
     DefaultCanvas = 'TGDIPlusCanvas'
     PrintMargins = (
       15
@@ -1029,9 +1029,8 @@ object frmJabsSorts: TfrmJabsSorts
     Width = 260
     Height = 126
     Anchors = [akLeft, akTop, akRight]
-    Caption = 'grpScoreBoard'
+    Caption = 'Score Board'
     TabOrder = 2
-    ExplicitWidth = 192
     object lblCompare: TLabel
       Left = 15
       Top = 52
@@ -1090,23 +1089,32 @@ object frmJabsSorts: TfrmJabsSorts
     object Sound1: TMenuItem
       Caption = 'Sound'
       object Instrament1: TMenuItem
-        Caption = 'Instrament'
+        Caption = 'Instrument'
+        OnClick = Instrament1Click
       end
     end
     object Help1: TMenuItem
       Caption = 'Help'
       object Checkforupdates1: TMenuItem
         Caption = 'Check for updates'
+        OnClick = Checkforupdates1Click
       end
       object OldMethodofCustomSorts1: TMenuItem
         Caption = 'Old Method of Custom Sorts'
         OnClick = OldMethodofCustomSorts1Click
       end
     end
+    object View1: TMenuItem
+      Caption = 'View'
+      object StyleOptions1: TMenuItem
+        Caption = 'Style Options'
+        OnClick = StyleOptions1Click
+      end
+    end
   end
   object tmrCustom: TTimer
     Enabled = False
-    Interval = 16
+    Interval = 1
     OnTimer = tmrCustomTimer
     Left = 912
     Top = 32
