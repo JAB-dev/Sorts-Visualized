@@ -100,6 +100,8 @@ type
     procedure ResetScoreBoard();
     procedure SwapHappened(iSwap1,iSwap2:integer);
     procedure CompareHappened(iCompare1,iComapare2:integer);
+    procedure sHappened(iSwap1,iSwap2:integer);
+    procedure cHappened(iCompare1,iComapare2:integer);
   end;
 
 var
@@ -128,7 +130,8 @@ procedure TfrmJabsSorts.btnSortClick(Sender: TObject);
 var
   X: Integer;
 begin
-
+  {If a CodeYourOwnSortTM was running we need to stop that timer as it writes the array}
+  tmrCustom.Enabled:=false;
   //Decide what sort to use      cbbSorts.
   //arrIntegers:=array[1..iarraylength] of Integer;
     //validate
@@ -447,6 +450,24 @@ begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
     tmrUpdate.Enabled := True;
     TTask.Run(simplestsort);
+  end;
+end;
+
+procedure TfrmJabsSorts.cHappened(iCompare1, iComapare2: integer);
+begin
+  try  {We use a try since we can get access violations, python doesn't like multitasking}
+    frmPython.UpdateMainArray;
+  except
+    //Do nothing on error, we expect errors :(
+  end;
+
+  //Now we have sound and scoreboard all in ONE!!! much neater code
+  sleep(iCompareDelay);
+  Inc(iComparisons);
+  if iCompareDelay>0 then
+  begin
+    PlaySound(round(iCompare1 / irange * 127), iCompareDelay);
+    playsound(round(iComapare2 / irange * 127), iCompareDelay);
   end;
 end;
 
@@ -967,6 +988,22 @@ begin
   iVolume := seVolume.Value;
 end;
 
+procedure TfrmJabsSorts.sHappened(iSwap1, iSwap2: integer);
+begin
+  try  {We use a try since we can get access violations, python doesn't like multitasking}
+      frmPython.UpdateMainArray;
+    except
+      //Do nothing on error, we expect errors :(
+    end;
+  sleep(iSwapDelay);
+  inc(iSwaps);
+  if iSwapDelay>0 then
+  begin
+    PlaySound(round(iswap1 / irange * 127), iSwapDelay);
+    playsound(round(iswap2 / irange * 127), iSwapDelay);
+  end;
+end;
+
 procedure TfrmJabsSorts.SimplestSort;
 var
 k,itemp:integer;
@@ -1007,16 +1044,6 @@ end;
 
 procedure TfrmJabsSorts.tmrCustomTimer(Sender: TObject);
 begin
-  try
-  TTask.Run(
-    procedure
-    begin
-      frmPython.UpdateMainArray;
-    end
-  );
-  finally
-    //
-  end;
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
 end;
@@ -1032,7 +1059,6 @@ begin
   //Update the graph by reloading the array  (Hopefully there is a better way)
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
-
 end;
 
 procedure TfrmJabsSorts.TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer; var b: array of integer);
@@ -1097,13 +1123,8 @@ procedure TfrmJabsSorts.UpdateScoreBoard;
 begin
   dEnd:=now;
   //Problem with this is that it only cares about the swap delay at the very end
-  if  not (frmPython.Showing) then
-  begin
-    rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
-  end else
-  begin
-    rElapsedSeconds:= (dend-dstart)*MSecsPerDay;
-  end;
+  rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+
   lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps);
   lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons);
   lblTime.Caption:='Estimated Sort Time(ms): '+FloatToStrF(rElapsedSeconds,ffGeneral,10,2);

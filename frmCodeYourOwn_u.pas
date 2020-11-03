@@ -36,6 +36,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure chkDebugModeClick(Sender: TObject);
     procedure UpdateMainArray();
+    procedure btnSaveClick(Sender: TObject);
+    procedure btnLoadClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -57,6 +59,24 @@ implementation
 uses unit2; //we need the array and such
 {$R *.dfm}
 
+procedure TfrmPython.btnLoadClick(Sender: TObject);
+begin
+  dlgOpenLoadPythonScript.InitialDir:=GetCurrentDir;
+  if dlgOpenLoadPythonScript.Execute then
+  begin
+    syndt1.Lines.LoadFromFile(dlgOpenLoadPythonScript.FileName);
+  end;
+end;
+
+procedure TfrmPython.btnSaveClick(Sender: TObject);
+begin
+  dlgSavePythonScript.InitialDir:=GetCurrentDir;
+ if dlgSavePythonScript.Execute() then
+ begin
+  syndt1.Lines.SaveToFile(dlgSavePythonScript.FileName);
+ end;
+end;
+
 procedure TfrmPython.btnSortClick(Sender: TObject);
 begin
   frmJabsSorts.PrepareForSort;
@@ -76,8 +96,10 @@ begin
   if chkDebugMode.Checked then
   begin
     PyEng1.ExecString(syndt1.Text);
+    PyEng1.IO:=pyGuiInputOutput1;
   end else
   begin
+    PyEng1.IO:=PyInputOutput1;
     //Run in the background so it can actually update and sort
     TTask.Run(
     procedure

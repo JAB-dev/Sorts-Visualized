@@ -3,7 +3,7 @@ object frmJabsSorts: TfrmJabsSorts
   Top = 0
   Caption = 'JABS Sort Visualizer'
   ClientHeight = 739
-  ClientWidth = 987
+  ClientWidth = 1055
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object frmJabsSorts: TfrmJabsSorts
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
-    987
+    1055
     739)
   PixelsPerInch = 96
   TextHeight = 13
@@ -343,7 +343,7 @@ object frmJabsSorts: TfrmJabsSorts
   object chtSort: TChart
     Left = 10
     Top = 241
-    Width = 967
+    Width = 1035
     Height = 504
     Margins.Left = 5
     Margins.Top = 5
@@ -994,6 +994,7 @@ object frmJabsSorts: TfrmJabsSorts
     Color = clBlack
     TabOrder = 1
     Anchors = [akLeft, akTop, akRight, akBottom]
+    ExplicitWidth = 967
     DefaultCanvas = 'TGDIPlusCanvas'
     PrintMargins = (
       15
@@ -1025,11 +1026,12 @@ object frmJabsSorts: TfrmJabsSorts
   object grpScoreBoard: TGroupBox
     Left = 777
     Top = 83
-    Width = 192
+    Width = 260
     Height = 126
     Anchors = [akLeft, akTop, akRight]
     Caption = 'grpScoreBoard'
     TabOrder = 2
+    ExplicitWidth = 192
     object lblCompare: TLabel
       Left = 15
       Top = 52

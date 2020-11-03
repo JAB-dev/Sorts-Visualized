@@ -1,0 +1,35 @@
+from Sorting_Module import * #Grab stuff we need
+from time import *
+Delphi_Form.ResetScoreBoard()#Resets the scoreboard
+
+#('compare_delay')Refers to the time that should be slept when a comparison occurs
+#('swap_delay')Refers to the time that should be slept when a swap occurs
+#('array_length') Refers to the lenght of the array(list)
+#('value_range') Refers to the maximum value posisble in an index
+# ('array') Refers to the array that needs to be sorted
+
+            #The 2 following procedures are for tracking in the scoreboard 
+#Delphi_Form.sHappened (iSwap1,iSwap2) Use this when 2 values are swapped
+#Delphi_Form.cHappened (iCompare1,iComapare2) use this when 2 values are compared
+  
+def bubbleSort(arr): 
+    n = len(arr) 
+  
+    # Traverse through all array elements 
+    for i in range(n): 
+    # range(n) also work but outer loop will repeat one time more than needed. 
+  
+        # Last i elements are already in place 
+        for j in range(0, n-i-1): 
+  
+            # traverse the array from 0 to n-i-1 
+            # Swap if the element found is greater 
+            # than the next element 
+            Delphi_Form.cHappened(arr[j],arr[j+1])
+            if arr[j] > arr[j+1]:
+                Delphi_Form.sHappened(arr[j],arr[j+1])
+                arr[j], arr[j+1] = arr[j+1], arr[j] 
+
+
+bubbleSort(array)
+Delphi_Form.UpdateScoreboard()#To be run at the end of a sort to update the scoreboard
