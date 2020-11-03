@@ -6,7 +6,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   frmCodeYourOwn_u in 'frmCodeYourOwn_u.pas' {frmPython},
-  clsSounds in 'clsSounds.pas';
+  clsSounds in 'clsSounds.pas',
+  frmChangeInstrument_u in 'frmChangeInstrument_u.pas' {frmChangeInstrument};
 
 {$R *.res}
 
@@ -17,5 +18,6 @@ begin
   Application.Title := 'JABs Sorts Visualizer';
   Application.CreateForm(TfrmJabsSorts, frmJabsSorts);
   Application.CreateForm(TfrmPython, frmPython);
+  Application.CreateForm(TfrmChangeInstrument, frmChangeInstrument);
   Application.Run;
 end.

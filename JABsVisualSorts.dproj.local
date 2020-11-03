@@ -12,6 +12,18 @@
     <Transaction>2020/10/30 15:11:33.000.585,=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
     <Transaction>2020/10/30 15:12:33.000.743,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.dfm=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmCodeYourOwn_u.dfm</Transaction>
     <Transaction>2020/10/30 15:12:33.000.743,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmCodeYourOwn_u.pas</Transaction>
-    <Transaction>2020/11/03 19:24:52.051,=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\clsSounds.pas</Transaction>
+    <Transaction>2020/11/03 19:24:52.000.051,=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\clsSounds.pas</Transaction>
+    <Transaction>2020/11/03 19:59:49.758,=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
+    <Transaction>2020/11/03 20:08:51.036,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmChangeInstrument_u.pas=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
+    <Transaction>2020/11/03 20:08:51.036,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmChangeInstrument_u.dfm=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.dfm</Transaction>
   </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="clsSounds.pas"/>
+    <File Path="frmCodeYourOwn_u.pas"/>
+    <File Path="frmCodeYourOwn_u.dfm"/>
+    <File Path="Unit2.pas"/>
+    <File Path="Unit2.dfm"/>
+    <File Path="frmChangeInstrument_u.pas"/>
+    <File Path="frmChangeInstrument_u.dfm"/>
+  </ProjectSortOrder>
 </BorlandProject>

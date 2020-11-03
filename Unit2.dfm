@@ -994,7 +994,6 @@ object frmJabsSorts: TfrmJabsSorts
     Color = clBlack
     TabOrder = 1
     Anchors = [akLeft, akTop, akRight, akBottom]
-    ExplicitWidth = 967
     DefaultCanvas = 'TGDIPlusCanvas'
     PrintMargins = (
       15
@@ -1031,7 +1030,6 @@ object frmJabsSorts: TfrmJabsSorts
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Score Board'
     TabOrder = 2
-    ExplicitWidth = 192
     object lblCompare: TLabel
       Left = 15
       Top = 52

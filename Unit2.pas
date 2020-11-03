@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -694,8 +694,7 @@ procedure TfrmJabsSorts.Instrament1Click(Sender: TObject);
 var
 iIns:integer;
 begin
-  iIns:=StrToInt(InputBox('Hello!','Enter the id of the instrument (0-127)',''));
-  Sounds.SetInstrument(iIns);
+  frmChangeInstrument.Show;
 end;
 
 procedure TfrmJabsSorts.LoadPythonSorts;
@@ -769,7 +768,6 @@ begin
   Sounds.NoteOn(abs(inote), ivolume);
   Sleep(iDuration);
   Sounds.NoteOff(abs(inote), ivolume);
-
 end;
 
 procedure TfrmJabsSorts.PrepareForSort;

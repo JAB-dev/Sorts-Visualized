@@ -1,0 +1,46 @@
+unit frmChangeInstrument_u;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,clsSounds, Vcl.StdCtrls,threading;
+
+type
+  TfrmChangeInstrument = class(TForm)
+    cbbInstruments: TComboBox;
+    btnChangeInstruMent: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure btnChangeInstruMentClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    sounds:TJABSounds;
+  end;
+
+var
+  frmChangeInstrument: TfrmChangeInstrument;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmChangeInstrument.btnChangeInstruMentClick(Sender: TObject);
+begin
+  sounds.SetInstrument(cbbInstruments.ItemIndex);
+end;
+
+procedure TfrmChangeInstrument.FormCreate(Sender: TObject);
+begin
+
+    TParallel.&For(
+    0,127,procedure(i:integer)
+    begin
+      cbbInstruments.Items.Add(clssounds.arrInstruments[i]);
+    end
+    );
+  cbbInstruments.ItemIndex:=0;
+end;
+
+end.

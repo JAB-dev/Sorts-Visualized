@@ -1,0 +1,38 @@
+object frmChangeInstrument: TfrmChangeInstrument
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'Change instrument'
+  ClientHeight = 131
+  ClientWidth = 208
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object cbbInstruments: TComboBox
+    Left = 0
+    Top = 0
+    Width = 208
+    Height = 21
+    Align = alTop
+    TabOrder = 0
+    Text = 'cbbInstruments'
+    ExplicitWidth = 423
+  end
+  object btnChangeInstruMent: TButton
+    Left = 0
+    Top = 51
+    Width = 208
+    Height = 55
+    Caption = 'Click to change'
+    TabOrder = 1
+    OnClick = btnChangeInstruMentClick
+  end
+end

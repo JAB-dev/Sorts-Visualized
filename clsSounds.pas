@@ -12,6 +12,7 @@ interface
   protected
 
   public
+      arrInstruments:array[0..127] of string;
     constructor Create;
     function MIDIEncodeMessage(Msg, Param1, Param2: byte): integer;
     procedure NoteOn(NewNote, NewIntensity: byte);
@@ -24,8 +25,9 @@ interface
 
  var
    mo: HMIDIOUT;
-  arrInstruments:array[0..127] of string;
+
   const
+
   MIDI_NOTE_ON = $90;
   MIDI_NOTE_OFF = $80;
   MIDI_CHANGE_INSTRUMENT = $C0;
