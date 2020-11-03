@@ -29,7 +29,7 @@ Timer support not really useful since you add delay anyway, so currently not in 
 
 Executable is located inside of Win32>Release(Or debug, debug is likely to be newer)>JABsVisualSorts.exe
 
-xxxHOW TO MAKE A CUSTOM SORTxxx
+xxxHOW TO MAKE A CUSTOM SORT OLD METHODxxx
 
 Whilst I am no expert in python here is what your sort needs to work
 
