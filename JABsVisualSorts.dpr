@@ -7,7 +7,8 @@ uses
   Vcl.Styles,
   frmCodeYourOwn_u in 'frmCodeYourOwn_u.pas' {frmPython},
   clsSounds in 'clsSounds.pas',
-  frmChangeInstrument_u in 'frmChangeInstrument_u.pas' {frmChangeInstrument};
+  frmChangeInstrument_u in 'frmChangeInstrument_u.pas' {frmChangeInstrument},
+  frmUpdate_u in 'frmUpdate_u.pas' {frmUpdate};
 
 {$R *.res}
 
@@ -19,5 +20,6 @@ begin
   Application.CreateForm(TfrmJabsSorts, frmJabsSorts);
   Application.CreateForm(TfrmPython, frmPython);
   Application.CreateForm(TfrmChangeInstrument, frmChangeInstrument);
+  Application.CreateForm(TfrmUpdate, frmUpdate);
   Application.Run;
 end.

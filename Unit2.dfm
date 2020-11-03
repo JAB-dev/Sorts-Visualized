@@ -1096,6 +1096,7 @@ object frmJabsSorts: TfrmJabsSorts
       Caption = 'Help'
       object Checkforupdates1: TMenuItem
         Caption = 'Check for updates'
+        OnClick = Checkforupdates1Click
       end
       object OldMethodofCustomSorts1: TMenuItem
         Caption = 'Old Method of Custom Sorts'

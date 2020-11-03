@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -63,6 +63,7 @@ type
     procedure seUpdateIntervalChange(Sender: TObject);
     procedure tmrCustomTimer(Sender: TObject);
     procedure Instrament1Click(Sender: TObject);
+    procedure Checkforupdates1Click(Sender: TObject);
   private
     { Private declarations }
     arrWorkArray: array of integer;
@@ -470,6 +471,11 @@ begin
     PlaySound(round(iCompare1 / irange * 127), iCompareDelay);
     playsound(round(iComapare2 / irange * 127), iCompareDelay);
   end;
+end;
+
+procedure TfrmJabsSorts.Checkforupdates1Click(Sender: TObject);
+begin
+  frmUpdate.Show;
 end;
 
 procedure TfrmJabsSorts.chkUsePythonClick(Sender: TObject);

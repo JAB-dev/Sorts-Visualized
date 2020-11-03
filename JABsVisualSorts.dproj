@@ -123,6 +123,10 @@
             <Form>frmChangeInstrument</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="frmUpdate_u.pas">
+            <Form>frmUpdate</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
