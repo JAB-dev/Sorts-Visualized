@@ -62,6 +62,7 @@ type
     procedure OldMethodofCustomSorts1Click(Sender: TObject);
     procedure seUpdateIntervalChange(Sender: TObject);
     procedure tmrCustomTimer(Sender: TObject);
+    procedure Instrament1Click(Sender: TObject);
   private
     { Private declarations }
     arrWorkArray: array of integer;
@@ -687,6 +688,14 @@ begin
   //barseriesSort.AddArray(arrIntegers);
   chtSort.Title.Text.Clear;
   LoadPythonSorts;
+end;
+
+procedure TfrmJabsSorts.Instrament1Click(Sender: TObject);
+var
+iIns:integer;
+begin
+  iIns:=StrToInt(InputBox('Hello!','Enter the id of the instrument (0-127)',''));
+  Sounds.SetInstrument(iIns);
 end;
 
 procedure TfrmJabsSorts.LoadPythonSorts;

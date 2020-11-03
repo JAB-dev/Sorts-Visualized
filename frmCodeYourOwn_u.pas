@@ -95,16 +95,18 @@ begin
   PyModule1.SetVarFromVariant('value_range',vRange);
   if chkDebugMode.Checked then
   begin
-    PyEng1.ExecString(syndt1.Text);
     PyEng1.IO:=pyGuiInputOutput1;
+    PyEng1.ExecString(syndt1.Text);
   end else
   begin
     PyEng1.IO:=PyInputOutput1;
+    frmJabsSorts.ResetScoreBoard;
     //Run in the background so it can actually update and sort
     TTask.Run(
     procedure
     begin
       PyEng1.ExecString(syndt1.Text);
+      frmJabsSorts.UpdateScoreboard;
     end
     );
   end;
@@ -115,6 +117,8 @@ begin
   with chkDebugMode do
   begin
     bDebugMode:=checked;
+    PyEng1.FatalAbort:=checked;
+    PyEng1.FatalMsgDlg:=checked;
   end;
 end;
 

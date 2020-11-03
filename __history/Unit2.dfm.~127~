@@ -3,7 +3,7 @@ object frmJabsSorts: TfrmJabsSorts
   Top = 0
   Caption = 'JABS Sort Visualizer'
   ClientHeight = 739
-  ClientWidth = 987
+  ClientWidth = 1055
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,7 +14,7 @@ object frmJabsSorts: TfrmJabsSorts
   OldCreateOrder = False
   OnCreate = FormCreate
   DesignSize = (
-    987
+    1055
     739)
   PixelsPerInch = 96
   TextHeight = 13
@@ -222,6 +222,7 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
       TabOrder = 4
       Value = 1
+      OnChange = seUpdateIntervalChange
     end
     object seArrayLength: TSpinEdit
       Left = 16
@@ -330,9 +331,9 @@ object frmJabsSorts: TfrmJabsSorts
       OnClick = chkUsePythonClick
     end
     object btnCodeYourOwnSort: TButton
-      Left = 570
-      Top = 92
-      Width = 136
+      Left = 585
+      Top = 73
+      Width = 145
       Height = 25
       Caption = 'Code your own sort'
       TabOrder = 11
@@ -342,7 +343,7 @@ object frmJabsSorts: TfrmJabsSorts
   object chtSort: TChart
     Left = 10
     Top = 241
-    Width = 967
+    Width = 1035
     Height = 504
     Margins.Left = 5
     Margins.Top = 5
@@ -993,6 +994,7 @@ object frmJabsSorts: TfrmJabsSorts
     Color = clBlack
     TabOrder = 1
     Anchors = [akLeft, akTop, akRight, akBottom]
+    ExplicitWidth = 967
     DefaultCanvas = 'TGDIPlusCanvas'
     PrintMargins = (
       15
@@ -1021,24 +1023,15 @@ object frmJabsSorts: TfrmJabsSorts
       Detail = {0000000000}
     end
   end
-  object btnHelpWithPython: TBitBtn
-    Left = 595
-    Top = 81
-    Width = 81
-    Height = 25
-    Kind = bkHelp
-    NumGlyphs = 2
-    TabOrder = 2
-    OnClick = btnHelpWithPythonClick
-  end
   object grpScoreBoard: TGroupBox
     Left = 777
     Top = 83
-    Width = 192
+    Width = 260
     Height = 126
     Anchors = [akLeft, akTop, akRight]
     Caption = 'grpScoreBoard'
-    TabOrder = 3
+    TabOrder = 2
+    ExplicitWidth = 192
     object lblCompare: TLabel
       Left = 15
       Top = 52
@@ -1105,6 +1098,17 @@ object frmJabsSorts: TfrmJabsSorts
       object Checkforupdates1: TMenuItem
         Caption = 'Check for updates'
       end
+      object OldMethodofCustomSorts1: TMenuItem
+        Caption = 'Old Method of Custom Sorts'
+        OnClick = OldMethodofCustomSorts1Click
+      end
     end
+  end
+  object tmrCustom: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = tmrCustomTimer
+    Left = 912
+    Top = 32
   end
 end

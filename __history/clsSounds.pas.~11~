@@ -24,7 +24,7 @@ interface
 
  var
    mo: HMIDIOUT;
-  arrInstruments:array[0..127] of string;
+   arrInstruments:array[0..127] of string;
   const
   MIDI_NOTE_ON = $90;
   MIDI_NOTE_OFF = $80;

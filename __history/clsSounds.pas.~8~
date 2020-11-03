@@ -19,12 +19,10 @@ interface
     procedure SetInstrument(NewInstrument: byte);
     procedure InitMIDI;
     procedure killmidi;
-
   end;
 
  var
    mo: HMIDIOUT;
-  arrInstruments:array[0..127] of string;
   const
   MIDI_NOTE_ON = $90;
   MIDI_NOTE_OFF = $80;
@@ -34,6 +32,11 @@ implementation
 
 { TJABSounds }
 {
+
+
+
+
+
 General MIDI Instrument List
 
 
@@ -123,6 +126,9 @@ Brass
 62.Brass Section
 63.Synth Brass 1
 64.Synth Brass 2
+
+
+
 
 Reed
 

@@ -5,8 +5,7 @@ uses
   Unit2 in 'Unit2.pas' {frmJabsSorts},
   Vcl.Themes,
   Vcl.Styles,
-  frmCodeYourOwn_u in 'frmCodeYourOwn_u.pas' {frmPython},
-  clsSounds in 'clsSounds.pas';
+  frmCodeYourOwn_u in 'frmCodeYourOwn_u.pas' {frmPython};
 
 {$R *.res}
 

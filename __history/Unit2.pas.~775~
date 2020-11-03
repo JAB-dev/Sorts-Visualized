@@ -1044,11 +1044,6 @@ end;
 
 procedure TfrmJabsSorts.tmrCustomTimer(Sender: TObject);
 begin
-  try  {We use a try since we can get access violations, python doesn't like multitasking}
-    frmPython.UpdateMainArray;
-  except
-    frmPython.mmoOutput.Lines.Add('Error reading array at the same time its written');
-  end;
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
 end;
@@ -1064,7 +1059,6 @@ begin
   //Update the graph by reloading the array  (Hopefully there is a better way)
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
-
 end;
 
 procedure TfrmJabsSorts.TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer; var b: array of integer);
@@ -1129,35 +1123,11 @@ procedure TfrmJabsSorts.UpdateScoreBoard;
 begin
   dEnd:=now;
   //Problem with this is that it only cares about the swap delay at the very end
-  if  not (frmPython.Showing) then
-  begin
-    rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
-  end else
-  begin
-    rElapsedSeconds:= (dend-dstart)*MSecsPerDay;
-  end;
+  rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+
   lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps);
   lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons);
   lblTime.Caption:='Estimated Sort Time(ms): '+FloatToStrF(rElapsedSeconds,ffGeneral,10,2);
-  //disable the timers
-//    tmrUpdate.Enabled:=false;
-//  tmrCustom.Enabled:=false;
-  //disable the timers
-  //Update manually incase the timers didnt have time XD to finish
-//  sleep(1);
-//  try
-//  TTask.Run(
-//    procedure
-//    begin
-//      frmPython.UpdateMainArray;
-//    end
-//  );
-//  finally
-//    //
-//  end;
-//  barseriesSort.Clear;
-//  barseriesSort.AddArray(arrIntegers);
-  //Update manually incase the timers didnt have time XD to finish
 end;
 
 procedure TfrmJabsSorts.VermenthruaxxSort(var a: array of integer);

@@ -39,7 +39,7 @@ object frmJabsSorts: TfrmJabsSorts
     Margins.Left = 5
     Margins.Right = 5
     Margins.Bottom = 5
-    Caption = 'grpSettings'
+    Caption = 'Settings'
     TabOrder = 0
     object lblSorts: TLabel
       Left = 16
@@ -1029,7 +1029,7 @@ object frmJabsSorts: TfrmJabsSorts
     Width = 260
     Height = 126
     Anchors = [akLeft, akTop, akRight]
-    Caption = 'grpScoreBoard'
+    Caption = 'Score Board'
     TabOrder = 2
     ExplicitWidth = 192
     object lblCompare: TLabel
@@ -1090,7 +1090,8 @@ object frmJabsSorts: TfrmJabsSorts
     object Sound1: TMenuItem
       Caption = 'Sound'
       object Instrament1: TMenuItem
-        Caption = 'Instrament'
+        Caption = 'Instrument'
+        OnClick = Instrament1Click
       end
     end
     object Help1: TMenuItem

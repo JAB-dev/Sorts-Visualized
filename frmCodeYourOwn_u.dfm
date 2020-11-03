@@ -59,10 +59,16 @@ object frmPython: TfrmPython
     end
     object chkDebugMode: TCheckBox
       Left = 240
-      Top = 15
-      Width = 185
+      Top = 18
+      Width = 273
       Height = 17
-      Caption = 'Debug Mode (Wont sort correctly)'
+      Caption = 'Debug Mode (wont vis, enables output)'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 3
       OnClick = chkDebugModeClick
     end
@@ -73,7 +79,7 @@ object frmPython: TfrmPython
     Width = 133
     Height = 491
     Align = alRight
-    Caption = 'grpHelp'
+    Caption = 'Debug Options'
     TabOrder = 1
     ExplicitLeft = 629
     ExplicitTop = 75
@@ -87,6 +93,8 @@ object frmPython: TfrmPython
       Lines.Strings = (
         'Output appears here:')
       TabOrder = 0
+      ExplicitLeft = 1
+      ExplicitTop = 23
     end
   end
   object syndt1: TSynEdit
@@ -111,22 +119,11 @@ object frmPython: TfrmPython
     Highlighter = SynPythonSyn1
     Lines.Strings = (
       'from Sorting_Module import * #Grab stuff we need'
-      'from time import *'
-      'Delphi_Form.ResetScoreBoard()#Resets the scoreboard'
-      '# Python program for implementation of Bubble Sort '
       ''
-      
-        '#('#39'compare_delay'#39')Refers to the time that should be slept when a' +
-        ' comparison occurs'
-      
-        '#('#39'swap_delay'#39')Refers to the time that should be slept when a sw' +
-        'ap occurs'
-      '#('#39'array_length'#39') Refers to the lenght of the array(list)'
-      
-        '#('#39'value_range'#39') Refers to the maximum value posisble in an inde' +
-        'x'
       '# ('#39'array'#39') Refers to the array that needs to be sorted'
-      '#The 2 following procedures are for tracking in the scoreboard '
+      
+        '        #The 2 following procedures are for tracking in the scor' +
+        'eboard'
       
         '#Delphi_Form.SwapHappened (iSwap1,iSwap2) Use this when 2 values' +
         ' are swapped'
@@ -135,20 +132,11 @@ object frmPython: TfrmPython
         'n 2 values are compared'
       '  '
       'def bubbleSort(arr): '
-      '    n = len(arr) '
-      '  '
-      '    # Traverse through all array elements '
+      '    n = len(arr)'
       '    for i in range(n): '
-      
-        '    # range(n) also work but outer loop will repeat one time mor' +
-        'e than needed. '
       '  '
-      '        # Last i elements are already in place '
       '        for j in range(0, n-i-1): '
-      '  '
-      '            # traverse the array from 0 to n-i-1 '
-      '            # Swap if the element found is greater '
-      '            # than the next element '
+      ''
       '            Delphi_Form.cHappened(arr[j],arr[j+1])'
       '            if arr[j] > arr[j+1]:'
       '                Delphi_Form.sHappened(arr[j],arr[j+1])'
@@ -156,9 +144,7 @@ object frmPython: TfrmPython
       ''
       ''
       'bubbleSort(array)'
-      
-        'Delphi_Form.UpdateScoreboard()#To be run at the end of a sort to' +
-        ' update the scoreboard')
+      '')
     WantTabs = True
     ExplicitTop = 75
     ExplicitWidth = 629
@@ -175,8 +161,8 @@ object frmPython: TfrmPython
     Engine = PyEng1
     Module = '_Sorts_'
     VarName = 'varname1'
-    Left = 744
-    Top = 184
+    Left = 720
+    Top = 312
   end
   object PyInputOutput1: TPythonInputOutput
     OnReceiveData = PyInputOutput1ReceiveData
@@ -208,14 +194,14 @@ object frmPython: TfrmPython
     Engine = PyEng1
     Module = PyModule1
     Left = 677
-    Top = 139
+    Top = 259
   end
   object PyModule1: TPythonModule
     Engine = PyEng1
     ModuleName = 'Sorting_Module'
     Errors = <>
     Left = 752
-    Top = 136
+    Top = 312
   end
   object dlgOpenLoadPythonScript: TOpenDialog
     Title = 'Open a saved script'

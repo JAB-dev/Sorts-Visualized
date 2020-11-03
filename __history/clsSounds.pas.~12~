@@ -24,8 +24,9 @@ interface
 
  var
    mo: HMIDIOUT;
-  arrInstruments:array[0..127] of string;
+  arrInstruments:array[0..127] of string=['Acoustic Piano','BrtAcou Piano',''];
   const
+
   MIDI_NOTE_ON = $90;
   MIDI_NOTE_OFF = $80;
   MIDI_CHANGE_INSTRUMENT = $C0;

@@ -3,7 +3,7 @@ object frmPython: TfrmPython
   Top = 0
   Caption = 'Code Your Sort'
   ClientHeight = 532
-  ClientWidth = 762
+  ClientWidth = 808
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,38 +18,44 @@ object frmPython: TfrmPython
   object grpControls: TGroupBox
     Left = 0
     Top = 0
-    Width = 762
-    Height = 75
+    Width = 808
+    Height = 41
     Align = alTop
     Caption = 'Controls'
     TabOrder = 0
+    ExplicitWidth = 762
     object btnLoad: TButton
       Left = 77
       Top = 15
       Width = 75
-      Height = 58
+      Height = 24
       Align = alLeft
-      Caption = 'Load'
+      Caption = 'Open'
       TabOrder = 0
+      OnClick = btnLoadClick
+      ExplicitHeight = 58
     end
     object btnSort: TButton
       Left = 2
       Top = 15
       Width = 75
-      Height = 58
+      Height = 24
       Align = alLeft
       Caption = 'Sort'
       TabOrder = 1
       OnClick = btnSortClick
+      ExplicitHeight = 58
     end
     object btnSave: TButton
       Left = 152
       Top = 15
       Width = 75
-      Height = 58
+      Height = 24
       Align = alLeft
       Caption = 'Save'
       TabOrder = 2
+      OnClick = btnSaveClick
+      ExplicitHeight = 58
     end
     object chkDebugMode: TCheckBox
       Left = 240
@@ -62,13 +68,16 @@ object frmPython: TfrmPython
     end
   end
   object GroupBox1: TGroupBox
-    Left = 629
-    Top = 75
+    Left = 675
+    Top = 41
     Width = 133
-    Height = 457
+    Height = 491
     Align = alRight
     Caption = 'grpHelp'
     TabOrder = 1
+    ExplicitLeft = 629
+    ExplicitTop = 75
+    ExplicitHeight = 457
     object mmoOutput: TMemo
       Left = 2
       Top = 15
@@ -82,9 +91,9 @@ object frmPython: TfrmPython
   end
   object syndt1: TSynEdit
     Left = 0
-    Top = 75
-    Width = 629
-    Height = 457
+    Top = 41
+    Width = 675
+    Height = 491
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -102,27 +111,23 @@ object frmPython: TfrmPython
     Highlighter = SynPythonSyn1
     Lines.Strings = (
       'from Sorting_Module import * #Grab stuff we need'
-      'Delphi_Form.PrepareForSort() #Run this before sorting'
-      'Delphi_Form.ResetScoreBoard()#Resets the scoreboard'
-      '# Python program for implementation of Bubble Sort '
       ''
-      
-        '#('#39'compare_delay'#39')Refers to the time that should be slept when a' +
-        ' comparison occurs'
-      
-        '#('#39'swap_delay'#39')Refers to the time that should be slept when a sw' +
-        'ap occurs'
-      '#('#39'array_length'#39') Refers to the lenght of the array(list)'
-      
-        '#('#39'value_range'#39') Refers to the maximum value posisble in an inde' +
-        'x'
       '# ('#39'array'#39') Refers to the array that needs to be sorted'
+      
+        '        #The 2 following procedures are for tracking in the scor' +
+        'eboard'
+      
+        '#Delphi_Form.SwapHappened (iSwap1,iSwap2) Use this when 2 values' +
+        ' are swapped'
+      
+        '#Delphi_Form.CompareHappened (iCompare1,iComapare2) use this whe' +
+        'n 2 values are compared'
       '  '
       'def bubbleSort(arr): '
       '    n = len(arr) '
       '  '
       '    # Traverse through all array elements '
-      '    for i in range(n-1): '
+      '    for i in range(n): '
       
         '    # range(n) also work but outer loop will repeat one time mor' +
         'e than needed. '
@@ -133,17 +138,22 @@ object frmPython: TfrmPython
       '            # traverse the array from 0 to n-i-1 '
       '            # Swap if the element found is greater '
       '            # than the next element '
-      '            if arr[j] > arr[j+1] : '
+      '            Delphi_Form.cHappened(arr[j],arr[j+1])'
+      '            if arr[j] > arr[j+1]:'
+      '                Delphi_Form.sHappened(arr[j],arr[j+1])'
       '                arr[j], arr[j+1] = arr[j+1], arr[j] '
       ''
       ''
       'bubbleSort(array)'
-      
-        'Delphi_Form.UpdateScoreboard()#To be run at the end of a sort to' +
-        ' update the scoreboard')
+      '')
     WantTabs = True
+    ExplicitTop = 75
+    ExplicitWidth = 629
+    ExplicitHeight = 457
   end
   object PyEng1: TPythonEngine
+    FatalAbort = False
+    FatalMsgDlg = False
     IO = pyGuiInputOutput1
     Left = 752
     Top = 88
@@ -184,8 +194,8 @@ object frmPython: TfrmPython
   object PyDelWrap1: TPyDelphiWrapper
     Engine = PyEng1
     Module = PyModule1
-    Left = 741
-    Top = 235
+    Left = 677
+    Top = 139
   end
   object PyModule1: TPythonModule
     Engine = PyEng1
@@ -195,11 +205,13 @@ object frmPython: TfrmPython
     Top = 136
   end
   object dlgOpenLoadPythonScript: TOpenDialog
-    Filter = 'Python Stuff|.py'
+    Title = 'Open a saved script'
     Left = 696
     Top = 16
   end
   object dlgSavePythonScript: TSaveDialog
+    DefaultExt = '.txt'
+    Title = 'Save Script'
     Left = 728
     Top = 16
   end
