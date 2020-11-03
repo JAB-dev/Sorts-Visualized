@@ -12,6 +12,7 @@ object frmPython: TfrmPython
   Font.Style = []
   Menu = mmPythonHelp
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -23,7 +24,6 @@ object frmPython: TfrmPython
     Align = alTop
     Caption = 'Controls'
     TabOrder = 0
-    ExplicitWidth = 762
     object btnLoad: TButton
       Left = 77
       Top = 15
@@ -33,7 +33,6 @@ object frmPython: TfrmPython
       Caption = 'Open'
       TabOrder = 0
       OnClick = btnLoadClick
-      ExplicitHeight = 58
     end
     object btnSort: TButton
       Left = 2
@@ -44,7 +43,6 @@ object frmPython: TfrmPython
       Caption = 'Sort'
       TabOrder = 1
       OnClick = btnSortClick
-      ExplicitHeight = 58
     end
     object btnSave: TButton
       Left = 152
@@ -55,7 +53,6 @@ object frmPython: TfrmPython
       Caption = 'Save'
       TabOrder = 2
       OnClick = btnSaveClick
-      ExplicitHeight = 58
     end
     object chkDebugMode: TCheckBox
       Left = 240
@@ -74,33 +71,29 @@ object frmPython: TfrmPython
     end
   end
   object GroupBox1: TGroupBox
-    Left = 675
+    Left = 640
     Top = 41
-    Width = 133
+    Width = 168
     Height = 491
     Align = alRight
     Caption = 'Debug Options'
     TabOrder = 1
-    ExplicitLeft = 629
-    ExplicitTop = 75
-    ExplicitHeight = 457
     object mmoOutput: TMemo
       Left = 2
       Top = 15
-      Width = 129
+      Width = 164
       Height = 162
       Align = alTop
       Lines.Strings = (
         'Output appears here:')
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = 23
+      ExplicitWidth = 129
     end
   end
   object syndt1: TSynEdit
     Left = 0
     Top = 41
-    Width = 675
+    Width = 640
     Height = 491
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
@@ -125,11 +118,11 @@ object frmPython: TfrmPython
         '        #The 2 following procedures are for tracking in the scor' +
         'eboard'
       
-        '#Delphi_Form.SwapHappened (iSwap1,iSwap2) Use this when 2 values' +
-        ' are swapped'
+        '#Delphi_Form.sHappened (iSwap1,iSwap2) Use this when 2 values ar' +
+        'e swapped'
       
-        '#Delphi_Form.CompareHappened (iCompare1,iComapare2) use this whe' +
-        'n 2 values are compared'
+        '#Delphi_Form.cHappened (iCompare1,iComapare2) use this when 2 va' +
+        'lues are compared'
       '  '
       'def bubbleSort(arr): '
       '    n = len(arr)'
@@ -146,37 +139,28 @@ object frmPython: TfrmPython
       'bubbleSort(array)'
       '')
     WantTabs = True
-    ExplicitTop = 75
-    ExplicitWidth = 629
-    ExplicitHeight = 457
+    ExplicitWidth = 641
   end
   object PyEng1: TPythonEngine
     FatalAbort = False
     FatalMsgDlg = False
     IO = pyGuiInputOutput1
     Left = 752
-    Top = 88
-  end
-  object PyDelphiVar1: TPythonDelphiVar
-    Engine = PyEng1
-    Module = '_Sorts_'
-    VarName = 'varname1'
-    Left = 720
-    Top = 312
+    Top = 240
   end
   object PyInputOutput1: TPythonInputOutput
     OnReceiveData = PyInputOutput1ReceiveData
     UnicodeIO = False
     RawOutput = False
-    Left = 744
-    Top = 40
+    Left = 688
+    Top = 376
   end
   object pyGuiInputOutput1: TPythonGUIInputOutput
     UnicodeIO = True
     RawOutput = False
     Output = mmoOutput
-    Left = 752
-    Top = 65531
+    Left = 704
+    Top = 291
   end
   object SynPythonSyn1: TSynPythonSyn
     Options.AutoDetectEnabled = False
@@ -190,29 +174,23 @@ object frmPython: TfrmPython
     Left = 624
     Top = 16
   end
-  object PyDelWrap1: TPyDelphiWrapper
-    Engine = PyEng1
-    Module = PyModule1
-    Left = 677
-    Top = 259
-  end
   object PyModule1: TPythonModule
     Engine = PyEng1
     ModuleName = 'Sorting_Module'
     Errors = <>
     Left = 752
-    Top = 312
+    Top = 336
   end
   object dlgOpenLoadPythonScript: TOpenDialog
     Title = 'Open a saved script'
-    Left = 696
-    Top = 16
+    Left = 664
+    Top = 8
   end
   object dlgSavePythonScript: TSaveDialog
     DefaultExt = '.txt'
     Title = 'Save Script'
-    Left = 728
-    Top = 16
+    Left = 704
+    Top = 8
   end
   object mmPythonHelp: TMainMenu
     Left = 552
@@ -221,7 +199,14 @@ object frmPython: TfrmPython
       Caption = 'Help'
       object LoadExampleSort1: TMenuItem
         Caption = 'Load Example Sort'
+        OnClick = LoadExampleSort1Click
       end
     end
+  end
+  object PyDelWrap1: TPyDelphiWrapper
+    Engine = PyEng1
+    Module = PyModule1
+    Left = 757
+    Top = 427
   end
 end

@@ -11,7 +11,6 @@ uses
 type
   TfrmPython = class(TForm)
     PyEng1: TPythonEngine;
-    PyDelphiVar1: TPythonDelphiVar;
     PyInputOutput1: TPythonInputOutput;
     grpControls: TGroupBox;
     GroupBox1: TGroupBox;
@@ -22,7 +21,6 @@ type
     syndt1: TSynEdit;
     SynPythonSyn1: TSynPythonSyn;
     SynEditPythonBehaviour1: TSynEditPythonBehaviour;
-    PyDelWrap1: TPyDelphiWrapper;
     PyModule1: TPythonModule;
     btnSave: TButton;
     dlgOpenLoadPythonScript: TOpenDialog;
@@ -31,6 +29,7 @@ type
     Help1: TMenuItem;
     LoadExampleSort1: TMenuItem;
     chkDebugMode: TCheckBox;
+    PyDelWrap1: TPyDelphiWrapper;
     procedure btnSortClick(Sender: TObject);
     procedure PyInputOutput1ReceiveData(Sender: TObject; var Data: AnsiString);
     procedure FormCreate(Sender: TObject);
@@ -38,6 +37,8 @@ type
     procedure UpdateMainArray();
     procedure btnSaveClick(Sender: TObject);
     procedure btnLoadClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure LoadExampleSort1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -48,6 +49,7 @@ type
     vArrayLength: Variant;
     vRange: Variant;
     pyArray:PPyObject;
+    sDefaultSort:string;
   end;
 
 var
@@ -122,6 +124,16 @@ begin
   end;
 end;
 
+procedure TfrmPython.FormActivate(Sender: TObject);
+begin
+  try        //When messing with anything visual I love to use try to hide errors
+      syndt1.SetFocus;     //it works but errors out? odd
+  except
+    //nothing
+  end;
+  sDefaultSort:=syndt1.Text;
+end;
+
 procedure TfrmPython.FormCreate(Sender: TObject);
 var
 pyform:PPyObject;
@@ -132,6 +144,11 @@ begin
   PyModule1.SetVar('Delphi_Form',pyform);
   PyEng1.Py_DECREF(pyform);
   //For a test
+end;
+
+procedure TfrmPython.LoadExampleSort1Click(Sender: TObject);
+begin
+  syndt1.Text:=sDefaultSort;
 end;
 
 procedure TfrmPython.PyInputOutput1ReceiveData(Sender: TObject;

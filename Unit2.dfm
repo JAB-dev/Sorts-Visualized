@@ -1103,6 +1103,13 @@ object frmJabsSorts: TfrmJabsSorts
         OnClick = OldMethodofCustomSorts1Click
       end
     end
+    object View1: TMenuItem
+      Caption = 'View'
+      object StyleOptions1: TMenuItem
+        Caption = 'Style Options'
+        OnClick = StyleOptions1Click
+      end
+    end
   end
   object tmrCustom: TTimer
     Enabled = False

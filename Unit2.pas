@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -48,6 +48,8 @@ type
     Checkforupdates1: TMenuItem;
     OldMethodofCustomSorts1: TMenuItem;
     tmrCustom: TTimer;
+    View1: TMenuItem;
+    StyleOptions1: TMenuItem;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -64,6 +66,7 @@ type
     procedure tmrCustomTimer(Sender: TObject);
     procedure Instrament1Click(Sender: TObject);
     procedure Checkforupdates1Click(Sender: TObject);
+    procedure StyleOptions1Click(Sender: TObject);
   private
     { Private declarations }
     arrWorkArray: array of integer;
@@ -75,6 +78,7 @@ type
     iVolume: integer;
     consoleControl: TJABConsole;
     iComparisons,iSwaps:uint32;
+    fdefaultStyleName:String;
   public
     { Public declarations }
     iCompareDelay: Integer;
@@ -1042,6 +1046,11 @@ begin
   end;
   //scoreboard should be at the end always
   UpdateScoreBoard;
+end;
+
+procedure TfrmJabsSorts.StyleOptions1Click(Sender: TObject);
+begin
+  frmStyleChanger.Show;
 end;
 
 procedure TfrmJabsSorts.SwapHappened(iSwap1,iSwap2:integer);

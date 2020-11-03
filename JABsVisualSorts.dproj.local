@@ -17,8 +17,11 @@
     <Transaction>2020/11/03 20:08:51.000.036,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmChangeInstrument_u.pas</Transaction>
     <Transaction>2020/11/03 20:08:51.000.036,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.dfm=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmChangeInstrument_u.dfm</Transaction>
     <Transaction>2020/11/03 22:21:12.457,=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
-    <Transaction>2020/11/03 22:22:15.229,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmUpdate_u.pas=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
     <Transaction>2020/11/03 22:22:15.229,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmUpdate_u.dfm=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.dfm</Transaction>
+    <Transaction>2020/11/03 22:22:15.229,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmUpdate_u.pas=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
+    <Transaction>2020/11/03 22:57:13.646,=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
+    <Transaction>2020/11/03 22:57:28.173,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmStyle.dfm=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.dfm</Transaction>
+    <Transaction>2020/11/03 22:57:28.173,C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\frmStyle.pas=C:\Users\CasualnooB\Documents\Embarcadero\Studio\Projects\VisualSortsGit\Sorts-Visualized\Unit1.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="clsSounds.pas"/>
@@ -30,5 +33,7 @@
     <File Path="frmChangeInstrument_u.dfm"/>
     <File Path="frmUpdate_u.pas"/>
     <File Path="frmUpdate_u.dfm"/>
+    <File Path="frmStyle.pas"/>
+    <File Path="frmStyle.dfm"/>
   </ProjectSortOrder>
 </BorlandProject>

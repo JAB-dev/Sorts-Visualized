@@ -1,9 +1,10 @@
 object frmUpdate: TfrmUpdate
   Left = 0
   Top = 0
+  BorderStyle = bsDialog
   Caption = 'Update here'
-  ClientHeight = 232
-  ClientWidth = 474
+  ClientHeight = 96
+  ClientWidth = 484
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -29,22 +30,24 @@ object frmUpdate: TfrmUpdate
   object btnDownloadLatest: TButton
     Left = 0
     Top = 0
-    Width = 474
+    Width = 484
     Height = 49
     Align = alTop
     Caption = 'Download Latest (Release) Version'
     TabOrder = 1
     OnClick = btnDownloadLatestClick
+    ExplicitWidth = 474
   end
   object btnDownloadDebug: TButton
     Left = 0
     Top = 49
-    Width = 474
+    Width = 484
     Height = 49
     Align = alTop
     Caption = 'Download Latest (Debug) Version'
     TabOrder = 2
     OnClick = btnDownloadDebugClick
     ExplicitTop = 8
+    ExplicitWidth = 474
   end
 end
