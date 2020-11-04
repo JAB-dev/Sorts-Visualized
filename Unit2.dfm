@@ -35,7 +35,7 @@ object frmJabsSorts: TfrmJabsSorts
     Left = 10
     Top = 8
     Width = 759
-    Height = 201
+    Height = 185
     Margins.Left = 5
     Margins.Right = 5
     Margins.Bottom = 5
@@ -152,7 +152,9 @@ object frmJabsSorts: TfrmJabsSorts
         'CockTail Shaker Sort'
         'Simplest Sort'
         'Parallel Bubble'
-        'Parralel Comb')
+        'Parallel Comb'
+        'Super Cocktail'
+        'Iterative HeapSort')
     end
     object seDelay: TSpinEdit
       Left = 179
@@ -189,8 +191,8 @@ object frmJabsSorts: TfrmJabsSorts
       OnChange = seDelayOnCompareChange
     end
     object btnSort: TButton
-      Left = 560
-      Top = 123
+      Left = 609
+      Top = 119
       Width = 121
       Height = 52
       Margins.Left = 5
@@ -344,9 +346,9 @@ object frmJabsSorts: TfrmJabsSorts
   end
   object chtSort: TChart
     Left = 10
-    Top = 241
+    Top = 203
     Width = 1035
-    Height = 504
+    Height = 542
     Margins.Left = 5
     Margins.Top = 5
     Margins.Right = 5
@@ -1026,14 +1028,14 @@ object frmJabsSorts: TfrmJabsSorts
   end
   object grpScoreBoard: TGroupBox
     Left = 777
-    Top = 83
+    Top = 33
     Width = 260
     Height = 126
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Score Board'
     TabOrder = 2
     object lblCompare: TLabel
-      Left = 15
+      Left = 3
       Top = 52
       Width = 103
       Height = 19
@@ -1046,8 +1048,8 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
     end
     object lblSwaps: TLabel
-      Left = 15
-      Top = 27
+      Left = 3
+      Top = 18
       Width = 51
       Height = 19
       Caption = 'Swaps:'
@@ -1059,8 +1061,8 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
     end
     object lblTime: TLabel
-      Left = 15
-      Top = 77
+      Left = 3
+      Top = 93
       Width = 150
       Height = 19
       Caption = 'Estimated Sort Time:'
@@ -1075,15 +1077,14 @@ object frmJabsSorts: TfrmJabsSorts
   object tmrUpdate: TTimer
     Enabled = False
     OnTimer = tmrUpdateTimer
-    Left = 848
-    Top = 32
+    Left = 328
   end
   object tmrTimeTaken: TTimer
     Enabled = False
     Interval = 1
     OnTimer = tmrTimeTakenTimer
-    Left = 784
-    Top = 32
+    Left = 368
+    Top = 40
   end
   object mmMenuOptions: TMainMenu
     Left = 360
@@ -1117,7 +1118,7 @@ object frmJabsSorts: TfrmJabsSorts
     Enabled = False
     Interval = 1
     OnTimer = tmrCustomTimer
-    Left = 912
-    Top = 32
+    Left = 472
+    Top = 65528
   end
 end

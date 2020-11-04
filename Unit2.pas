@@ -72,12 +72,12 @@ type
     arrWorkArray: array of integer;
     iInterval: Integer;
     iTimeTaken: Integer;
-    rElapsedSeconds: extended;
-    dStart, dEnd: tdatetime;
+    rElapsedSeconds,rSoundComputeTime,rsoundcomputetimeforcompare: double;
+    dStart, dEnd,dBeforeSound,dAfterSound: tdatetime;
     Sounds: TJABSounds;
     iVolume: integer;
     consoleControl: TJABConsole;
-    iComparisons,iSwaps:uint32;
+    iComparisons,iSwaps,iComparesWithSound,iSwapsWithSound:uint32;
     fdefaultStyleName:String;
   public
     { Public declarations }
@@ -110,6 +110,11 @@ type
     procedure cHappened(iCompare1,iComapare2:integer);
     procedure ParralelBubble();
     procedure ParralelComb();
+    procedure SuperCocktail();
+    procedure CalcSoundComputetime();
+    procedure CalcCompareTime();
+    procedure HeapSortIterative();
+    procedure BuildMaxHeap();
   end;
 
 var
@@ -482,6 +487,95 @@ begin
     end
     );
   end;
+
+  if cbbSorts.Text='Super Cocktail' then
+  begin
+    ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
+    tmrUpdate.Enabled := True;
+    TTask.Run(
+    procedure
+    begin
+      SuperCocktail();
+    end
+    );
+  end;
+
+  if cbbSorts.Text='Iterative HeapSort' then
+  begin
+    ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
+    tmrUpdate.Enabled := True;
+    TTask.Run(
+    procedure
+    begin
+      HeapsortIterative();
+    end
+    );
+  end;
+
+
+end;
+
+procedure TfrmJabsSorts.BuildMaxHeap;
+var
+i,j,itemp:integer;
+begin
+//  void buildMaxHeap(int arr[], int n)
+//{
+//    for (int i = 1; i < n; i++)
+//    {
+//        // if child is bigger than parent
+//        if (arr[i] > arr[(i - 1) / 2])
+//        {
+//            int j = i;
+//
+//            // swap child and parent until
+//            // parent is smaller
+//            while (arr[j] > arr[(j - 1) / 2])
+//            {
+//                swap(arr[j], arr[(j - 1) / 2]);
+//                j = (j - 1) / 2;
+//            }
+//        }
+//    }
+//}  for I := 1 to iArrayLength do
+  begin
+    CompareHappened(arrIntegers[i],arrIntegers[(i-1) div 2]);
+    if arrIntegers[i]>arrIntegers[(i-1) div 2] then
+    begin
+      j:=i;
+      while arrIntegers[j]>arrIntegers[(j-1)Div 2 ] do
+      begin
+        //
+        itemp:=arrIntegers[j];
+        arrIntegers[j]:=arrIntegers[(j-1) div 2];
+        arrIntegers[(j-1) div 2]:=itemp;
+        //
+
+        SwapHappened(Arrintegers[j],arrintegers[j-1 div 2]);
+        j:=(j-1) div 2;
+      end;
+    end;
+  end;
+
+end;
+
+procedure TfrmJabsSorts.CalcCompareTime;
+begin
+  dBeforeSound:=now;
+  SwapHappened(irange,irange);
+  dAfterSound:=now;
+
+  rsoundcomputetimeforcompare:=dAfterSound-dBeforeSound;
+end;
+
+procedure TfrmJabsSorts.CalcSoundComputetime;
+begin
+  dBeforeSound:=now;
+
+  SwapHappened(irange,irange);
+  dAfterSound:=now;
+
+  rSoundComputeTime:=dAfterSound-dBeforeSound;
 end;
 
 procedure TfrmJabsSorts.cHappened(iCompare1, iComapare2: integer);
@@ -493,7 +587,6 @@ begin
   end;
 
   //Now we have sound and scoreboard all in ONE!!! much neater code
-  sleep(iCompareDelay);
   Inc(iComparisons);
   if iCompareDelay>0 then
   begin
@@ -532,7 +625,7 @@ begin
   iruns := 0;
   repeat
     bSorted := true;
-    for k := 0 + iruns to iArrayLength - 2 - iruns do
+    for k :=iruns to iArrayLength - 2 - iruns do
     begin
        CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
       if arrIntegers[k + 1] > arrIntegers[k] then
@@ -545,8 +638,8 @@ begin
        SwapHappened(arrintegers[k] ,arrintegers[k+1] );
       end;
     end;
-
-    for k := iArrayLength - 2 - iruns downto 0 + iruns do
+    bsorted:=true;
+    for k := iArrayLength - 2 - iruns downto iruns do
     begin
       CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
       if arrIntegers[k + 1] > arrIntegers[k] then
@@ -608,10 +701,10 @@ end;
 procedure TfrmJabsSorts.CompareHappened(iCompare1,iComapare2:integer);
 begin
   //Now we have sound and scoreboard all in ONE!!! much neater code
-  sleep(iCompareDelay);
   Inc(iComparisons);
   if iCompareDelay>0 then
   begin
+    Inc(iComparesWithSound);
     PlaySound(round(iCompare1 / irange * 127), iCompareDelay);
     playsound(round(iComapare2 / irange * 127), iCompareDelay);
   end;
@@ -625,7 +718,6 @@ begin
   begin
     b[K] := A[K];
   end;
-
 end;
 
 procedure TfrmJabsSorts.FillArray;
@@ -746,6 +838,80 @@ begin
   LoadPythonSorts;
 end;
 
+procedure TfrmJabsSorts.HeapSortIterative;
+var
+i,j,itemp,index:integer;
+begin
+//void heapSort(int arr[], int n)
+//{
+//    buildMaxHeap(arr, n);
+//
+//    for (int i = n - 1; i > 0; i--)
+//    {
+//        // swap value of first indexed
+//        // with last indexed
+//        swap(arr[0], arr[i]);
+//
+//        // maintaining heap property
+//        // after each swapping
+//        int j = 0, index;
+//
+//        do
+//        {
+//            index = (2 * j + 1);
+//
+//            // if left child is smaller than
+//            // right child point index variable
+//            // to right child
+//            if (arr[index] < arr[index + 1] &&
+//                                index < (i - 1))
+//                index++;
+//
+//            // if parent is smaller than child
+//            // then swapping parent with child
+//            // having higher value
+//            if (arr[j] < arr[index] && index < i)
+//                swap(arr[j], arr[index]);
+//
+//            j = index;
+//
+//        } while (index < i);
+//    }
+//}
+  BuildMaxHeap;
+  for i := iArrayLength-1 downto 0 do
+  begin
+    SwapHappened(arrintegers[0],arrintegers[i]);
+    //
+    itemp :=arrIntegers[0];
+    arrIntegers[0]:=arrIntegers[i];
+    arrIntegers[i]:=itemp;
+    //
+    j:=0;
+
+    repeat
+        index:=(2*j+1);
+        CompareHappened(arrIntegers[index],arrIntegers[index+1]);
+        if (arrIntegers[index]<arrIntegers[index+1]) and (index<(i-1)) then
+        begin
+          inc(index);
+        end;
+        if (arrIntegers[j]<arrIntegers[index])and(index<1) then
+        begin
+          //
+          SwapHappened(arrIntegers[j],arrIntegers[index]);
+          itemp:=arrIntegers[j];
+          arrIntegers[j]:=arrIntegers[index];
+          arrIntegers[index]:=itemp;
+        end;
+        j:=index;
+
+    until (index>=1);
+
+
+end;
+  UpdateScoreBoard;
+end;
 procedure TfrmJabsSorts.Instrament1Click(Sender: TObject);
 var
 iIns:integer;
@@ -886,7 +1052,6 @@ end;
 
 procedure TfrmJabsSorts.PlaySound(inote, iDuration: integer);//Play sound, not asnync since would cause stutters
 begin
- 
   Sounds.NoteOn(abs(inote), ivolume);
   Sleep(iDuration);
   Sounds.NoteOff(abs(inote), ivolume);
@@ -1076,12 +1241,14 @@ end;
 procedure TfrmJabsSorts.ResetScoreBoard;
 begin
   //Scoreboard setup
+  iSwapsWithSound:=0;
+  iComparesWithSound:=0;
   iSwaps:=0;
   iComparisons:=0;
   rElapsedSeconds:=0;
   lblSwaps.Caption:= 'Swaps: ';
   lblCompare.Caption:='Comparisons: ';
-  lblTime.Caption:='Estimated Sort Time: ';
+  lblTime.Caption:='Sort Time: ';
   //Scoreboard setup
   dStart:=now;
 end;
@@ -1124,7 +1291,6 @@ begin
     except
       //Do nothing on error, we expect errors :(
     end;
-  sleep(iSwapDelay);
   inc(iSwaps);
   if iSwapDelay>0 then
   begin
@@ -1165,12 +1331,68 @@ begin
   frmStyleChanger.Show;
 end;
 
+procedure TfrmJabsSorts.SuperCocktail;
+var
+  bSorted: boolean;
+  k, itemp, iruns: integer;
+begin
+  dStart := now;
+  iruns := 0;
+  repeat
+    bSorted := true;
+    TParallel.&For(0,iArrayLength-2,procedure(K:integer)
+    begin
+      CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
+      if arrIntegers[k + 1] > arrIntegers[k] then
+      begin
+        itemp := arrIntegers[k];
+        arrintegers[k] := arrintegers[k + 1];
+        arrIntegers[k + 1] := itemp;
+        bSorted := false;
+
+       SwapHappened(arrintegers[k] ,arrintegers[k+1] );
+      end;
+    end);
+    TParallel.&For(0,iArrayLength-2,procedure(K:integer)
+    begin
+      CompareHappened(arrIntegers[iArrayLength-k + 1], arrIntegers[iArrayLength-k] );
+      if arrIntegers[iArrayLength-k + 1] > arrIntegers[iArrayLength-k] then
+      begin
+        itemp := arrIntegers[iArrayLength-k];
+        arrintegers[iArrayLength-k] := arrintegers[iArrayLength-k + 1];
+        arrIntegers[iArrayLength-k + 1] := itemp;
+        bSorted := false;
+
+       SwapHappened(arrintegers[iArrayLength-k] ,arrintegers[iArrayLength-k + 1] );
+      end;
+    end);
+//    TParallel.&For(iArrayLength - 2 - iruns, iruns,procedure(K:integer)
+//    begin
+//      ShowMessage('This is the second loop');
+//      CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
+//      if arrIntegers[k + 1] > arrIntegers[k] then
+//      begin
+//        bSorted := false;
+//
+//        itemp := arrIntegers[k];
+//        arrintegers[k] := arrintegers[k + 1];
+//        arrIntegers[k + 1] := itemp;
+//
+//        SwapHappened(arrintegers[k] ,arrintegers[k+1] );
+//      end;
+//    end);
+    Inc(iruns);
+
+  until (bSorted);
+  UpdateScoreBoard;
+end;
+
 procedure TfrmJabsSorts.SwapHappened(iSwap1,iSwap2:integer);
 begin
-  sleep(iSwapDelay);
   inc(iSwaps);
   if iSwapDelay>0 then
   begin
+    Inc(iSwapsWithSound);
     PlaySound(round(iswap1 / irange * 127), iSwapDelay);
     playsound(round(iswap2 / irange * 127), iSwapDelay);
   end;
@@ -1257,11 +1479,19 @@ procedure TfrmJabsSorts.UpdateScoreBoard;
 begin
   dEnd:=now;
   //Problem with this is that it only cares about the swap delay at the very end
-  rElapsedSeconds:=((dend-dstart)*MSecsPerDay)-(iSwapDelay*iSwaps)-(iCompareDelay*iComparisons);
+  CalcSoundComputetime;
+  CalcCompareTime;
+  rElapsedSeconds:=dend-dstart;    //basic
+//  rElapsedSeconds:=rElapsedSeconds-(rSoundComputeTime*iSwaps);
+//  rElapsedSeconds:=rElapsedSeconds-(rsoundcomputetimeforcompare*iComparisons);
+//  rElapsedSeconds:=rElapsedSeconds-((iSwaps*2*iSwapDelay)/MSecsPerDay);
+//  rElapsedSeconds:=rElapsedSeconds-((iComparisons*2*iSwapDelay)/MSecsPerDay);
+  rElapsedSeconds:=((rElapsedSeconds)*MSecsPerDay);
 
-  lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps);
-  lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons);
-  lblTime.Caption:='Estimated Sort Time(ms): '+FloatToStrF(rElapsedSeconds,ffGeneral,10,2);
+  //we simulatue 1 compare and swap thats why we subtract 1
+  lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps-1);
+  lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons-1);
+  lblTime.Caption:='Sort Time(ms): '+FloatToStr(rElapsedSeconds);
 end;
 
 procedure TfrmJabsSorts.VermenthruaxxSort(var a: array of integer);
