@@ -539,7 +539,9 @@ begin
 //    }
 //}  for I := 1 to iArrayLength do
   begin
+    //
     CompareHappened(arrIntegers[i],arrIntegers[(i-1) div 2]);
+    //
     if arrIntegers[i]>arrIntegers[(i-1) div 2] then
     begin
       j:=i;
@@ -896,7 +898,7 @@ begin
         begin
           inc(index);
         end;
-        if (arrIntegers[j]<arrIntegers[index])and(index<1) then
+        if (arrIntegers[j]<arrIntegers[index])and(index<i) then
         begin
           //
           SwapHappened(arrIntegers[j],arrIntegers[index]);
@@ -906,7 +908,7 @@ begin
         end;
         j:=index;
 
-    until (index>=1);
+    until (index>=i);
 
 
 end;

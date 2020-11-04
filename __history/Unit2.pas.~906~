@@ -499,6 +499,20 @@ begin
     end
     );
   end;
+
+  if cbbSorts.Text='Iterative HeapSort' then
+  begin
+    ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
+    tmrUpdate.Enabled := True;
+    TTask.Run(
+    procedure
+    begin
+      HeapsortIterative();
+    end
+    );
+  end;
+
+
 end;
 
 procedure TfrmJabsSorts.BuildMaxHeap;
@@ -525,7 +539,9 @@ begin
 //    }
 //}  for I := 1 to iArrayLength do
   begin
+    //
     CompareHappened(arrIntegers[i],arrIntegers[(i-1) div 2]);
+    //
     if arrIntegers[i]>arrIntegers[(i-1) div 2] then
     begin
       j:=i;
@@ -538,10 +554,9 @@ begin
         //
 
         SwapHappened(Arrintegers[j],arrintegers[j-1 div 2]);
-        j=(j-1) div 2;
+        j:=(j-1) div 2;
       end;
     end;
-
   end;
 
 end;
@@ -869,18 +884,36 @@ begin
   for i := iArrayLength-1 downto 0 do
   begin
     SwapHappened(arrintegers[0],arrintegers[i]);
-
     //
     itemp :=arrIntegers[0];
     arrIntegers[0]:=arrIntegers[i];
     arrIntegers[i]:=itemp;
     //
+    j:=0;
 
-  end;
+    repeat
+        index:=(2*j+1);
+        CompareHappened(arrIntegers[index],arrIntegers[index+1]);
+        if (arrIntegers[index]<arrIntegers[index+1]) and (index<(i-1)) then
+        begin
+          inc(index);
+        end;
+        if (arrIntegers[j]<arrIntegers[index])and(index<i) then
+        begin
+          //
+          SwapHappened(arrIntegers[j],arrIntegers[index]);
+          itemp:=arrIntegers[j];
+          arrIntegers[j]:=arrIntegers[index];
+          arrIntegers[index]:=itemp;
+        end;
+        j:=index;
+
+    until (index>=1);
 
 
 end;
-
+  UpdateScoreBoard;
+end;
 procedure TfrmJabsSorts.Instrament1Click(Sender: TObject);
 var
 iIns:integer;
