@@ -1007,15 +1007,20 @@ object frmJabsSorts: TfrmJabsSorts
     ColorPaletteIndex = 8
     object barseriesSort: TBarSeries
       Legend.Visible = False
+      Selected.Hover.Visible = False
+      BarBrush.Gradient.EndColor = 29695
       BarPen.Visible = False
       ColorEachPoint = True
       ConePercent = 2
       Marks.Visible = False
+      SeriesColor = clWhite
       ShowInLegend = False
       Transparency = 4
+      BarWidthPercent = 100
       Dark3D = False
+      Gradient.EndColor = 29695
       MultiBar = mbNone
-      Sides = 110
+      Sides = 3
       XValues.Name = 'X'
       XValues.Order = loNone
       YValues.Name = 'Bar'

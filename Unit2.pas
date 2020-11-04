@@ -979,9 +979,11 @@ begin
       begin
         bsorted:=false;
         Swaphappened(arrIntegers[k],arrIntegers[k+1]);
-        iswap:=arrIntegers[k];
-        arrintegers[k]:=arrIntegers[k+1];
-        arrintegers[k+1]:=iswap;
+
+        AtomicExchange(iswap,arrintegers[k]);
+        atomicexchange(arrintegers[k],arrIntegers[k+1]);
+        AtomicExchange(arrintegers[k+1],iswap);
+
       end;
     end);
   end;
@@ -1015,9 +1017,10 @@ begin
       begin
         bsorted:=false;
         Swaphappened(arrIntegers[k],arrIntegers[k+igap]);
-        iswap:=arrIntegers[k];
-        arrintegers[k]:=arrIntegers[k+igap];
-        arrintegers[k+igap]:=iswap;
+
+        atomicexchange(iswap,arrIntegers[k]);
+        atomicexchange(arrintegers[k],arrIntegers[k+igap]);
+        atomicexchange(arrintegers[k+igap],iswap);
       end;
     end);
   end;
@@ -1336,65 +1339,54 @@ end;
 procedure TfrmJabsSorts.SuperCocktail;
 var
   bSorted: boolean;
-  k, itemp, iruns: integer;
+  k: integer;
 begin
   dStart := now;
-  iruns := 0;
   repeat
     bSorted := true;
+
     TParallel.&For(0,iArrayLength-2,procedure(K:integer)
+    var
+    itemp:integer;
     begin
       CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
       if arrIntegers[k + 1] > arrIntegers[k] then
       begin
-        itemp := arrIntegers[k];
-        arrintegers[k] := arrintegers[k + 1];
-        arrIntegers[k + 1] := itemp;
+        atomicexchange(itemp,arrIntegers[k]);
+        atomicexchange(arrintegers[k],arrIntegers[k + 1]);
+        atomicexchange(arrIntegers[k + 1],itemp);
+
         bSorted := false;
 
        SwapHappened(arrintegers[k] ,arrintegers[k+1] );
       end;
     end);
+
+    bsorted:=true;
     TParallel.&For(0,iArrayLength-2,procedure(K:integer)
+    var
+    itemp:integer;
     begin
       CompareHappened(arrIntegers[iArrayLength-k + 1], arrIntegers[iArrayLength-k] );
       if arrIntegers[iArrayLength-k + 1] > arrIntegers[iArrayLength-k] then
       begin
-        itemp := arrIntegers[iArrayLength-k];
-        arrintegers[iArrayLength-k] := arrintegers[iArrayLength-k + 1];
-        arrIntegers[iArrayLength-k + 1] := itemp;
+        atomicexchange( itemp,arrIntegers[iArrayLength-k]);
+        atomicexchange(arrintegers[iArrayLength-k],arrintegers[iArrayLength-k + 1]);
+        atomicexchange(arrIntegers[iArrayLength-k + 1],itemp);
         bSorted := false;
 
        SwapHappened(arrintegers[iArrayLength-k] ,arrintegers[iArrayLength-k + 1] );
       end;
     end);
-//    TParallel.&For(iArrayLength - 2 - iruns, iruns,procedure(K:integer)
-//    begin
-//      ShowMessage('This is the second loop');
-//      CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
-//      if arrIntegers[k + 1] > arrIntegers[k] then
-//      begin
-//        bSorted := false;
-//
-//        itemp := arrIntegers[k];
-//        arrintegers[k] := arrintegers[k + 1];
-//        arrIntegers[k + 1] := itemp;
-//
-//        SwapHappened(arrintegers[k] ,arrintegers[k+1] );
-//      end;
-//    end);
-    Inc(iruns);
-
   until (bSorted);
   UpdateScoreBoard;
 end;
 
 procedure TfrmJabsSorts.SwapHappened(iSwap1,iSwap2:integer);
 begin
-  inc(iSwaps);
+  AtomicIncrement(iSwaps);
   if iSwapDelay>0 then
   begin
-    Inc(iSwapsWithSound);
     PlaySound(round(iswap1 / irange * 127), iSwapDelay);
     playsound(round(iswap2 / irange * 127), iSwapDelay);
   end;

@@ -13,6 +13,13 @@ object frmStyleChanger: TfrmStyleChanger
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object lblBarWidth: TLabel
+    Left = 8
+    Top = 30
+    Width = 69
+    Height = 13
+    Caption = 'Bar Width (%)'
+  end
   object cbbStyles: TComboBox
     Left = 0
     Top = 0
@@ -26,21 +33,26 @@ object frmStyleChanger: TfrmStyleChanger
       'Windows'
       'Windows10 Dark'
       'Smokey Quartz Kamri')
-    ExplicitLeft = 72
-    ExplicitTop = 24
-    ExplicitWidth = 145
   end
   object btnSwapThemes: TButton
     Left = 0
-    Top = 41
+    Top = 80
     Width = 297
-    Height = 87
+    Height = 48
     Align = alBottom
     Caption = 'Swap Themes'
     TabOrder = 1
     OnClick = btnSwapThemesClick
-    ExplicitLeft = -8
-    ExplicitTop = 27
-    ExplicitWidth = 300
+  end
+  object seBarWidth: TSpinEdit
+    Left = 83
+    Top = 27
+    Width = 53
+    Height = 22
+    MaxValue = 100
+    MinValue = 10
+    TabOrder = 2
+    Value = 0
+    OnChange = seBarWidthChange
   end
 end
