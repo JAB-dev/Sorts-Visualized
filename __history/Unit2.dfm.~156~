@@ -34,7 +34,7 @@ object frmJabsSorts: TfrmJabsSorts
   object grpSettings: TGroupBox
     Left = 10
     Top = 8
-    Width = 759
+    Width = 695
     Height = 185
     Margins.Left = 5
     Margins.Right = 5
@@ -49,7 +49,7 @@ object frmJabsSorts: TfrmJabsSorts
       Caption = 'Sorting Algo:'
     end
     object lblDelay: TLabel
-      Left = 179
+      Left = 165
       Top = 71
       Width = 141
       Height = 19
@@ -62,8 +62,8 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
     end
     object lblDelayOnCompare: TLabel
-      Left = 413
-      Top = 21
+      Left = 331
+      Top = 24
       Width = 166
       Height = 19
       Caption = 'Delay on compare (ms)'
@@ -101,7 +101,7 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
     end
     object lblRange: TLabel
-      Left = 179
+      Left = 165
       Top = 21
       Width = 139
       Height = 19
@@ -114,8 +114,8 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
     end
     object lblVolume: TLabel
-      Left = 397
-      Top = 75
+      Left = 329
+      Top = 82
       Width = 60
       Height = 19
       Caption = 'Volume:'
@@ -153,12 +153,14 @@ object frmJabsSorts: TfrmJabsSorts
         'Simplest Sort'
         'Parallel Bubble'
         'Parallel Comb'
-        'Super Cocktail')
+        'Super Cocktail'
+        'Iterative HeapSort'
+        'Gnome Sort')
     end
     object seDelay: TSpinEdit
-      Left = 179
+      Left = 165
       Top = 90
-      Width = 121
+      Width = 126
       Height = 29
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
@@ -173,8 +175,8 @@ object frmJabsSorts: TfrmJabsSorts
       OnChange = seDelayChange
     end
     object seDelayOnCompare: TSpinEdit
-      Left = 413
-      Top = 40
+      Left = 331
+      Top = 43
       Width = 121
       Height = 29
       Font.Charset = DEFAULT_CHARSET
@@ -190,10 +192,10 @@ object frmJabsSorts: TfrmJabsSorts
       OnChange = seDelayOnCompareChange
     end
     object btnSort: TButton
-      Left = 609
-      Top = 119
-      Width = 121
-      Height = 52
+      Left = 544
+      Top = 122
+      Width = 141
+      Height = 53
       Margins.Left = 5
       Margins.Right = 5
       Margins.Bottom = 5
@@ -244,9 +246,9 @@ object frmJabsSorts: TfrmJabsSorts
       Value = 100
     end
     object seRange: TSpinEdit
-      Left = 179
+      Left = 165
       Top = 40
-      Width = 121
+      Width = 126
       Height = 29
       Hint = 
         'The number to which the integers in the  array can rise,useless ' +
@@ -263,8 +265,8 @@ object frmJabsSorts: TfrmJabsSorts
       Value = 10
     end
     object seVolume: TSpinEdit
-      Left = 477
-      Top = 75
+      Left = 395
+      Top = 78
       Width = 57
       Height = 28
       Font.Charset = DEFAULT_CHARSET
@@ -289,23 +291,25 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -19
       Font.Name = 'Tahoma'
       Font.Style = []
+      ItemIndex = 8
       ParentFont = False
       TabOrder = 8
-      Text = 'Random'
+      Text = 'Shuffle'
       Items.Strings = (
         'Random'
-        'Reverse Input'
+        'Ascending Order'
         'Sin Graph'
         'Cos Graph'
         'Cos Graph (Negative)'
         'Parabola'
         'Parabola (Negative)'
         'Negative Sin Graph'
-        'Shuffle')
+        'Shuffle'
+        'Descending Order')
     end
     object cbbPythonSorts: TComboBox
-      Left = 585
-      Top = 43
+      Left = 540
+      Top = 61
       Width = 145
       Height = 24
       Enabled = False
@@ -319,8 +323,8 @@ object frmJabsSorts: TfrmJabsSorts
       Text = 'Select Python Sort'
     end
     object chkUsePython: TCheckBox
-      Left = 585
-      Top = 20
+      Left = 540
+      Top = 38
       Width = 121
       Height = 17
       Caption = 'Use Custom Sorts'
@@ -334,8 +338,8 @@ object frmJabsSorts: TfrmJabsSorts
       OnClick = chkUsePythonClick
     end
     object btnCodeYourOwnSort: TButton
-      Left = 585
-      Top = 73
+      Left = 540
+      Top = 91
       Width = 145
       Height = 25
       Caption = 'Code your own sort'
@@ -1006,15 +1010,20 @@ object frmJabsSorts: TfrmJabsSorts
     ColorPaletteIndex = 8
     object barseriesSort: TBarSeries
       Legend.Visible = False
+      Selected.Hover.Visible = False
+      BarBrush.Gradient.EndColor = 29695
       BarPen.Visible = False
       ColorEachPoint = True
       ConePercent = 2
       Marks.Visible = False
+      SeriesColor = clWhite
       ShowInLegend = False
       Transparency = 4
+      BarWidthPercent = 100
       Dark3D = False
+      Gradient.EndColor = 29695
       MultiBar = mbNone
-      Sides = 110
+      Sides = 3
       XValues.Name = 'X'
       XValues.Order = loNone
       YValues.Name = 'Bar'
@@ -1026,10 +1035,10 @@ object frmJabsSorts: TfrmJabsSorts
     end
   end
   object grpScoreBoard: TGroupBox
-    Left = 777
-    Top = 33
+    Left = 713
+    Top = 69
     Width = 260
-    Height = 126
+    Height = 124
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Score Board'
     TabOrder = 2
@@ -1073,17 +1082,26 @@ object frmJabsSorts: TfrmJabsSorts
       ParentFont = False
     end
   end
+  object btn1: TButton
+    Left = 784
+    Top = 40
+    Width = 85
+    Height = 25
+    Caption = 'Test'
+    TabOrder = 3
+    Visible = False
+    OnClick = btn1Click
+  end
   object tmrUpdate: TTimer
     Enabled = False
     OnTimer = tmrUpdateTimer
-    Left = 328
+    Left = 304
   end
   object tmrTimeTaken: TTimer
     Enabled = False
     Interval = 1
     OnTimer = tmrTimeTakenTimer
-    Left = 368
-    Top = 40
+    Left = 240
   end
   object mmMenuOptions: TMainMenu
     Left = 360

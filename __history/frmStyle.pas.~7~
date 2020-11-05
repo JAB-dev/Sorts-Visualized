@@ -42,7 +42,7 @@ end;
 
 procedure TfrmStyleChanger.seBarWidthChange(Sender: TObject);
 begin
-//  frmJabsSorts.barseriesSort.BarWidth:=seBarWidth.Value;
+  frmJabsSorts.barseriesSort.BarWidth:=seBarWidth.Value;
 end;
 
 end.

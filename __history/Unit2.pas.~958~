@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle,IdThreadSafe;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -50,6 +50,7 @@ type
     tmrCustom: TTimer;
     View1: TMenuItem;
     StyleOptions1: TMenuItem;
+    btn1: TButton;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -85,7 +86,7 @@ type
     iSwapDelay: Integer;
     iArrayLength: Integer;
     iRange: Integer;
-    arrIntegers: array of Integer;
+    arrIntegers: array of integer;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
     procedure CombSort;
@@ -115,6 +116,7 @@ type
     procedure CalcCompareTime();
     procedure HeapSortIterative();
     procedure BuildMaxHeap();
+    procedure GnomeSort();
   end;
 
 var
@@ -125,8 +127,22 @@ implementation
 {$R *.dfm}
 
 procedure TfrmJabsSorts.btn1Click(Sender: TObject);
+var
+iInt1,iInt2:integer;
+bOutput:boolean;
+
 begin
-  RainbowBar;
+  iInt1:=10;
+  iInt2:=20;
+  AtomicCmpExchange(iint1,iint1,10,bOutput);
+  if bOutput=true then
+  begin
+    ShowMessage('TRUE LULW');
+    ShowMessage(IntToStr(iInt1));
+    ShowMessage(IntToStr(iInt2));
+  end;
+//  if atomic then
+
 end;
 
 procedure TfrmJabsSorts.btnCodeYourOwnSortClick(Sender: TObject);
@@ -153,7 +169,6 @@ begin
     PythonSort;
     exit;
   end;
-
   if cbbSorts.ItemIndex = -1 then
   begin
     ShowMessage('A sorting algorithm was not selected');
@@ -167,7 +182,6 @@ begin
     cbbInputStyle.SetFocus;
     exit;
   end;
-
   PrepareForSort;
 
   //chtSort.BottomAxis.Maximum := iArrayLength;
@@ -511,6 +525,17 @@ begin
     end
     );
   end;
+  if cbbSorts.Text='Gnome Sort' then
+  begin
+    tmrUpdate.Enabled := True;
+    TTask.Run(
+    procedure
+    begin
+      GnomeSort();
+    end
+    );
+  end;
+
 
 
 end;
@@ -801,11 +826,11 @@ begin
       begin
         iRange:=iArrayLength-1;
         seRange.Value:=irange;
-        TParallel.&For(0,iArrayLength-1,
-        procedure(C:integer)
+        TParallel.&For(0,iArrayLength-1,procedure(C:integer)
         begin
           arrintegers[C]:=C;
         end);
+
         for X := 0 to iArrayLength-1 do
         begin
           iRandom:=RandomRange(0,iArrayLength-1);
@@ -813,6 +838,16 @@ begin
           arrintegers[X]:=arrIntegers[irandom];
           arrintegers[irandom]:=iswap;
         end;
+
+      end;
+      9:begin  //Descending order
+        iRange := iArrayLength - 1;
+        for X := 0 to iArrayLength-1 do
+        begin
+          arrIntegers[iRange-x] := X;
+        end;
+        exit
+
       end;
   end;
 
@@ -838,6 +873,41 @@ begin
   //barseriesSort.AddArray(arrIntegers);
   chtSort.Title.Text.Clear;
   LoadPythonSorts;
+end;
+
+procedure TfrmJabsSorts.GnomeSort;
+var
+ipos:integer;
+iswap:integer;
+begin
+//procedure gnomeSort(a[]):
+//    pos := 0
+//    while pos < length(a):
+//        if (pos == 0 or a[pos] >= a[pos-1]):
+//            pos := pos + 1
+//        else:
+//            swap a[pos] and a[pos-1]
+//            pos := pos - 1
+  ResetScoreBoard;
+
+  ipos:=0;
+  while ipos<iarraylength do
+  begin
+    comparehappened(arrIntegers[ipos],arrIntegers[ipos-1]);
+    if (ipos=0) or (arrIntegers[ipos]>=arrIntegers[ipos-1]) then
+    begin
+      AtomicIncrement(ipos);
+    end
+    else
+    begin
+      SwapHappened(arrintegers[ipos],arrintegers[ipos-1]);
+      AtomicExchange(iswap,arrintegers[ipos]);
+      AtomicExchange(arrintegers[ipos],arrintegers[ipos-1]);
+      AtomicExchange(arrintegers[ipos-1],iswap);
+      AtomicDecrement(ipos);
+    end;
+  end;
+  UpdateScoreBoard;
 end;
 
 procedure TfrmJabsSorts.HeapSortIterative;
@@ -911,7 +981,7 @@ begin
     until (index>=i);
 
 
-end;
+  end;
   UpdateScoreBoard;
 end;
 procedure TfrmJabsSorts.Instrament1Click(Sender: TObject);
@@ -1017,9 +1087,10 @@ begin
       begin
         bsorted:=false;
         Swaphappened(arrIntegers[k],arrIntegers[k+igap]);
-        iswap:=arrIntegers[k];
-        arrintegers[k]:=arrIntegers[k+igap];
-        arrintegers[k+igap]:=iswap;
+
+        atomicexchange(iswap,arrIntegers[k]);
+        atomicexchange(arrintegers[k],arrIntegers[k+igap]);
+        atomicexchange(arrintegers[k+igap],iswap);
       end;
     end);
   end;
@@ -1338,13 +1409,15 @@ end;
 procedure TfrmJabsSorts.SuperCocktail;
 var
   bSorted: boolean;
-  k, itemp, iruns: integer;
+  k: integer;
 begin
   dStart := now;
-  iruns := 0;
   repeat
     bSorted := true;
+
     TParallel.&For(0,iArrayLength-2,procedure(K:integer)
+    var
+    itemp:integer;
     begin
       CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
       if arrIntegers[k + 1] > arrIntegers[k] then
@@ -1358,7 +1431,11 @@ begin
        SwapHappened(arrintegers[k] ,arrintegers[k+1] );
       end;
     end);
+
+    bsorted:=true;
     TParallel.&For(0,iArrayLength-2,procedure(K:integer)
+    var
+    itemp:integer;
     begin
       CompareHappened(arrIntegers[iArrayLength-k + 1], arrIntegers[iArrayLength-k] );
       if arrIntegers[iArrayLength-k + 1] > arrIntegers[iArrayLength-k] then
@@ -1371,29 +1448,15 @@ begin
        SwapHappened(arrintegers[iArrayLength-k] ,arrintegers[iArrayLength-k + 1] );
       end;
     end);
-//    TParallel.&For(iArrayLength - 2 - iruns, iruns,procedure(K:integer)
-//    begin
-//      ShowMessage('This is the second loop');
-//      CompareHappened(arrIntegers[k + 1], arrIntegers[k] );
-//      if arrIntegers[k + 1] > arrIntegers[k] then
-//      begin
-//        bSorted := false;
-//
-//        itemp := arrIntegers[k];
-//        arrintegers[k] := arrintegers[k + 1];
-//        arrIntegers[k + 1] := itemp;
-//
-//        SwapHappened(arrintegers[k] ,arrintegers[k+1] );
-//      end;
-//    end);
-    Inc(iruns);
-
   until (bSorted);
   UpdateScoreBoard;
 end;
 
 procedure TfrmJabsSorts.SwapHappened(iSwap1,iSwap2:integer);
 begin
+
+
+
   AtomicIncrement(iSwaps);
   if iSwapDelay>0 then
   begin

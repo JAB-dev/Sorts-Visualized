@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle,IdThreadSafe;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -50,6 +50,7 @@ type
     tmrCustom: TTimer;
     View1: TMenuItem;
     StyleOptions1: TMenuItem;
+    btn1: TButton;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -85,7 +86,7 @@ type
     iSwapDelay: Integer;
     iArrayLength: Integer;
     iRange: Integer;
-    arrIntegers: array of Integer;
+    arrIntegers: array of integer;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
     procedure CombSort;
@@ -115,6 +116,9 @@ type
     procedure CalcCompareTime();
     procedure HeapSortIterative();
     procedure BuildMaxHeap();
+    procedure GnomeSort();
+    procedure MultiTopDownSplitMerge(var b: array of integer; iBegin, iEnd: integer; var a: array of integer);
+    procedure MultiTopDownMergeSort(var a: array of integer; var b: array of integer; n: integer);
   end;
 
 var
@@ -125,8 +129,22 @@ implementation
 {$R *.dfm}
 
 procedure TfrmJabsSorts.btn1Click(Sender: TObject);
+var
+iInt1,iInt2:integer;
+bOutput:boolean;
+
 begin
-  RainbowBar;
+  iInt1:=10;
+  iInt2:=20;
+  AtomicCmpExchange(iint1,iint1,10,bOutput);
+  if bOutput=true then
+  begin
+    ShowMessage('TRUE LULW');
+    ShowMessage(IntToStr(iInt1));
+    ShowMessage(IntToStr(iInt2));
+  end;
+//  if atomic then
+
 end;
 
 procedure TfrmJabsSorts.btnCodeYourOwnSortClick(Sender: TObject);
@@ -153,7 +171,6 @@ begin
     PythonSort;
     exit;
   end;
-
   if cbbSorts.ItemIndex = -1 then
   begin
     ShowMessage('A sorting algorithm was not selected');
@@ -167,7 +184,6 @@ begin
     cbbInputStyle.SetFocus;
     exit;
   end;
-
   PrepareForSort;
 
   //chtSort.BottomAxis.Maximum := iArrayLength;
@@ -511,7 +527,27 @@ begin
     end
     );
   end;
+  if cbbSorts.Text='Gnome Sort' then
+  begin
+    tmrUpdate.Enabled := True;
+    TTask.Run(
+    procedure
+    begin
+      GnomeSort();
+    end
+    );
+  end;
 
+  if cbbSorts.ItemIndex=16 then //MultiTopDownMergesort
+  begin
+    tmrUpdate.Enabled:=true;
+     TTask.Run(
+      procedure
+      begin
+        multitopdownmergesort(arrIntegers, arrWorkArray, iArrayLength);
+      end);
+
+  end;
 
 end;
 
@@ -801,11 +837,11 @@ begin
       begin
         iRange:=iArrayLength-1;
         seRange.Value:=irange;
-        TParallel.&For(0,iArrayLength-1,
-        procedure(C:integer)
+        TParallel.&For(0,iArrayLength-1,procedure(C:integer)
         begin
           arrintegers[C]:=C;
         end);
+
         for X := 0 to iArrayLength-1 do
         begin
           iRandom:=RandomRange(0,iArrayLength-1);
@@ -813,6 +849,16 @@ begin
           arrintegers[X]:=arrIntegers[irandom];
           arrintegers[irandom]:=iswap;
         end;
+
+      end;
+      9:begin  //Descending order
+        iRange := iArrayLength - 1;
+        for X := 0 to iArrayLength-1 do
+        begin
+          arrIntegers[iRange-x] := X;
+        end;
+        exit
+
       end;
   end;
 
@@ -838,6 +884,41 @@ begin
   //barseriesSort.AddArray(arrIntegers);
   chtSort.Title.Text.Clear;
   LoadPythonSorts;
+end;
+
+procedure TfrmJabsSorts.GnomeSort;
+var
+ipos:integer;
+iswap:integer;
+begin
+//procedure gnomeSort(a[]):
+//    pos := 0
+//    while pos < length(a):
+//        if (pos == 0 or a[pos] >= a[pos-1]):
+//            pos := pos + 1
+//        else:
+//            swap a[pos] and a[pos-1]
+//            pos := pos - 1
+  ResetScoreBoard;
+
+  ipos:=0;
+  while ipos<iarraylength do
+  begin
+    comparehappened(arrIntegers[ipos],arrIntegers[ipos-1]);
+    if (ipos=0) or (arrIntegers[ipos]>=arrIntegers[ipos-1]) then
+    begin
+      AtomicIncrement(ipos);
+    end
+    else
+    begin
+      SwapHappened(arrintegers[ipos],arrintegers[ipos-1]);
+      AtomicExchange(iswap,arrintegers[ipos]);
+      AtomicExchange(arrintegers[ipos],arrintegers[ipos-1]);
+      AtomicExchange(arrintegers[ipos-1],iswap);
+      AtomicDecrement(ipos);
+    end;
+  end;
+  UpdateScoreBoard;
 end;
 
 procedure TfrmJabsSorts.HeapSortIterative;
@@ -911,7 +992,7 @@ begin
     until (index>=i);
 
 
-end;
+  end;
   UpdateScoreBoard;
 end;
 procedure TfrmJabsSorts.Instrament1Click(Sender: TObject);
@@ -945,6 +1026,30 @@ begin
   begin
     ShowMessage('it seems no custom sorts where found!');
   end;
+end;
+
+procedure TfrmJabsSorts.MultiTopDownMergeSort(var a, b: array of integer;
+  n: integer);
+begin
+    CopyArray(a, 0, n, b);
+  MultiTopDownSplitMerge(b, 0, n, a);
+end;
+
+procedure TfrmJabsSorts.MultiTopDownSplitMerge(var b: array of integer; iBegin,
+  iEnd: integer; var a: array of integer);
+var
+  iMiddle: integer;
+begin
+  if (iEnd - iBegin <= 1) then
+  begin
+    exit;
+  end;
+  iMiddle := (iEnd + iBegin) div 2;              // iMiddle = mid point
+  // recursively sort both runs from array A[] into B[]
+  TTask.Run(TopDownSplitMerge(a, iBegin, iMiddle, b));
+  TTask.Run( TopDownSplitMerge(a, iMiddle, iEnd, b));
+  TTask.Run(TopDownMerge(b, iBegin, iMiddle, iEnd, a));
+
 end;
 
 procedure TfrmJabsSorts.OldMethodofCustomSorts1Click(Sender: TObject);
@@ -1384,6 +1489,9 @@ end;
 
 procedure TfrmJabsSorts.SwapHappened(iSwap1,iSwap2:integer);
 begin
+
+
+
   AtomicIncrement(iSwaps);
   if iSwapDelay>0 then
   begin
