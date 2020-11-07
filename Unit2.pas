@@ -8,7 +8,8 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle,IdThreadSafe;
+  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle,IdThreadSafe
+  ,frmchangepitch_u;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -51,10 +52,11 @@ type
     View1: TMenuItem;
     StyleOptions1: TMenuItem;
     btn1: TButton;
+    AdjustPitch1: TMenuItem;
+    Settings1: TMenuItem;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure seVolumeChange(Sender: TObject);
     procedure btnResetSoundsClick(Sender: TObject);
     procedure btn1Click(Sender: TObject);
@@ -68,6 +70,10 @@ type
     procedure Instrament1Click(Sender: TObject);
     procedure Checkforupdates1Click(Sender: TObject);
     procedure StyleOptions1Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure AdjustPitch1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Settings1Click(Sender: TObject);
   private
     { Private declarations }
     arrWorkArray: array of integer;
@@ -86,6 +92,7 @@ type
     iSwapDelay: Integer;
     iArrayLength: Integer;
     iRange: Integer;
+    iPitchadjust:integer;
     arrIntegers: array of integer;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
@@ -134,6 +141,11 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TfrmJabsSorts.AdjustPitch1Click(Sender: TObject);
+begin
+  frmChangePitch.Show;
+end;
 
 procedure TfrmJabsSorts.BitonicSort;
 var
@@ -586,12 +598,13 @@ begin
 
   if cbbSorts.ItemIndex=16 then //MultiTopDownMergesort
   begin
-    tmrUpdate.Enabled:=true;
-     TTask.Run(
-      procedure
-      begin
-        multitopdownmergesort(arrIntegers, arrWorkArray, iArrayLength);
-      end);
+    ShowMessage('This sort is enabled as of yet');
+//    tmrUpdate.Enabled:=true;
+//     TTask.Run(
+//      procedure
+//      begin
+//        multitopdownmergesort(arrIntegers, arrWorkArray, iArrayLength);
+//      end);
 
   end;
   if cbbSorts.ItemIndex=17 then //Inplace Bitonic sort
@@ -957,23 +970,51 @@ begin
 
 end;
 
-procedure TfrmJabsSorts.FormCreate(Sender: TObject);
+
+
+
+procedure TfrmJabsSorts.FormActivate(Sender: TObject);
 var
 i:integer;
 begin
-  sounds := TJABSounds.Create;
-  sounds.SetInstrument(24);
+  try
+    sounds := TJABSounds.Create;
+    sounds.SetInstrument(24);
+  except
+    ShowMessageUser('Problem loading sounds...');
+  end;
+
+
   cbbSorts.ItemIndex := 0;
   cbbInputStyle.ItemIndex:=0;
-  //barseriesSort.Clear;
-  //barseriesSort.AddArray(arrIntegers);
   chtSort.Title.Text.Clear;
   LoadPythonSorts;
   barseriesSort.BarWidthPercent:=10;
   barseriesSort.ColorEachPoint:=true;
 
+  iPitchadjust:=0;
+end;
+
+procedure TfrmJabsSorts.FormCreate(Sender: TObject);
+var
+i:integer;
+begin
+  try
+    sounds := TJABSounds.Create;
+    sounds.SetInstrument(24);
+  except
+    ShowMessageUser('Problem loading sounds...');
+  end;
 
 
+  cbbSorts.ItemIndex := 0;
+  cbbInputStyle.ItemIndex:=0;
+  chtSort.Title.Text.Clear;
+  LoadPythonSorts;
+  barseriesSort.BarWidthPercent:=10;
+  barseriesSort.ColorEachPoint:=true;
+
+  iPitchadjust:=0;
 end;
 
 procedure TfrmJabsSorts.GnomeSort;
@@ -1264,6 +1305,8 @@ end;
 
 procedure TfrmJabsSorts.PlaySounds(inote, iDuration, inote2: integer);
 begin
+  inote:=inote+iPitchadjust;
+  inote2:=inote2+iPitchadjust;
   Sounds.NoteOn(abs(inote), ivolume);
   Sounds.NoteOn(abs(inote2), ivolume);
   Sleep(iDuration);
@@ -1487,6 +1530,18 @@ begin
   iCompareDelay:=seDelayOnCompare.Value;
 end;
 
+procedure TfrmJabsSorts.Settings1Click(Sender: TObject);
+begin
+  Settings1.Checked:=Not(Settings1.Checked);
+  if Settings1.Checked then
+  begin
+    grpSettings.Height:=1;
+  end else
+  begin
+    grpSettings.Height:=185;
+  end;
+end;
+
 procedure TfrmJabsSorts.seUpdateIntervalChange(Sender: TObject);
 begin
   tmrUpdate.Interval:=seUpdateInterval.Value;
@@ -1596,7 +1651,7 @@ begin
   AtomicIncrement(iSwaps);
   if iSwapDelay>0 then
   begin
-    PlaySounds(round(iswap2 / irange * 127),round(iswap1 / irange * 127),iSwapDelay);
+    PlaySounds(ceil(iswap2 / irange * 127),ceil(iswap1 / irange * 127),iSwapDelay);
   end;
 end;
 

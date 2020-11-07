@@ -9,7 +9,8 @@ uses
   clsSounds in 'clsSounds.pas',
   frmChangeInstrument_u in 'frmChangeInstrument_u.pas' {frmChangeInstrument},
   frmUpdate_u in 'frmUpdate_u.pas' {frmUpdate},
-  frmStyle in 'frmStyle.pas' {frmStyleChanger};
+  frmStyle in 'frmStyle.pas' {frmStyleChanger},
+  frmChangePitch_u in 'frmChangePitch_u.pas' {frmChangePitch};
 
 {$R *.res}
 
@@ -23,5 +24,6 @@ begin
   Application.CreateForm(TfrmChangeInstrument, frmChangeInstrument);
   Application.CreateForm(TfrmUpdate, frmUpdate);
   Application.CreateForm(TfrmStyleChanger, frmStyleChanger);
+  Application.CreateForm(TfrmChangePitch, frmChangePitch);
   Application.Run;
 end.
