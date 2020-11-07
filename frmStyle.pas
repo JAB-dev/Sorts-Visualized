@@ -13,8 +13,10 @@ type
     btnSwapThemes: TButton;
     seBarWidth: TSpinEdit;
     lblBarWidth: TLabel;
+    chkShowActivebars: TCheckBox;
     procedure btnSwapThemesClick(Sender: TObject);
     procedure seBarWidthChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -37,12 +39,16 @@ begin
   except
     ShowMessage('harumph, something went wrong');
   end;
+end;
 
+procedure TfrmStyleChanger.FormCreate(Sender: TObject);
+begin
+  cbbStyles.ItemIndex:=0;
 end;
 
 procedure TfrmStyleChanger.seBarWidthChange(Sender: TObject);
 begin
-//  frmJabsSorts.barseriesSort.BarWidth:=seBarWidth.Value;
+  frmJabsSorts.barseriesSort.BarWidthPercent:=seBarWidth.Value;
 end;
 
 end.

@@ -3,7 +3,7 @@ object frmChangeInstrument: TfrmChangeInstrument
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Change instrument'
-  ClientHeight = 131
+  ClientHeight = 22
   ClientWidth = 208
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,9 +21,10 @@ object frmChangeInstrument: TfrmChangeInstrument
     Top = 0
     Width = 208
     Height = 21
-    Align = alTop
+    Align = alClient
     TabOrder = 0
     Text = 'cbbInstruments'
+    OnChange = btnChangeInstruMentClick
     Items.Strings = (
       'Acoustic Piano'
       'BrtAcou Piano'
@@ -161,6 +162,7 @@ object frmChangeInstrument: TfrmChangeInstrument
     Height = 55
     Caption = 'Click to change'
     TabOrder = 1
+    Visible = False
     OnClick = btnChangeInstruMentClick
   end
 end

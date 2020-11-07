@@ -156,7 +156,9 @@ object frmJabsSorts: TfrmJabsSorts
         'Super Cocktail'
         'Iterative HeapSort'
         'Gnome Sort'
-        'MultiMerge')
+        'MultiMerge'
+        'InPlace Bitonic'
+        'Super InPlace Bitonic')
     end
     object seDelay: TSpinEdit
       Left = 165
@@ -244,7 +246,7 @@ object frmJabsSorts: TfrmJabsSorts
       MinValue = 10
       ParentFont = False
       TabOrder = 5
-      Value = 100
+      Value = 128
     end
     object seRange: TSpinEdit
       Left = 165
@@ -260,7 +262,7 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Name = 'Tahoma'
       Font.Style = []
       MaxValue = 100000
-      MinValue = 10
+      MinValue = 1000
       ParentFont = False
       TabOrder = 6
       Value = 10
@@ -368,13 +370,13 @@ object frmJabsSorts: TfrmJabsSorts
       'TChart')
     AxisVisible = False
     BottomAxis.Increment = 1.000000000000000000
+    Hover.Visible = False
     LeftAxis.Axis.JoinStyle = jsBevel
     LeftAxis.Visible = False
     View3D = False
     View3DOptions.HorizOffset = 5
     View3DOptions.Orthogonal = False
     View3DOptions.Perspective = 16
-    Zoom.Allow = False
     Zoom.Brush.Style = bsSolid
     Zoom.Brush.Gradient.EndColor = clGray
     Zoom.Brush.Gradient.MidColor = clWhite
@@ -998,6 +1000,7 @@ object frmJabsSorts: TfrmJabsSorts
       12120E0D0D0E2D2E274037372D28282827222A25292923252928262B2A272923
       232B2B2F3B413A000000}
     Zoom.KeepAspectRatio = True
+    Zoom.MinimumPixels = 1
     Zoom.MouseButton = mbMiddle
     Color = clBlack
     TabOrder = 1
@@ -1008,22 +1011,29 @@ object frmJabsSorts: TfrmJabsSorts
       26
       15
       26)
-    ColorPaletteIndex = 8
+    ColorPaletteIndex = 15
     object barseriesSort: TBarSeries
       Legend.Visible = False
       Selected.Hover.Visible = False
-      BarBrush.Gradient.EndColor = 29695
+      BarBrush.Color = 8421631
+      BarBrush.Gradient.EndColor = 9084993
       BarPen.Visible = False
       ColorEachPoint = True
       ConePercent = 2
       Marks.Visible = False
-      SeriesColor = clWhite
       ShowInLegend = False
       Transparency = 4
       BarWidthPercent = 100
       Dark3D = False
-      Gradient.EndColor = 29695
+      Gradient.EndColor = 9084993
       MultiBar = mbNone
+      Shadow.Color = 11184810
+      Shadow.HorizSize = -14
+      Shadow.Smooth = False
+      Shadow.SmoothBlur = -65
+      Shadow.Transparency = 0
+      Shadow.VertSize = -14
+      Shadow.Visible = False
       Sides = 3
       XValues.Name = 'X'
       XValues.Order = loNone

@@ -11,6 +11,7 @@ object frmStyleChanger: TfrmStyleChanger
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object lblBarWidth: TLabel
@@ -52,7 +53,15 @@ object frmStyleChanger: TfrmStyleChanger
     MaxValue = 100
     MinValue = 10
     TabOrder = 2
-    Value = 0
+    Value = 10
     OnChange = seBarWidthChange
+  end
+  object chkShowActivebars: TCheckBox
+    Left = 168
+    Top = 29
+    Width = 97
+    Height = 17
+    Caption = 'Show Active Bars'
+    TabOrder = 3
   end
 end
