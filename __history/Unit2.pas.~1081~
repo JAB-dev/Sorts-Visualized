@@ -601,15 +601,16 @@ begin
     );
   end;
 
-  if cbbSorts.ItemIndex=16 then //MultiTopDownMergesort
+  if cbbSorts.ItemIndex=16 then //MultiHeapSort
   begin
-    ShowMessage('This sort is enabled as of yet');
-//    tmrUpdate.Enabled:=true;
-//     TTask.Run(
-//      procedure
-//      begin
-//        multitopdownmergesort(arrIntegers, arrWorkArray, iArrayLength);
-//      end);
+    tmrUpdate.Enabled:=true;
+    ShowMessage('This sort can be unstable');
+     TTask.Run(
+      procedure
+      begin
+        ParHeapSortIterative;
+
+      end);
 
   end;
   if cbbSorts.ItemIndex=17 then //Inplace Bitonic sort
@@ -1219,9 +1220,9 @@ begin
       while arrIntegers[j]>arrIntegers[(j-1)Div 2 ] do
       begin
         //
-        itemp:=arrIntegers[j];
-        arrIntegers[j]:=arrIntegers[(j-1) div 2];
-        arrIntegers[(j-1) div 2]:=itemp;
+        atomicexchange(itemp,arrIntegers[j]);
+        atomicexchange(arrIntegers[j],arrIntegers[(j-1) div 2]);
+        atomicexchange(arrIntegers[(j-1) div 2],itemp);
         //
 
         SwapHappened(Arrintegers[j],arrintegers[j-1 div 2]);
@@ -1237,6 +1238,7 @@ var
 i,j,itemp,index:integer;
 begin
   ParBuildMaxHeap;
+
   for i := iArrayLength-1 downto 0 do
   begin
     SwapHappened(arrintegers[0],arrintegers[i]);
@@ -1266,6 +1268,8 @@ begin
 
     until (index>=i);
   end;
+
+
   UpdateScoreBoard;
 end;
 

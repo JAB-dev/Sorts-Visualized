@@ -76,6 +76,9 @@ type
     procedure Settings1Click(Sender: TObject);
   private
     { Private declarations }
+
+  public
+    { Public declarations }
     arrWorkArray: array of integer;
     iInterval: Integer;
     iTimeTaken: Integer;
@@ -86,8 +89,6 @@ type
     consoleControl: TJABConsole;
     iComparisons,iSwaps,iComparesWithSound,iSwapsWithSound:uint32;
     fdefaultStyleName:String;
-  public
-    { Public declarations }
     iCompareDelay: Integer;
     iSwapDelay: Integer;
     iArrayLength: Integer;
