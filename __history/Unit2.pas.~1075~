@@ -53,10 +53,10 @@ type
     StyleOptions1: TMenuItem;
     btn1: TButton;
     AdjustPitch1: TMenuItem;
+    Settings1: TMenuItem;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure seVolumeChange(Sender: TObject);
     procedure btnResetSoundsClick(Sender: TObject);
     procedure btn1Click(Sender: TObject);
@@ -72,6 +72,8 @@ type
     procedure StyleOptions1Click(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure AdjustPitch1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Settings1Click(Sender: TObject);
   private
     { Private declarations }
     arrWorkArray: array of integer;
@@ -90,6 +92,7 @@ type
     iSwapDelay: Integer;
     iArrayLength: Integer;
     iRange: Integer;
+    iPitchadjust:integer;
     arrIntegers: array of integer;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
@@ -120,7 +123,9 @@ type
     procedure CalcSoundComputetime();
     procedure CalcCompareTime();
     procedure HeapSortIterative();
+    procedure ParHeapSortIterative();
     procedure BuildMaxHeap();
+    procedure ParBuildMaxHeap();
     procedure GnomeSort();
     procedure MultiTopDownSplitMerge(var b: array of integer; iBegin, iEnd: integer; var a: array of integer);
     procedure MultiTopDownMergeSort(var a: array of integer; var b: array of integer; n: integer);
@@ -150,9 +155,11 @@ k,X,G,J,i:integer;
 itemp:integer;
 n:integer;
 begin
+  ResetScoreBoard;
   k:=2;
-  n:=length(arrintegers);
-  repeat
+  n:=iArrayLength;
+  while k<=n do
+  begin
     j:=k div 2;
     while j>0 do
     begin
@@ -163,23 +170,24 @@ begin
         begin
           G:=i and k; //neatness
           CompareHappened(arrintegers[i],arrintegers[X]);
-          if ((g=0) and (arrintegers[i] > arrintegers[X]) )
-          or ( (not(g=0) ) and (arrintegers[i]<arrintegers[x]) )
+          if
+          ((g=0) and (arrintegers[i] > arrintegers[X]) )
+          or
+          ( (g<>0) and (arrintegers[i]<arrintegers[x]) )
           then
           begin
             SwapHappened(arrintegers[i],arrintegers[x]);
-            AtomicExchange(itemp,arrintegers[i]);
-            AtomicExchange(arrintegers[i],arrintegers[X]);
-            AtomicExchange(arrintegers[x],itemp);
+            itemp:=arrIntegers[i];
+            arrIntegers[i]:=arrIntegers[x];
+            arrIntegers[x]:=itemp;
           end;
         end;
       end;
-      AtomicExchange(j,Trunc(j /2));
+      j:=Trunc(j/2);
     end;
-    AtomicExchange(k,k*2);
-  until (k>n);
 
-
+    k:=k*2;
+  end;
 end;
 
 procedure TfrmJabsSorts.btn1Click(Sender: TObject);
@@ -593,15 +601,15 @@ begin
     );
   end;
 
-  if cbbSorts.ItemIndex=16 then //MultiTopDownMergesort
+  if cbbSorts.ItemIndex=16 then //MultiHeapSort
   begin
-    ShowMessage('This sort is enabled as of yet');
-//    tmrUpdate.Enabled:=true;
-//     TTask.Run(
-//      procedure
-//      begin
-//        multitopdownmergesort(arrIntegers, arrWorkArray, iArrayLength);
-//      end);
+    tmrUpdate.Enabled:=true;
+     TTask.Run(
+      procedure
+      begin
+        ParHeapSortIterative;
+
+      end);
 
   end;
   if cbbSorts.ItemIndex=17 then //Inplace Bitonic sort
@@ -988,6 +996,30 @@ begin
   LoadPythonSorts;
   barseriesSort.BarWidthPercent:=10;
   barseriesSort.ColorEachPoint:=true;
+
+  iPitchadjust:=0;
+end;
+
+procedure TfrmJabsSorts.FormCreate(Sender: TObject);
+var
+i:integer;
+begin
+  try
+    sounds := TJABSounds.Create;
+    sounds.SetInstrument(24);
+  except
+    ShowMessageUser('Problem loading sounds...');
+  end;
+
+
+  chtSort.Title.Text.Clear;
+  LoadPythonSorts;
+  barseriesSort.BarWidthPercent:=10;
+  barseriesSort.ColorEachPoint:=true;
+
+  iPitchadjust:=0;
+
+  chtSort.Axes.FastCalc:=true;
 end;
 
 procedure TfrmJabsSorts.GnomeSort;
@@ -1140,6 +1172,7 @@ n:integer;
 begin
   k:=2;
   n:=length(arrintegers);
+  ResetScoreBoard;
   repeat
     j:=k div 2;
     while j>0 do
@@ -1169,6 +1202,76 @@ begin
     end;
     AtomicExchange(k,k*2);
   until (k>n);
+end;
+
+procedure TfrmJabsSorts.ParBuildMaxHeap;
+begin
+  TParallel.&For(1,iArrayLength,procedure(I:integer)
+  var
+  j,itemp:integer;
+  begin
+  //
+    CompareHappened(arrIntegers[i],arrIntegers[(i-1) div 2]);
+    //
+    if arrIntegers[i]>arrIntegers[(i-1) div 2] then
+    begin
+      j:=i;
+      while arrIntegers[j]>arrIntegers[(j-1)Div 2 ] do
+      begin
+        //
+        atomicexchange(itemp,arrIntegers[j]);
+        atomicexchange(arrIntegers[j],arrIntegers[(j-1) div 2]);
+        atomicexchange(arrIntegers[(j-1) div 2],itemp);
+        //
+
+        SwapHappened(Arrintegers[j],arrintegers[j-1 div 2]);
+        j:=(j-1) div 2;
+      end;
+    end;
+  end);
+
+end;
+
+procedure TfrmJabsSorts.ParHeapSortIterative;
+var
+i,j,itemp,index:integer;
+begin
+  ParBuildMaxHeap;
+  TParallel.&For(0,iArrayLength-1,
+  procedure(I:integer)
+  var
+  j,itemp:integer;
+  begin
+    SwapHappened(arrintegers[0],arrintegers[i]);
+    //
+    itemp :=arrIntegers[0];
+    arrIntegers[0]:=arrIntegers[i];
+    arrIntegers[i]:=itemp;
+    //
+    j:=0;
+
+    repeat
+        index:=(2*j+1);
+        CompareHappened(arrIntegers[index],arrIntegers[index+1]);
+        if (arrIntegers[index]<arrIntegers[index+1]) and (index<(i-1)) then
+        begin
+          inc(index);
+        end;
+        if (arrIntegers[j]<arrIntegers[index])and(index<i) then
+        begin
+          //
+          SwapHappened(arrIntegers[j],arrIntegers[index]);
+          itemp:=arrIntegers[j];
+          arrIntegers[j]:=arrIntegers[index];
+          arrIntegers[index]:=itemp;
+        end;
+        j:=index;
+
+    until (index>=i);
+  end
+  );
+
+  UpdateScoreBoard;
 end;
 
 procedure TfrmJabsSorts.ParralelBubble();
@@ -1278,6 +1381,8 @@ end;
 
 procedure TfrmJabsSorts.PlaySounds(inote, iDuration, inote2: integer);
 begin
+  inote:=inote+iPitchadjust;
+  inote2:=inote2+iPitchadjust;
   Sounds.NoteOn(abs(inote), ivolume);
   Sounds.NoteOn(abs(inote2), ivolume);
   Sleep(iDuration);
@@ -1501,6 +1606,18 @@ begin
   iCompareDelay:=seDelayOnCompare.Value;
 end;
 
+procedure TfrmJabsSorts.Settings1Click(Sender: TObject);
+begin
+  Settings1.Checked:=Not(Settings1.Checked);
+  if Settings1.Checked then
+  begin
+    grpSettings.Height:=1;
+  end else
+  begin
+    grpSettings.Height:=185;
+  end;
+end;
+
 procedure TfrmJabsSorts.seUpdateIntervalChange(Sender: TObject);
 begin
   tmrUpdate.Interval:=seUpdateInterval.Value;
@@ -1610,7 +1727,7 @@ begin
   AtomicIncrement(iSwaps);
   if iSwapDelay>0 then
   begin
-    PlaySounds(round(iswap2 / irange * 127),round(iswap1 / irange * 127),iSwapDelay);
+    PlaySounds(ceil(iswap2 / irange * 127),ceil(iswap1 / irange * 127),iSwapDelay);
   end;
 end;
 
@@ -1631,6 +1748,8 @@ begin
   //Update the graph by reloading the array  (Hopefully there is a better way)
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
+  lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps-1);
+  lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons-1);
 end;
 
 procedure TfrmJabsSorts.TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer; var b: array of integer);
@@ -1709,6 +1828,9 @@ begin
   lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps-1);
   lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons-1);
   lblTime.Caption:='Sort Time(ms): '+FloatToStr(rElapsedSeconds);
+
+  tmrUpdate.Enabled:=false;
+  tmrUpdate.OnTimer(frmJabsSorts);
 end;
 
 procedure TfrmJabsSorts.VeriftSortDescends;

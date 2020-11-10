@@ -40,7 +40,6 @@ object frmJabsSorts: TfrmJabsSorts
     Align = alTop
     Caption = 'Settings'
     TabOrder = 0
-    ExplicitTop = 7
     object lblSorts: TLabel
       Left = 16
       Top = 125
@@ -156,7 +155,7 @@ object frmJabsSorts: TfrmJabsSorts
         'Super Cocktail'
         'Iterative HeapSort'
         'Gnome Sort'
-        'MultiMerge'
+        'Iterative Heapsort (Parr. Heap)'
         'InPlace Bitonic'
         'Super InPlace Bitonic')
     end
@@ -246,7 +245,7 @@ object frmJabsSorts: TfrmJabsSorts
       MinValue = 10
       ParentFont = False
       TabOrder = 5
-      Value = 128
+      Value = 64
     end
     object seRange: TSpinEdit
       Left = 165
@@ -369,8 +368,7 @@ object frmJabsSorts: TfrmJabsSorts
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitLeft = 1
-        ExplicitTop = 40
+        ExplicitWidth = 103
       end
       object lblSwaps: TLabel
         Left = 2
@@ -385,8 +383,6 @@ object frmJabsSorts: TfrmJabsSorts
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitLeft = 3
-        ExplicitTop = 18
         ExplicitWidth = 51
       end
       object lblTime: TLabel
@@ -402,8 +398,6 @@ object frmJabsSorts: TfrmJabsSorts
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitLeft = 3
-        ExplicitTop = 110
         ExplicitWidth = 150
       end
     end
@@ -1063,10 +1057,6 @@ object frmJabsSorts: TfrmJabsSorts
     Align = alClient
     Color = clBlack
     TabOrder = 1
-    ExplicitLeft = 10
-    ExplicitTop = 203
-    ExplicitWidth = 1035
-    ExplicitHeight = 542
     DefaultCanvas = 'TGDIPlusCanvas'
     PrintMargins = (
       15
