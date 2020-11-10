@@ -50,9 +50,9 @@ object frmJabsSorts: TfrmJabsSorts
     object lblDelay: TLabel
       Left = 165
       Top = 71
-      Width = 141
+      Width = 136
       Height = 19
-      Caption = 'Delay on swap (ms)'
+      Caption = 'Delay on swap ('#956's)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -63,9 +63,9 @@ object frmJabsSorts: TfrmJabsSorts
     object lblDelayOnCompare: TLabel
       Left = 331
       Top = 24
-      Width = 166
+      Width = 161
       Height = 19
-      Caption = 'Delay on compare (ms)'
+      Caption = 'Delay on compare ('#956's)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -16
@@ -169,11 +169,11 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -16
       Font.Name = 'Tahoma'
       Font.Style = []
-      MaxValue = 1000
+      MaxValue = 2147483647
       MinValue = 0
       ParentFont = False
       TabOrder = 1
-      Value = 1
+      Value = 10000
       OnChange = seDelayChange
     end
     object seDelayOnCompare: TSpinEdit
@@ -186,7 +186,7 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Height = -16
       Font.Name = 'Tahoma'
       Font.Style = []
-      MaxValue = 0
+      MaxValue = 10000000
       MinValue = 0
       ParentFont = False
       TabOrder = 2
@@ -352,7 +352,7 @@ object frmJabsSorts: TfrmJabsSorts
       Left = 704
       Top = 15
       Width = 325
-      Height = 86
+      Height = 101
       Caption = 'Score Board'
       TabOrder = 12
       object lblCompare: TLabel
@@ -360,6 +360,10 @@ object frmJabsSorts: TfrmJabsSorts
         Top = 34
         Width = 321
         Height = 19
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Align = alTop
         Caption = 'Comparisons: '
         Font.Charset = DEFAULT_CHARSET
@@ -375,6 +379,10 @@ object frmJabsSorts: TfrmJabsSorts
         Top = 15
         Width = 321
         Height = 19
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Align = alTop
         Caption = 'Swaps:'
         Font.Charset = DEFAULT_CHARSET
@@ -390,6 +398,10 @@ object frmJabsSorts: TfrmJabsSorts
         Top = 53
         Width = 321
         Height = 19
+        Margins.Left = 5
+        Margins.Top = 5
+        Margins.Right = 5
+        Margins.Bottom = 5
         Align = alTop
         Caption = 'Estimated Sort Time:'
         Font.Charset = DEFAULT_CHARSET
@@ -412,11 +424,18 @@ object frmJabsSorts: TfrmJabsSorts
     Margins.Right = 5
     Margins.Bottom = 5
     AllowPanning = pmNone
+    BackWall.Visible = False
+    BottomWall.Visible = False
     Gradient.EndColor = 753908
     Gradient.MidColor = 16059031
     Gradient.StartColor = 14540754
     Gradient.SubGradient.Transparency = 100
+    LeftWall.Visible = False
     Legend.Visible = False
+    MarginBottom = 0
+    MarginLeft = 1
+    MarginRight = 1
+    MarginTop = 0
     Title.Font.Height = -16
     Title.Text.Strings = (
       'TChart')
@@ -425,10 +444,12 @@ object frmJabsSorts: TfrmJabsSorts
     Hover.Visible = False
     LeftAxis.Axis.JoinStyle = jsBevel
     LeftAxis.Visible = False
+    Shadow.Visible = False
     View3D = False
     View3DOptions.HorizOffset = 5
     View3DOptions.Orthogonal = False
     View3DOptions.Perspective = 16
+    View3DWalls = False
     Zoom.Brush.Style = bsSolid
     Zoom.Brush.Gradient.EndColor = clGray
     Zoom.Brush.Gradient.MidColor = clWhite

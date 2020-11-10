@@ -1,12 +1,7 @@
 # Python program for implementation of Radix Sort
-
+from Sorting_Module import * #Grab stuff we need
 # A function to do counting sort of arr[] according to
 # the digit represented by exp.
-inputa = []
-f = open("Sort.txt", "r")
-for x in f:
-    inputa.append(int(x))
-f.close
 def countingSort(arr, exp1):
 
 	n = len(arr)
@@ -40,9 +35,6 @@ def countingSort(arr, exp1):
 	i = 0
 	for i in range(0,len(arr)):
             arr[i] = output[i]
-            f = open("Sorted.txt", "a")
-            f.write(str(inputa)+"\n")
-            f.close()
 
 # Method to do Radix Sort
 def radixSort(arr):
@@ -62,9 +54,11 @@ def radixSort(arr):
             exp *= 10
 # Driver code to test above
 
-radixSort(inputa)
+radixSort(array)
 
-f = open("Sorted.txt", "a")
-f.write(str(inputa))
-f.close()
 # This code is contributed by Mohit Kumra
+
+
+# ("array") Refers to the array that needs to be sorted
+#Delphi_Form.sHappened(iSwap1,iSwap2) Use this when 2 values are swapped
+#Delphi_Form.cHappened(iCompare1,iComapare2) use this when 2 values are compared

@@ -30,6 +30,7 @@ type
     LoadExampleSort1: TMenuItem;
     chkDebugMode: TCheckBox;
     PyDelWrap1: TPyDelphiWrapper;
+    AddReferences1: TMenuItem;
     procedure btnSortClick(Sender: TObject);
     procedure PyInputOutput1ReceiveData(Sender: TObject; var Data: AnsiString);
     procedure FormCreate(Sender: TObject);
@@ -39,6 +40,7 @@ type
     procedure btnLoadClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure LoadExampleSort1Click(Sender: TObject);
+    procedure AddReferences1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -60,6 +62,14 @@ implementation
 
 uses unit2; //we need the array and such
 {$R *.dfm}
+
+procedure TfrmPython.AddReferences1Click(Sender: TObject);
+begin
+  syndt1.Lines.Add('from Sorting_Module import * #Grab stuff we need');
+  syndt1.Lines.Add('# ("array") Refers to the array that needs to be sorted');
+  syndt1.Lines.Add('#Delphi_Form.sHappened (iSwap1,iSwap2) Use this when 2 values are swapped');
+  syndt1.Lines.Add('#Delphi_Form.cHappened (iCompare1,iComapare2) use this when 2 values are compared');
+end;
 
 procedure TfrmPython.btnLoadClick(Sender: TObject);
 begin

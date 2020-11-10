@@ -55,8 +55,8 @@ object frmPython: TfrmPython
       OnClick = btnSaveClick
     end
     object chkDebugMode: TCheckBox
-      Left = 240
-      Top = 18
+      Left = 384
+      Top = 21
       Width = 273
       Height = 17
       Caption = 'Debug Mode (wont vis, enables output)'
@@ -87,7 +87,6 @@ object frmPython: TfrmPython
       Lines.Strings = (
         'Output appears here:')
       TabOrder = 0
-      ExplicitWidth = 129
     end
   end
   object syndt1: TSynEdit
@@ -139,7 +138,6 @@ object frmPython: TfrmPython
       'bubbleSort(array)'
       '')
     WantTabs = True
-    ExplicitWidth = 641
   end
   object PyEng1: TPythonEngine
     FatalAbort = False
@@ -166,13 +164,13 @@ object frmPython: TfrmPython
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 592
-    Top = 16
+    Left = 304
+    Top = 8
   end
   object SynEditPythonBehaviour1: TSynEditPythonBehaviour
     Editor = syndt1
-    Left = 624
-    Top = 16
+    Left = 344
+    Top = 65528
   end
   object PyModule1: TPythonModule
     Engine = PyEng1
@@ -200,6 +198,10 @@ object frmPython: TfrmPython
       object LoadExampleSort1: TMenuItem
         Caption = 'Load Example Sort'
         OnClick = LoadExampleSort1Click
+      end
+      object AddReferences1: TMenuItem
+        Caption = 'Add References '
+        OnClick = AddReferences1Click
       end
     end
   end

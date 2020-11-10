@@ -9,7 +9,7 @@ uses
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
   Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle,IdThreadSafe
-  ,frmchangepitch_u;
+  ,frmchangepitch_u, Vcl.Imaging.pngimage, Vcl.AppAnalytics, Vcl.Samples.Gauges;
 
 type
   TfrmJabsSorts = class(TForm)
@@ -91,9 +91,13 @@ type
     fdefaultStyleName:String;
     iCompareDelay: Integer;
     iSwapDelay: Integer;
+    dSwapDelay:TDateTime;
     iArrayLength: Integer;
+    dBeforeUpdate,dAfterUPdate:tdatetime;
+    rMiliSecondsElapsed:extended;
     iRange: Integer;
     iPitchadjust:integer;
+    iframes:uint32;
     arrIntegers: array of integer;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
@@ -116,25 +120,44 @@ type
     procedure ResetScoreBoard();
     procedure SwapHappened(iSwap1,iSwap2:integer);
     procedure CompareHappened(iCompare1,iComapare2:integer);
+
     procedure sHappened(iSwap1,iSwap2:integer);
+
     procedure cHappened(iCompare1,iComapare2:integer);
+
     procedure ParralelBubble();
+
     procedure ParralelComb();
+
     procedure SuperCocktail();
+
     procedure CalcSoundComputetime();
+
     procedure CalcCompareTime();
+
     procedure HeapSortIterative();
+
     procedure ParHeapSortIterative();
+
     procedure BuildMaxHeap();
+
     procedure ParBuildMaxHeap();
+
     procedure GnomeSort();
+
     procedure MultiTopDownSplitMerge(var b: array of integer; iBegin, iEnd: integer; var a: array of integer);
     procedure MultiTopDownMergeSort(var a: array of integer; var b: array of integer; n: integer);
     procedure BitonicSort();
+
     procedure ParBitonicSort();
+
     procedure VerifySortAscends();
+
     procedure VeriftSortDescends();
+
     function CheckIfBitonic(pInteger:integer):boolean;
+
+    procedure BetterSleep(pDays:Extended);
 
   end;
 
@@ -148,6 +171,18 @@ implementation
 procedure TfrmJabsSorts.AdjustPitch1Click(Sender: TObject);
 begin
   frmChangePitch.Show;
+end;
+
+procedure TfrmJabsSorts.BetterSleep(pDays: Extended);
+var
+dBeforeSleep:TDateTime;
+dSleepTime:TDateTime;
+begin
+  dBeforeSleep:=now;
+  while dSleepTime<pdays do
+  begin
+    dSleepTime:=now-dBeforeSleep;
+  end;
 end;
 
 procedure TfrmJabsSorts.BitonicSort;
@@ -226,7 +261,6 @@ var
   iTestifbitonic:integer;
 begin
   {If a CodeYourOwnSortTM was running we need to stop that timer as it writes the array}
-  tmrCustom.Enabled:=false;
   //Decide what sort to use      cbbSorts.
   //arrIntegers:=array[1..iarraylength] of Integer;
     //validate
@@ -248,24 +282,11 @@ begin
     cbbInputStyle.SetFocus;
     exit;
   end;
+
   PrepareForSort;
-
-  //chtSort.BottomAxis.Maximum := iArrayLength;
-    //Filling the array randomly or giving a reverse input
   FillArray;
-
-
-    {Bubble Sort (Using For(Unoptimized))     0
-    Bubble Sort (Faster)                      1
-    Comb Sort                                 2
-    Insertion Sort                            3
-    Selection Sort (Unoptimized)              4
-    Quick Sort (Lomuto partition scheme)      5
-    Cycle (Circle) Sort                       6 SHould really make this one neater
-    Top Down Merge Sort                       7
-    Vermenthruaxx sort (Joke)                 8
-    }
   ResetScoreBoard;
+
   if cbbSorts.ItemIndex = 0 then
   begin
     ShowMessage(cbbSorts.Items[cbbSorts.ItemIndex] + ' Has been selected');
@@ -711,11 +732,10 @@ begin
   end;
 
   //Now we have sound and scoreboard all in ONE!!! much neater code
-  Inc(iComparisons);
+   AtomicIncrement(iComparisons);
   if iCompareDelay>0 then
   begin
-    PlaySound(round(iCompare1 / irange * 127), iCompareDelay);
-    playsound(round(iComapare2 / irange * 127), iCompareDelay);
+    PlaySounds(round(iCompare1 / irange * 127), round(iComapare2 / irange * 127),iCompareDelay);
   end;
 end;
 
@@ -843,10 +863,9 @@ end;
 procedure TfrmJabsSorts.CompareHappened(iCompare1,iComapare2:integer);
 begin
   //Now we have sound and scoreboard all in ONE!!! much neater code
-  Inc(iComparisons);
+  AtomicIncrement(iComparisons);
   if iCompareDelay>0 then
   begin
-    Inc(iComparesWithSound);
     PlaySounds(round(iCompare1 / irange * 127), round(iComapare2 / irange * 127),iCompareDelay);
   end;
 end;
@@ -867,6 +886,14 @@ var
   iRandom:integer;
   iSwap:integer;
 begin
+  if iArrayLength>chtSort.Width then
+  begin
+    ShowMessage('There are more elements than there are pixels on the chart'+#10
+    +'This may lead to funny graphical bugs when a sort is done'
+    );
+  end;
+
+
   case cbbInputStyle.ItemIndex of
     0:
       begin
@@ -1013,15 +1040,11 @@ begin
     ShowMessageUser('Problem loading sounds...');
   end;
 
-
   chtSort.Title.Text.Clear;
   LoadPythonSorts;
   barseriesSort.BarWidthPercent:=10;
-  barseriesSort.ColorEachPoint:=true;
 
   iPitchadjust:=0;
-
-  chtSort.Axes.FastCalc:=true;
 end;
 
 procedure TfrmJabsSorts.GnomeSort;
@@ -1029,14 +1052,6 @@ var
 ipos:integer;
 iswap:integer;
 begin
-//procedure gnomeSort(a[]):
-//    pos := 0
-//    while pos < length(a):
-//        if (pos == 0 or a[pos] >= a[pos-1]):
-//            pos := pos + 1
-//        else:
-//            swap a[pos] and a[pos-1]
-//            pos := pos - 1
   ResetScoreBoard;
 
   ipos:=0;
@@ -1050,10 +1065,12 @@ begin
     else
     begin
       SwapHappened(arrintegers[ipos],arrintegers[ipos-1]);
-      AtomicExchange(iswap,arrintegers[ipos]);
-      AtomicExchange(arrintegers[ipos],arrintegers[ipos-1]);
-      AtomicExchange(arrintegers[ipos-1],iswap);
-      AtomicDecrement(ipos);
+
+      iswap:=arrIntegers[ipos];
+      arrIntegers[ipos]:=arrIntegers[ipos-1];
+      arrIntegers[ipos-1]:=iswap;
+
+      Dec(ipos);
     end;
   end;
   UpdateScoreBoard;
@@ -1385,7 +1402,9 @@ begin
   inote2:=inote2+iPitchadjust;
   Sounds.NoteOn(abs(inote), ivolume);
   Sounds.NoteOn(abs(inote2), ivolume);
-  Sleep(iDuration);
+
+  BetterSleep( (iSwapDelay/SecsPerDay)*0.000001);
+
   Sounds.NoteOff(abs(inote), ivolume);
   Sounds.NoteOff(abs(inote2), ivolume);
 end;
@@ -1393,6 +1412,7 @@ end;
 procedure TfrmJabsSorts.PrepareForSort;
 begin
   iVolume := seVolume.Value;
+  iframes:=0;
   iTimeTaken := 0;
   iArrayLength := seArrayLength.Value;
   SetLength(arrIntegers, iArrayLength);  //dynamic array length setting, way easier than I thought
@@ -1636,11 +1656,10 @@ begin
     except
       //Do nothing on error, we expect errors :(
     end;
-  inc(iSwaps);
+  AtomicIncrement(iSwaps);
   if iSwapDelay>0 then
   begin
-    PlaySound(round(iswap1 / irange * 127), iSwapDelay);
-    playsound(round(iswap2 / irange * 127), iSwapDelay);
+    PlaySounds(ceil(iswap2 / irange * 127),ceil(iswap1 / irange * 127),iSwapDelay);
   end;
 end;
 
@@ -1681,7 +1700,7 @@ var
   bSorted: boolean;
   k: integer;
 begin
-  dStart := now;
+  ResetScoreBoard;
   repeat
     bSorted := true;
 
