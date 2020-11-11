@@ -99,6 +99,7 @@ type
     iRange: Integer;
     iPitchadjust:integer;
     arrIntegers: array of integer;
+    arrSorts:array of TMethod;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
     procedure CombSort;
@@ -158,6 +159,9 @@ type
     function CheckIfBitonic(pInteger:integer):boolean;
 
     procedure BetterSleep(pDays:Extended);
+    procedure HybridCombInsert();
+    procedure InsertionSort();
+    procedure MultiInsertionSort();
 
   end;
 
@@ -383,25 +387,11 @@ begin
     //CaptureTimeNow
     dStart := now;
     //captureTimeNOw
-    TTask.Run(
-      procedure
+    TTask.Run(procedure
       var
         itemp, k, J: Integer;
       begin
-        for k := 1 to iArrayLength - 1 do
-        begin
-          J := k;
-          while (arrIntegers[J - 1] < arrIntegers[J]) and (J >= 1) do
-          begin
-            itemp := arrIntegers[J - 1];
-            arrintegers[J - 1] := arrIntegers[J];
-            arrintegers[J] := itemp;
-
-            swaphappened(arrintegers[J],arrintegers[J - 1]);
-            dec(J)
-          end;
-        end;
-        updatescoreboard;
+        InsertionSort;
       end);
   end;
   //selection sort
@@ -619,6 +609,7 @@ begin
     TTask.Run(
     procedure
     begin
+      resetscoreboard;
       GnomeSort();
     end
     );
@@ -669,9 +660,19 @@ begin
     procedure
     begin
       ParBitonicSort;
-      UpdateScoreBoard;
+
     end);
   end;
+
+  if cbbSorts.ItemIndex=19 then
+  begin
+    TTask.Run(
+    procedure
+    begin
+      hybridcombinsert()
+    end);
+  end;
+
 
 
 end;
@@ -1058,13 +1059,11 @@ var
 ipos:integer;
 iswap:integer;
 begin
-  ResetScoreBoard;
-
   ipos:=0;
   while ipos<iarraylength do
   begin
     comparehappened(arrIntegers[ipos],arrIntegers[ipos-1]);
-    if (ipos=0) or (arrIntegers[ipos]>=arrIntegers[ipos-1]) then
+    if (ipos=0) or (arrIntegers[ipos]<=arrIntegers[ipos-1]) then
     begin
       AtomicIncrement(ipos);
     end
@@ -1120,6 +1119,60 @@ begin
   end;
   UpdateScoreBoard;
 end;
+procedure TfrmJabsSorts.HybridCombInsert;
+var
+  itemp, k, igap: Integer;
+  bSorted,bdone: Boolean;
+begin
+  bSorted := False;
+  bdone:=false;
+  igap := iArrayLength;
+  dStart:=now;
+  while (bSorted = False)and(igap > 1) do
+  begin
+    igap := Floor(igap / 1.3);
+    if igap<=1 then
+    begin
+      break;
+    end;
+    k := 0;
+    while (igap + k) < iArrayLength do
+    begin
+      CompareHappened( arrIntegers[k + igap], arrIntegers[k] );
+      if arrIntegers[k + igap] > arrIntegers[k] then
+      begin
+        itemp := arrIntegers[k];
+        arrintegers[k] := arrIntegers[k + igap];
+        arrintegers[k + igap] := itemp;
+        bSorted := False;
+        SwapHappened(arrintegers[k],arrintegers[k + igap]);
+      end;
+      inc(k);
+    end;
+  end;
+  MultiInsertionSort;//Insertion will finish off the remainder
+end;
+
+procedure TfrmJabsSorts.InsertionSort;
+var
+itemp, k, J: Integer;
+begin
+  for k := 1 to iArrayLength - 1 do
+  begin
+    J := k;
+    while (arrIntegers[J - 1] < arrIntegers[J]) and (J >= 1) do
+    begin
+      itemp := arrIntegers[J - 1];
+      arrintegers[J - 1] := arrIntegers[J];
+      arrintegers[J] := itemp;
+
+      swaphappened(arrintegers[J],arrintegers[J - 1]);
+      dec(J)
+    end;
+  end;
+  updatescoreboard;
+end;
+
 procedure TfrmJabsSorts.Instrament1Click(Sender: TObject);
 var
 iIns:integer;
@@ -1151,6 +1204,30 @@ begin
   begin
     ShowMessage('it seems no custom sorts where found!');
   end;
+end;
+
+procedure TfrmJabsSorts.MultiInsertionSort;
+var
+itemp, k, J: Integer;
+begin
+  TParallel.&For(
+  1,iArrayLength-1,procedure(K:integer)
+  var
+  itemp,J:integer;
+  begin
+    J := k;
+    while (arrIntegers[J - 1] < arrIntegers[J]) and (J >= 1) do
+    begin
+      atomicexchange(itemp,arrIntegers[J - 1]);
+      atomicexchange(arrintegers[J - 1],arrIntegers[J]);
+      atomicexchange(arrintegers[J],itemp);
+
+      swaphappened(arrintegers[J],arrintegers[J - 1]);
+      dec(J)
+    end;
+  end
+  );
+  updatescoreboard;
 end;
 
 procedure TfrmJabsSorts.MultiTopDownMergeSort(var a, b: array of integer;
@@ -1191,7 +1268,7 @@ end;
 
 procedure TfrmJabsSorts.ParBitonicSort;
 var
-k,X,G,J,i:integer;
+k,J,i:integer;
 itemp:integer;
 n:integer;
 begin
@@ -1204,8 +1281,7 @@ begin
     begin
       TParallel.&For(0,n,procedure(i:integer)
       var
-      g:integer;
-      x:integer;
+      x,g:integer;
       begin
         x:=i xor j;
         if x>i then
@@ -1227,6 +1303,7 @@ begin
     end;
     AtomicExchange(k,k*2);
   until (k>n);
+  UpdateScoreBoard;
 end;
 
 procedure TfrmJabsSorts.ParBuildMaxHeap;
@@ -1333,8 +1410,8 @@ procedure TfrmJabsSorts.ParralelComb;
 var
 bsorted:boolean;
 igap:integer;
+iswap:integer;
 begin
-  ResetScoreBoard;
   dStart:=now;
   igap:=iArrayLength-1;
   bsorted:=false;
@@ -1346,9 +1423,8 @@ begin
       bsorted:=true;
       igap:=1;
     end;
+
     TParallel.&For(0,iarraylength-igap-1,procedure(K:Integer)
-    var
-    iswap:integer;
     begin
       Comparehappened(arrIntegers[k],arrIntegers[k+igap]);
       if arrIntegers[k+igap]>arrIntegers[k] then
@@ -1361,6 +1437,7 @@ begin
         atomicexchange(arrintegers[k+igap],iswap);
       end;
     end);
+
   end;
 
   UpdateScoreBoard;

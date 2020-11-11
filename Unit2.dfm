@@ -157,7 +157,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Gnome Sort'
         'Iterative Heapsort (Parr. Heap)'
         'InPlace Bitonic'
-        'Super InPlace Bitonic')
+        'Super InPlace Bitonic'
+        'Hybrid CombInsert')
     end
     object seDelay: TSpinEdit
       Left = 165
