@@ -8,7 +8,7 @@ uses
   System.Actions, Vcl.ActnList, Vcl.ExtCtrls, Vcl.StdCtrls, VclTee.TeeGDIPlus,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart,
   Vcl.Samples.Spin, System.threading, System.Math, dateutils, clssounds,
-  Vcl.Buttons, consolecontrol,frmCodeYourOwn_u, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle,IdThreadSafe
+  Vcl.Buttons, consolecontrol, Vcl.Menus,frmchangeinstrument_u,frmUpdate_u,Vcl.themes,frmStyle,IdThreadSafe
   ,frmchangepitch_u, Vcl.Imaging.pngimage, Vcl.AppAnalytics, Vcl.Samples.Gauges;
 
 type
@@ -23,7 +23,6 @@ type
     btnSort: TButton;
     seUpdateInterval: TSpinEdit;
     lblUpdateINterval: TLabel;
-    chtSort: TChart;
     seArrayLength: TSpinEdit;
     lblArrayLength: TLabel;
     seRange: TSpinEdit;
@@ -55,6 +54,7 @@ type
     AdjustPitch1: TMenuItem;
     Settings1: TMenuItem;
     TeeGDIPlus1: TTeeGDIPlus;
+    chtSort: TChart;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -88,7 +88,7 @@ type
     Sounds: TJABSounds;
     iVolume: integer;
     consoleControl: TJABConsole;
-    iComparisons,iSwaps,iComparesWithSound,iSwapsWithSound:uint32;
+    iComparisons,iSwaps:uint64;
     fdefaultStyleName:String;
     iCompareDelay: Integer;
     iSwapDelay: Integer;
@@ -98,7 +98,6 @@ type
     rMiliSecondsElapsed:extended;
     iRange: Integer;
     iPitchadjust:integer;
-    iframes:uint32;
     arrIntegers: array of integer;
     procedure QuickSort(Lo, hi: integer);
     function Partition(lo, hi: integer): integer;
@@ -168,6 +167,9 @@ var
 implementation
 
 {$R *.dfm}
+
+ uses frmCodeYourOwn_u;
+
 
 procedure TfrmJabsSorts.AdjustPitch1Click(Sender: TObject);
 begin
@@ -242,13 +244,11 @@ begin
     BitonicSort;
     UpdateScoreBoard;
   end);
-
-
 end;
 
 procedure TfrmJabsSorts.btnCodeYourOwnSortClick(Sender: TObject);
 begin
-  frmPython.Show;
+ frmPython.Show;
 end;
 
 procedure TfrmJabsSorts.btnResetSoundsClick(Sender: TObject);
@@ -727,6 +727,7 @@ end;
 procedure TfrmJabsSorts.cHappened(iCompare1, iComapare2: integer);
 begin
   try  {We use a try since we can get access violations, python doesn't like multitasking}
+
     frmPython.UpdateMainArray;
   except
     //Do nothing on error, we expect errors :(
@@ -992,6 +993,9 @@ begin
 
       end;
   end;
+
+
+
 
   //This try is to fill the python variable
   try
@@ -1414,7 +1418,6 @@ end;
 procedure TfrmJabsSorts.PrepareForSort;
 begin
   iVolume := seVolume.Value;
-  iframes:=0;
   iTimeTaken := 0;
   iArrayLength := seArrayLength.Value;
   SetLength(arrIntegers, iArrayLength);  //dynamic array length setting, way easier than I thought
@@ -1424,13 +1427,15 @@ begin
   iInterval := seUpdateInterval.Value;
   tmrUpdate.Interval := iInterval;
   //There is a different timer for when custom python sorts are likely in use
-  if frmPython.Showing then
+
+ if frmPython.Showing then
   begin
     tmrCustom.Enabled:=true;
   end else
   begin
     tmrUpdate.Enabled := True;
   end;
+
 
 end;
 
@@ -1596,8 +1601,6 @@ end;
 procedure TfrmJabsSorts.ResetScoreBoard;
 begin
   //Scoreboard setup
-  iSwapsWithSound:=0;
-  iComparesWithSound:=0;
   iSwaps:=0;
   iComparisons:=0;
   rElapsedSeconds:=0;
@@ -1654,7 +1657,9 @@ end;
 procedure TfrmJabsSorts.sHappened(iSwap1, iSwap2: integer);
 begin
   try  {We use a try since we can get access violations, python doesn't like multitasking}
-      frmPython.UpdateMainArray;
+
+     frmPython.UpdateMainArray;
+      
     except
       //Do nothing on error, we expect errors :(
     end;

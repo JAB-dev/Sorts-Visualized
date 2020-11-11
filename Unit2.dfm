@@ -1080,7 +1080,7 @@ object frmJabsSorts: TfrmJabsSorts
     Align = alClient
     Color = clBlack
     TabOrder = 1
-    DefaultCanvas = 'TTeeCanvas3D'
+    DefaultCanvas = 'TGDIPlusCanvas'
     PrintMargins = (
       15
       26
