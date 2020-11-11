@@ -29,7 +29,7 @@ implementation
 
 procedure TfrmUpdate.btnDownload32Click(Sender: TObject);
 begin
-  wbUpdate.Navigate('https://github.com/JAB-dev/Sorts-Visualized/raw/Executable/Win32/Release/JABsVisualSorts.exe');
+  wbUpdate.Navigate('https://github.com/JAB-dev/Sorts-Visualized/raw/Executable/Win32/Debug/JABsVisualSorts.exe');
 end;
 
 procedure TfrmUpdate.btnDownloadLatestClick(Sender: TObject);

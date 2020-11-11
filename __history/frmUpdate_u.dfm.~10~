@@ -33,18 +33,21 @@ object frmUpdate: TfrmUpdate
     Width = 484
     Height = 49
     Align = alTop
-    Caption = 'Download Latest 64bit Version'
+    Caption = 'Download Latest (Release) Version'
     TabOrder = 1
     OnClick = btnDownloadLatestClick
+    ExplicitWidth = 474
   end
-  object btnDownload32: TButton
+  object btnDownloadDebug: TButton
     Left = 0
     Top = 49
     Width = 484
     Height = 49
     Align = alTop
-    Caption = 'Download Latest 32bit Version'
+    Caption = 'Download Latest (Debug) Version'
     TabOrder = 2
-    OnClick = btnDownload32Click
+    OnClick = btnDownloadDebugClick
+    ExplicitTop = 8
+    ExplicitWidth = 474
   end
 end
