@@ -446,9 +446,11 @@ object frmJabsSorts: TfrmJabsSorts
     LeftAxis.Visible = False
     Shadow.Visible = False
     View3D = False
-    View3DOptions.HorizOffset = 5
+    View3DOptions.HorizOffset = -1087
     View3DOptions.Orthogonal = False
-    View3DOptions.Perspective = 16
+    View3DOptions.Perspective = 0
+    View3DOptions.VertOffset = -1335
+    View3DOptions.Zoom = 1
     View3DWalls = False
     Zoom.Brush.Style = bsSolid
     Zoom.Brush.Gradient.EndColor = clGray
@@ -1078,7 +1080,7 @@ object frmJabsSorts: TfrmJabsSorts
     Align = alClient
     Color = clBlack
     TabOrder = 1
-    DefaultCanvas = 'TGDIPlusCanvas'
+    DefaultCanvas = 'TTeeCanvas3D'
     PrintMargins = (
       15
       26
@@ -1182,5 +1184,10 @@ object frmJabsSorts: TfrmJabsSorts
     OnTimer = tmrCustomTimer
     Left = 472
     Top = 65528
+  end
+  object TeeGDIPlus1: TTeeGDIPlus
+    Active = True
+    Antialias = False
+    TeePanel = chtSort
   end
 end

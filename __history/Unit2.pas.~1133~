@@ -54,7 +54,6 @@ type
     btn1: TButton;
     AdjustPitch1: TMenuItem;
     Settings1: TMenuItem;
-    lblFPS: TLabel;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -1413,6 +1412,7 @@ end;
 procedure TfrmJabsSorts.PrepareForSort;
 begin
   iVolume := seVolume.Value;
+  iframes:=0;
   iTimeTaken := 0;
   iArrayLength := seArrayLength.Value;
   SetLength(arrIntegers, iArrayLength);  //dynamic array length setting, way easier than I thought
@@ -1764,15 +1764,11 @@ end;
 
 procedure TfrmJabsSorts.tmrUpdateTimer(Sender: TObject);
 begin
-  dBeforeUpdate:=now;
   //Update the graph by reloading the array  (Hopefully there is a better way)
   barseriesSort.Clear;
   barseriesSort.AddArray(arrIntegers);
   lblSwaps.Caption:= 'Swaps: '+IntToStr(iSwaps-1);
   lblCompare.Caption:='Comparisons: '+IntToStr(iComparisons-1);
-  dAfterUPdate:=now;
-  rMiliSecondsElapsed:=(dAfterUPdate-dBeforeUpdate)*MSecsPerDay;
-  lblFPS.Caption:='FPS: '+FloatToStrF(1000/rMiliSecondsElapsed,ffExponent,10,2);
 end;
 
 procedure TfrmJabsSorts.TopDownMerge(var a: array of integer; iBegin, Imiddle, iEnd: integer; var b: array of integer);

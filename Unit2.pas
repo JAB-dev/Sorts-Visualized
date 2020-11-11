@@ -54,6 +54,7 @@ type
     btn1: TButton;
     AdjustPitch1: TMenuItem;
     Settings1: TMenuItem;
+    TeeGDIPlus1: TTeeGDIPlus;
     procedure btnSortClick(Sender: TObject);
     procedure tmrUpdateTimer(Sender: TObject);
     procedure tmrTimeTakenTimer(Sender: TObject);
@@ -1043,6 +1044,7 @@ begin
   chtSort.Title.Text.Clear;
   LoadPythonSorts;
   barseriesSort.BarWidthPercent:=10;
+
 
   iPitchadjust:=0;
 end;
