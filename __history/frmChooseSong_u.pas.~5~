@@ -1,0 +1,59 @@
+unit frmChooseSong_u;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    dlgOpenSong: TOpenDialog;
+    cbbSongs: TComboBox;
+    btnLoad: TButton;
+    chkUseSong: TCheckBox;
+    procedure btnLoadClick(Sender: TObject);
+    procedure chkUseSongClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+uses unit2;
+
+{$R *.dfm}
+
+procedure TForm1.btnLoadClick(Sender: TObject);
+begin
+   dlgOpenSong.InitialDir:=GetCurrentDir;
+  if dlgOpenSong.Execute then
+  begin
+    frmJabsSorts.sSongPath:=(dlgOpenSong.FileName);
+    frmJabsSorts.WMp1.URL:=frmJabsSorts.sSongPath;
+  end;
+end;
+
+procedure TForm1.chkUseSongClick(Sender: TObject);
+begin
+  if chkUseSong.Enabled then
+  begin
+    if frmJabsSorts.sSongPath<>'' then
+    begin
+      frmJabsSorts.WMp1.Controls.play;
+    end else
+    begin
+      ShowMessage('It seems no song is selected!');
+    end;
+  end else
+  begin
+    frmJabsSorts.WMp1.controls.pause;
+  end;
+
+end;
+
+end.

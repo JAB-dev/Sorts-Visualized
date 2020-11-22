@@ -10,7 +10,9 @@ uses
   frmChangeInstrument_u in 'frmChangeInstrument_u.pas' {frmChangeInstrument},
   frmUpdate_u in 'frmUpdate_u.pas' {frmUpdate},
   frmStyle in 'frmStyle.pas' {frmStyleChanger},
-  frmChangePitch_u in 'frmChangePitch_u.pas' {frmChangePitch};
+  frmChangePitch_u in 'frmChangePitch_u.pas' {frmChangePitch},
+  frmChangeDisplayStyle_u in 'frmChangeDisplayStyle_u.pas' {frmChangeDisplayStyle},
+  frmChooseSong_u in 'frmChooseSong_u.pas' {frmChooseSong};
 
 {$R *.res}
 
@@ -25,5 +27,7 @@ begin
   Application.CreateForm(TfrmUpdate, frmUpdate);
   Application.CreateForm(TfrmStyleChanger, frmStyleChanger);
   Application.CreateForm(TfrmChangePitch, frmChangePitch);
+  Application.CreateForm(TfrmChangeDisplayStyle, frmChangeDisplayStyle);
+  Application.CreateForm(TfrmChooseSong, frmChooseSong);
   Application.Run;
 end.

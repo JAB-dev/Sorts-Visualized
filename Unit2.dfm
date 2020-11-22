@@ -158,7 +158,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Iterative Heapsort (Parr. Heap)'
         'InPlace Bitonic'
         'Super InPlace Bitonic'
-        'Hybrid CombInsert')
+        'Hybrid CombInsert'
+        'Bitonic Hybrid')
     end
     object seDelay: TSpinEdit
       Left = 165
@@ -262,7 +263,7 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Name = 'Tahoma'
       Font.Style = []
       MaxValue = 100000
-      MinValue = 1000
+      MinValue = 100
       ParentFont = False
       TabOrder = 6
       Value = 1000
@@ -358,9 +359,9 @@ object frmJabsSorts: TfrmJabsSorts
       TabOrder = 12
       object lblCompare: TLabel
         Left = 2
-        Top = 34
+        Top = 40
         Width = 321
-        Height = 19
+        Height = 25
         Margins.Left = 5
         Margins.Top = 5
         Margins.Right = 5
@@ -369,36 +370,36 @@ object frmJabsSorts: TfrmJabsSorts
         Caption = 'Comparisons: '
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -16
+        Font.Height = -21
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitWidth = 103
+        ExplicitWidth = 133
       end
       object lblSwaps: TLabel
         Left = 2
         Top = 15
         Width = 321
-        Height = 19
-        Margins.Left = 5
-        Margins.Top = 5
-        Margins.Right = 5
-        Margins.Bottom = 5
+        Height = 25
+        Margins.Left = 10
+        Margins.Top = 10
+        Margins.Right = 10
+        Margins.Bottom = 10
         Align = alTop
         Caption = 'Swaps:'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -16
+        Font.Height = -21
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitWidth = 51
+        ExplicitWidth = 67
       end
       object lblTime: TLabel
         Left = 2
-        Top = 53
+        Top = 65
         Width = 321
-        Height = 19
+        Height = 25
         Margins.Left = 5
         Margins.Top = 5
         Margins.Right = 5
@@ -407,12 +408,48 @@ object frmJabsSorts: TfrmJabsSorts
         Caption = 'Estimated Sort Time:'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
-        Font.Height = -16
+        Font.Height = -21
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        ExplicitWidth = 150
+        ExplicitWidth = 197
       end
+    end
+    object chkHideAllButStats: TCheckBox
+      Left = 706
+      Top = 122
+      Width = 177
+      Height = 17
+      Caption = 'Hide Settings on sort'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 13
+    end
+    object syndtDebug: TSynEdit
+      Left = 852
+      Top = 3
+      Width = 200
+      Height = 150
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Consolas'
+      Font.Style = []
+      Font.Quality = fqClearTypeNatural
+      TabOrder = 14
+      Visible = False
+      UseCodeFolding = False
+      Gutter.Font.Charset = DEFAULT_CHARSET
+      Gutter.Font.Color = clWindowText
+      Gutter.Font.Height = -11
+      Gutter.Font.Name = 'Consolas'
+      Gutter.Font.Style = []
+      Lines.Strings = (
+        'syndtDebug')
     end
   end
   object chtSort: TChart
@@ -1092,16 +1129,88 @@ object frmJabsSorts: TfrmJabsSorts
       Legend.Visible = False
       Selected.Hover.Visible = False
       BarBrush.Color = 8421631
+      BarBrush.Gradient.Colors = <
+        item
+          Color = clWhite
+        end
+        item
+          Color = clGreen
+          Offset = 0.002994011976047904
+        end
+        item
+          Color = 12615680
+          Offset = 0.053892215568862280
+        end
+        item
+          Color = clGreen
+        end
+        item
+          Color = clGreen
+        end
+        item
+          Color = clGreen
+          Offset = 0.056886227544910180
+        end
+        item
+          Color = clGreen
+          Offset = 0.086826347305389230
+        end
+        item
+          Color = clGreen
+          Offset = 0.452095808383233500
+        end
+        item
+          Color = 9084993
+          Offset = 1.000000000000000000
+        end>
       BarBrush.Gradient.EndColor = 9084993
+      BarBrush.Gradient.MidColor = clGreen
       BarPen.Visible = False
       ColorEachPoint = True
       ConePercent = 2
       Marks.Visible = False
       ShowInLegend = False
+      Title = 'Bars'
       Transparency = 4
-      BarWidthPercent = 100
+      BarWidthPercent = 1
       Dark3D = False
+      DepthPercent = 1
+      Gradient.Colors = <
+        item
+          Color = clWhite
+        end
+        item
+          Color = clGreen
+          Offset = 0.002994011976047904
+        end
+        item
+          Color = 12615680
+          Offset = 0.053892215568862280
+        end
+        item
+          Color = clGreen
+        end
+        item
+          Color = clGreen
+        end
+        item
+          Color = clGreen
+          Offset = 0.056886227544910180
+        end
+        item
+          Color = clGreen
+          Offset = 0.086826347305389230
+        end
+        item
+          Color = clGreen
+          Offset = 0.452095808383233500
+        end
+        item
+          Color = 9084993
+          Offset = 1.000000000000000000
+        end>
       Gradient.EndColor = 9084993
+      Gradient.MidColor = clGreen
       MultiBar = mbNone
       Shadow.Color = 11184810
       Shadow.HorizSize = -14
@@ -1110,15 +1219,117 @@ object frmJabsSorts: TfrmJabsSorts
       Shadow.Transparency = 0
       Shadow.VertSize = -14
       Shadow.Visible = False
-      Sides = 3
       XValues.Name = 'X'
       XValues.Order = loNone
       YValues.Name = 'Bar'
       YValues.Order = loAscending
       Data = {
-        000600000000000000004C884000000000005089400000000000188A40000000
-        0000A48A400000000000F48A400000000000A88B40}
+        0006000000000000000000F03F00000000000000400000000000000840000000
+        000000104000000000000014400000000000001840}
       Detail = {0000000000}
+    end
+    object FLlineSrs1: TFastLineSeries
+      Active = False
+      Title = 'Fast Line (Could bug)'
+      LinePen.Color = 9196603
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Y'
+      YValues.Order = loNone
+    end
+    object blsrsSeries1: TBubbleSeries
+      Active = False
+      Marks.Frame.Visible = False
+      Title = 'Bubbles (useless)'
+      ClickableLine = False
+      Pointer.HorizSize = 16
+      Pointer.InflateMargins = True
+      Pointer.Style = psCircle
+      Pointer.VertSize = 16
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Y'
+      YValues.Order = loNone
+      RadiusValues.Name = 'Radius'
+      RadiusValues.Order = loNone
+    end
+    object psrsSeries1: TPieSeries
+      Selected.Hover.Visible = False
+      Marks.Visible = False
+      Marks.AutoPosition = False
+      Title = 'PIe (useless)'
+      XValues.Order = loAscending
+      YValues.Name = 'Pie'
+      YValues.Order = loNone
+      Circled = False
+      Frame.InnerBrush.BackColor = clRed
+      Frame.InnerBrush.Gradient.EndColor = clGray
+      Frame.InnerBrush.Gradient.MidColor = clWhite
+      Frame.InnerBrush.Gradient.StartColor = 4210752
+      Frame.InnerBrush.Gradient.Visible = True
+      Frame.MiddleBrush.BackColor = clYellow
+      Frame.MiddleBrush.Gradient.EndColor = 8553090
+      Frame.MiddleBrush.Gradient.MidColor = clWhite
+      Frame.MiddleBrush.Gradient.StartColor = clGray
+      Frame.MiddleBrush.Gradient.Visible = True
+      Frame.OuterBrush.BackColor = clGreen
+      Frame.OuterBrush.Gradient.EndColor = 4210752
+      Frame.OuterBrush.Gradient.MidColor = clWhite
+      Frame.OuterBrush.Gradient.StartColor = clSilver
+      Frame.OuterBrush.Gradient.Visible = True
+      Frame.Width = 4
+      Active = False
+      OtherSlice.Legend.Visible = False
+    end
+    object arsrsSeries1: TAreaSeries
+      Active = False
+      Title = 'Area'
+      AreaChartBrush.Color = clGray
+      AreaChartBrush.BackColor = clDefault
+      AreaLinesPen.Visible = False
+      DrawArea = True
+      Pointer.InflateMargins = True
+      Pointer.Style = psRectangle
+      Pointer.Visible = False
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Y'
+      YValues.Order = loNone
+    end
+    object chrtshpsort: TChartShape
+      Active = False
+      Marks.AutoPosition = False
+      SeriesColor = clRed
+      Title = 'Shapes (useless)'
+      Brush.Color = clRed
+      Brush.Gradient.EndColor = clGray
+      Brush.Gradient.MidColor = clWhite
+      Brush.Gradient.StartColor = clSilver
+      Brush.Gradient.Visible = True
+      Gradient.EndColor = clGray
+      Gradient.MidColor = clWhite
+      Gradient.StartColor = clSilver
+      Gradient.Visible = True
+      Style = chasCube
+      X1 = 1.000000000000000000
+      Y0 = 111111.000000000000000000
+      XValues.Name = 'X'
+      XValues.Order = loAscending
+      YValues.Name = 'Y'
+      YValues.Order = loNone
+      Data = {0002000000000000007020FB400000000000000000}
+      Detail = {0000000000}
+    end
+    object HoriLineSeries1: THorizLineSeries
+      Active = False
+      Title = 'Vertical Line'
+      Brush.BackColor = clDefault
+      Pointer.InflateMargins = True
+      Pointer.Style = psRectangle
+      XValues.Name = 'X'
+      XValues.Order = loNone
+      YValues.Name = 'Y'
+      YValues.Order = loAscending
     end
   end
   object btn1: TButton
@@ -1130,6 +1341,21 @@ object frmJabsSorts: TfrmJabsSorts
     TabOrder = 2
     Visible = False
     OnClick = btn1Click
+  end
+  object WMp1: TWindowsMediaPlayer
+    Left = 677
+    Top = 122
+    Width = 245
+    Height = 240
+    TabOrder = 3
+    Visible = False
+    ControlData = {
+      0003000008000200000000000500000000000000F03F03000000000005000000
+      00000000000008000200000000000300010000000B0000000300000000000B00
+      FFFF08000200000000000300320000000B00000008001400000069006E007600
+      69007300690062006C00650000000B0000000B0000000B00FFFF0B00FFFF0B00
+      0000080002000000000008000200000000000800020000000000080002000000
+      00000B00000052190000CE180000}
   end
   object tmrUpdate: TTimer
     Enabled = False
@@ -1155,6 +1381,10 @@ object frmJabsSorts: TfrmJabsSorts
         Caption = 'Adjust Pitch'
         OnClick = AdjustPitch1Click
       end
+      object UseCustomSong1: TMenuItem
+        Caption = 'Use Custom Song'
+        OnClick = UseCustomSong1Click
+      end
     end
     object Help1: TMenuItem
       Caption = 'Help'
@@ -1177,6 +1407,17 @@ object frmJabsSorts: TfrmJabsSorts
         Caption = 'Settings'
         OnClick = Settings1Click
       end
+      object ChartStyle1: TMenuItem
+        Caption = 'ChartStyle'
+        OnClick = ChartStyle1Click
+      end
+    end
+    object Debug1: TMenuItem
+      Caption = 'Debug'
+      object ViewDebugLogs1: TMenuItem
+        Caption = 'View Debug Logs'
+        OnClick = ViewDebugLogs1Click
+      end
     end
   end
   object tmrCustom: TTimer
@@ -1190,5 +1431,7 @@ object frmJabsSorts: TfrmJabsSorts
     Active = True
     Antialias = False
     TeePanel = chtSort
+    Left = 656
+    Top = 8
   end
 end

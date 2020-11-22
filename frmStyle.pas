@@ -48,7 +48,11 @@ end;
 
 procedure TfrmStyleChanger.seBarWidthChange(Sender: TObject);
 begin
-  frmJabsSorts.barseriesSort.BarWidthPercent:=seBarWidth.Value;
+  with frmJabsSorts do
+  begin
+    barseriesSort.BarWidthPercent:=seBarWidth.Value;
+  end;
+
 end;
 
 end.
