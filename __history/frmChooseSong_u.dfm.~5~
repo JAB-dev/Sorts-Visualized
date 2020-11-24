@@ -32,6 +32,9 @@ object frmChooseSong: TfrmChooseSong
     Caption = 'Load Song'
     TabOrder = 1
     OnClick = btnLoadClick
+    ExplicitTop = 48
+    ExplicitWidth = 298
+    ExplicitHeight = 39
   end
   object chkUseSong: TCheckBox
     AlignWithMargins = True
@@ -49,6 +52,9 @@ object frmChooseSong: TfrmChooseSong
     ParentFont = False
     TabOrder = 2
     OnClick = chkUseSongClick
+    ExplicitLeft = 0
+    ExplicitTop = 21
+    ExplicitWidth = 271
   end
   object dlgOpenSong: TOpenDialog
     Left = 344

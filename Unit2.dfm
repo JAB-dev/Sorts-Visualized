@@ -1230,8 +1230,9 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object FLlineSrs1: TFastLineSeries
       Active = False
+      SeriesColor = clWhite
       Title = 'Fast Line (Could bug)'
-      LinePen.Color = 9196603
+      LinePen.Color = clWhite
       XValues.Name = 'X'
       XValues.Order = loAscending
       YValues.Name = 'Y'
@@ -1283,6 +1284,7 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object arsrsSeries1: TAreaSeries
       Active = False
+      SeriesColor = 16744703
       Title = 'Area'
       AreaChartBrush.Color = clGray
       AreaChartBrush.BackColor = clDefault

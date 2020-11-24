@@ -108,17 +108,23 @@ type
     consoleControl: TJABConsole;
     iComparisons, iSwaps: uint64;
     fdefaultStyleName: string;
-    iCompareDelay: Integer;
-    iSwapDelay: Integer;
+
     dSwapDelay: TDateTime;
     iArrayLength: Integer;
     dBeforeUpdate, dAfterUPdate: tdatetime;
     rMiliSecondsElapsed: extended;
     iRange: Integer;
     iActiveDisplayStyle: integer;
+
+    {For Sleeping}
+      iCompareDelay: Integer;
+      iSwapDelay: Integer;
+      rPreFix:extended;
+    {For Sleeping}
+
     {For custom Music}
-    bSongMode:boolean;
-    sSongPath:string;
+      bSongMode:boolean;
+      sSongPath:string;
     {For Custom Music}
 
     iPitchadjust: integer;
@@ -290,9 +296,10 @@ begin
     J := k div 2;
     while J > 0 do
     begin
-      for i := 0 to n do
+      for i := 0 to n-1 do
       begin
         X := i xor J;
+        syndtDebug.Lines.Add('X:'+IntToStr(X));
         if X > i then
         begin
           G := i and k; //neatness
@@ -300,6 +307,7 @@ begin
           if ((G = 0) and (arrintegers[i] > arrintegers[X])) or ((G <> 0) and (arrintegers[i] < arrintegers[X])) then
           begin
             SwapHappened(arrintegers[i], arrintegers[X]);
+
             itemp := arrIntegers[i];
             arrIntegers[i] := arrIntegers[X];
             arrIntegers[X] := itemp;
@@ -958,7 +966,7 @@ begin
   AtomicIncrement(iComparisons);
   if iCompareDelay > 0 then
   begin
-    PlaySounds(round(iCompare1 / irange * 127), round(iComapare2 / irange * 127), iCompareDelay);
+    PlaySounds(round(iCompare1 / irange * 127), iCompareDelay, round(iComapare2 / irange * 127));
   end;
 end;
 
@@ -1136,6 +1144,8 @@ begin
 
   iActiveDisplayStyle := 0;
   iPitchadjust := 0;
+
+  rPreFix:=0.000001; //Preconfig, may change later
 
   sSongPath:='';
 
@@ -1574,13 +1584,26 @@ begin
 end;
 
 procedure TfrmJabsSorts.PlaySounds(inote, iDuration, inote2: integer);
+var
+rMusicPos:double;
 begin
+    if Not(inote in [-1*(irange)..irange]) then
+    begin
+//      syndtDebug.Lines.Add('note 1 is out of range!');
+    end;
+    if Not(inote2 in [-1*(irange)..irange]) then
+    begin
+//      syndtDebug.Lines.Add('note 2 is out of range!');
+    end;
   if bSongMode=true then
   begin
     //Atomic of the line
-//    WMp1.controls.currentPosition:=((inote)/127)*WMp1.currentMedia.duration;
-    AtomicExchange(WMp1.controls.currentPosition,((inote)/127)*WMp1.currentMedia.duration);
-    BetterSleep((iSwapDelay / SecsPerDay) * 0.000001);
+    rMusicPos:=Abs(((inote)/127)*WMp1.currentMedia.duration);
+    rMusicPos:=rMusicPos+Abs(((inote)/127)*WMp1.currentMedia.duration);
+    rMusicPos:=rMusicPos/2;
+    WMp1.controls.currentPosition:=rMusicPos;
+    syndtDebug.Lines.Add('Pos: ',floattostr(rmusicpos));
+    BetterSleep((iDuration / SecsPerDay) * rPreFix);
   end else
   begin
     inote := inote + iPitchadjust;
@@ -1588,7 +1611,7 @@ begin
     Sounds.NoteOn(abs(inote), ivolume);
     Sounds.NoteOn(abs(inote2), ivolume);
 
-    BetterSleep((iSwapDelay / SecsPerDay) * 0.000001);
+    BetterSleep((iDuration / SecsPerDay) * rPreFix);
 
     Sounds.NoteOff(abs(inote), ivolume);
     Sounds.NoteOff(abs(inote2), ivolume);
@@ -1622,6 +1645,10 @@ begin
   begin
     HideSettings;
     MoveStatsOutGrp;
+  end;
+  if bSongMode=true then
+  begin
+    WMp1.controls.play;
   end;
 
 end;
@@ -1951,7 +1978,8 @@ begin
   AtomicIncrement(iSwaps);
   if iSwapDelay > 0 then
   begin
-    PlaySounds(ceil(iSwap2 / irange * 127), ceil(iSwap1 / irange * 127), iSwapDelay);
+    //Note1,duration,note2
+    PlaySounds(ceil(iSwap1 / irange * 127),  iSwapDelay,ceil(iSwap2 / irange * 127));
   end;
 end;
 
@@ -2059,6 +2087,8 @@ begin
   MoveStatsIntoGroup;
   tmrUpdate.Enabled := false;
   tmrUpdate.OnTimer(frmJabsSorts);
+
+  WMp1.controls.stop;
 end;
 
 procedure TfrmJabsSorts.UseCustomSong1Click(Sender: TObject);

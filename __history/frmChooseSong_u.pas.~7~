@@ -40,7 +40,7 @@ end;
 
 procedure TfrmChooseSong.chkUseSongClick(Sender: TObject);
 begin
-  if chkUseSong.checked then
+  if chkUseSong.Enabled then
   begin
     if frmJabsSorts.sSongPath<>'' then
     begin
