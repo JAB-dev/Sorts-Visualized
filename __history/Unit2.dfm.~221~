@@ -159,7 +159,8 @@ object frmJabsSorts: TfrmJabsSorts
         'InPlace Bitonic'
         'Super InPlace Bitonic'
         'Hybrid CombInsert'
-        'Bitonic Hybrid')
+        'Bitonic Hybrid (Not working yet)'
+        'Radix Sort (Base 10)')
     end
     object seDelay: TSpinEdit
       Left = 165
@@ -428,6 +429,28 @@ object frmJabsSorts: TfrmJabsSorts
       Font.Style = []
       ParentFont = False
       TabOrder = 13
+    end
+    object syndtDebug: TSynEdit
+      Left = 852
+      Top = 3
+      Width = 200
+      Height = 150
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Consolas'
+      Font.Style = []
+      Font.Quality = fqClearTypeNatural
+      TabOrder = 14
+      Visible = False
+      UseCodeFolding = False
+      Gutter.Font.Charset = DEFAULT_CHARSET
+      Gutter.Font.Color = clWindowText
+      Gutter.Font.Height = -11
+      Gutter.Font.Name = 'Consolas'
+      Gutter.Font.Style = []
+      Lines.Strings = (
+        'syndtDebug')
     end
   end
   object chtSort: TChart
@@ -1208,8 +1231,9 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object FLlineSrs1: TFastLineSeries
       Active = False
+      SeriesColor = clWhite
       Title = 'Fast Line (Could bug)'
-      LinePen.Color = 9196603
+      LinePen.Color = clWhite
       XValues.Name = 'X'
       XValues.Order = loAscending
       YValues.Name = 'Y'
@@ -1261,6 +1285,7 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object arsrsSeries1: TAreaSeries
       Active = False
+      SeriesColor = 16744703
       Title = 'Area'
       AreaChartBrush.Color = clGray
       AreaChartBrush.BackColor = clDefault
@@ -1320,6 +1345,21 @@ object frmJabsSorts: TfrmJabsSorts
     Visible = False
     OnClick = btn1Click
   end
+  object WMp1: TWindowsMediaPlayer
+    Left = 677
+    Top = 122
+    Width = 245
+    Height = 240
+    TabOrder = 3
+    Visible = False
+    ControlData = {
+      0003000008000200000000000500000000000000F03F03000000000005000000
+      00000000000008000200000000000300010000000B0000000300000000000B00
+      FFFF08000200000000000300320000000B00000008001400000069006E007600
+      69007300690062006C00650000000B0000000B0000000B00FFFF0B00FFFF0B00
+      0000080002000000000008000200000000000800020000000000080002000000
+      00000B00000052190000CE180000}
+  end
   object tmrUpdate: TTimer
     Enabled = False
     OnTimer = tmrUpdateTimer
@@ -1343,6 +1383,10 @@ object frmJabsSorts: TfrmJabsSorts
       object AdjustPitch1: TMenuItem
         Caption = 'Adjust Pitch'
         OnClick = AdjustPitch1Click
+      end
+      object UseCustomSong1: TMenuItem
+        Caption = 'Use Custom Song'
+        OnClick = UseCustomSong1Click
       end
     end
     object Help1: TMenuItem
@@ -1369,6 +1413,13 @@ object frmJabsSorts: TfrmJabsSorts
       object ChartStyle1: TMenuItem
         Caption = 'ChartStyle'
         OnClick = ChartStyle1Click
+      end
+    end
+    object Debug1: TMenuItem
+      Caption = 'Debug'
+      object ViewDebugLogs1: TMenuItem
+        Caption = 'View Debug Logs'
+        OnClick = ViewDebugLogs1Click
       end
     end
   end

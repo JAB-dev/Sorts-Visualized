@@ -451,20 +451,6 @@ object frmJabsSorts: TfrmJabsSorts
       Lines.Strings = (
         'syndtDebug')
     end
-    object WMp1: TWindowsMediaPlayer
-      Left = 693
-      Top = 107
-      Width = 245
-      Height = 240
-      TabOrder = 15
-      ControlData = {
-        0003000008000200000000000500000000000000F03F03000000000005000000
-        00000000000008000200000000000300010000000B00FFFF0300000000000B00
-        FFFF08000200000000000300320000000B00000008001400000069006E007600
-        69007300690062006C00650000000B0000000B0000000B00FFFF0B00FFFF0B00
-        0000080002000000000008000200000000000800020000000000080002000000
-        00000B00000052190000CE180000}
-    end
   end
   object chtSort: TChart
     Left = 0
@@ -1167,7 +1153,7 @@ object frmJabsSorts: TfrmJabsSorts
         end
         item
           Color = clGreen
-          Offset = 0.086826347305389220
+          Offset = 0.086826347305389230
         end
         item
           Color = clGreen
@@ -1213,7 +1199,7 @@ object frmJabsSorts: TfrmJabsSorts
         end
         item
           Color = clGreen
-          Offset = 0.086826347305389220
+          Offset = 0.086826347305389230
         end
         item
           Color = clGreen
@@ -1244,8 +1230,9 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object FLlineSrs1: TFastLineSeries
       Active = False
+      SeriesColor = clWhite
       Title = 'Fast Line (Could bug)'
-      LinePen.Color = 9196603
+      LinePen.Color = clWhite
       XValues.Name = 'X'
       XValues.Order = loAscending
       YValues.Name = 'Y'
@@ -1297,6 +1284,7 @@ object frmJabsSorts: TfrmJabsSorts
     end
     object arsrsSeries1: TAreaSeries
       Active = False
+      SeriesColor = 16744703
       Title = 'Area'
       AreaChartBrush.Color = clGray
       AreaChartBrush.BackColor = clDefault
@@ -1356,6 +1344,21 @@ object frmJabsSorts: TfrmJabsSorts
     Visible = False
     OnClick = btn1Click
   end
+  object WMp1: TWindowsMediaPlayer
+    Left = 677
+    Top = 122
+    Width = 245
+    Height = 240
+    TabOrder = 3
+    Visible = False
+    ControlData = {
+      0003000008000200000000000500000000000000F03F03000000000005000000
+      00000000000008000200000000000300010000000B0000000300000000000B00
+      FFFF08000200000000000300320000000B00000008001400000069006E007600
+      69007300690062006C00650000000B0000000B0000000B00FFFF0B00FFFF0B00
+      0000080002000000000008000200000000000800020000000000080002000000
+      00000B00000052190000CE180000}
+  end
   object tmrUpdate: TTimer
     Enabled = False
     OnTimer = tmrUpdateTimer
@@ -1382,6 +1385,7 @@ object frmJabsSorts: TfrmJabsSorts
       end
       object UseCustomSong1: TMenuItem
         Caption = 'Use Custom Song'
+        OnClick = UseCustomSong1Click
       end
     end
     object Help1: TMenuItem

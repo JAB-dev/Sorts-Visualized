@@ -123,6 +123,7 @@ type
     {For Sleeping}
 
     {For custom Music}
+        equalizer:IWMPEqualizerSettingsCtrl;
       bSongMode:boolean;
       sSongPath:string;
     {For Custom Music}
@@ -179,6 +180,11 @@ type
     procedure InsertionSort();
     procedure MultiInsertionSort();
     procedure BitonicInsert();
+
+    //RADIX SORT BASE 10
+    procedure CountSort(var arr:array of integer;n,exp:uint64);
+    procedure RadixSort(var arr:array of integer;n:integer);
+    //RADIX SORT
   end;
 
 var
@@ -326,15 +332,7 @@ var
   iInt1, iInt2: integer;
   bOutput: boolean;
 begin
-  ResetScoreBoard;
-  PrepareForSort;
-  FillArray;
-  TTask.Run(
-    procedure
-    begin
-      BitonicSort;
-      UpdateScoreBoard;
-    end);
+  showmessage(IntToStr(0 mod 10));
 end;
 
 procedure TfrmJabsSorts.btnCodeYourOwnSortClick(Sender: TObject);
@@ -766,6 +764,17 @@ begin
     );
 
   end;
+
+
+  if cbbSorts.ItemIndex=21 then
+  begin
+    TTask.Run(
+    PROCEDURE
+    BEGIN
+      radixsort(arrintegers,iarraylength);
+    END
+    );
+  end;
 end;
 
 procedure TfrmJabsSorts.BuildMaxHeap;
@@ -977,6 +986,52 @@ begin
   for K := iBegin to iEnd do
   begin
     b[K] := A[K];
+  end;
+end;
+
+procedure TfrmJabsSorts.CountSort(var arr: array of integer; n, exp: uint64);
+var
+arrOutput:array of integer;
+count:array of integer;
+i:integer;
+begin
+  syndtDebug.Lines.Add('Count Sort starts for exp:'+IntToStr(exp));
+  SetLength(count,10);
+  //Fill count with zeros
+  for i := 0 to 9 do
+  begin
+    count[i]:=0;
+  end;
+  //fill output with zeros
+  SetLength(arrOutput,length(arrIntegers));
+  for i := 0 to n-1 do
+  begin
+    arrOutput[i]:=0;
+  end;
+
+  for I := 0 to length(arrIntegers)-1 do
+  begin
+    INc( count[Floor(arr[i] / exp)mod 10] );
+  end;
+
+
+  for i := 1 to 9 do
+  begin
+    count[i]:=count[i]+count[i-1];
+    syndtDebug.Lines.Add('Count '+IntToStr(i)+'value is '+IntToStr(count[i]));
+  end;
+
+  for i := n-1 downto 0 do
+  begin
+    SwapHappened(arr[i],arrOutput[i]);
+    arrOutput[count[ Floor(arr[i] / exp ) mod 10]-1]:=arr[i];
+    Dec(count[Floor(arr[i] / exp) mod 10]);
+  end;
+
+  for I := 0 to n-1 do
+  begin
+    SwapHappened(arr[i],arrOutput[i]);
+    arr[i]:=arrOutput[i];
   end;
 end;
 
@@ -1384,7 +1439,7 @@ begin
     J := k div 2;
     while J > 0 do
     begin
-      TParallel.&For(0, n,
+      TParallel.&For(0, n-1,
         procedure(i: integer)
         var
           x, g: integer;
@@ -1597,11 +1652,14 @@ begin
     end;
   if bSongMode=true then
   begin
-    //Atomic of the line
+    WMp1.controls.play;//incase we reached the end
     rMusicPos:=Abs(((inote)/127)*WMp1.currentMedia.duration);
     rMusicPos:=rMusicPos+Abs(((inote)/127)*WMp1.currentMedia.duration);
     rMusicPos:=rMusicPos/2;
     WMp1.controls.currentPosition:=rMusicPos;
+//    WMp1.settings.volume:=((Abs(((inote)/127))+Abs(((inote)/127))) / 2)*100;
+     syndtDebug.Lines.Add( floattostr(equalizer.gainLevel1));
+    syndtDebug.Lines.Add('Volume:' +IntToStr(WMp1.settings.volume));
     BetterSleep((iDuration / SecsPerDay) * rPreFix);
     syndtDebug.Lines.Add('Duratoin-current pos:'+FloatToStr(wmp1.currentMedia.duration-wmp1.controls.currentPosition))
 
@@ -1649,6 +1707,7 @@ begin
   end;
   if bSongMode=true then
   begin
+
     WMp1.controls.play;
   end;
 
@@ -1799,6 +1858,36 @@ begin
     QuickSort(Lo, p - 1);
     QuickSort(p + 1, hi);
   end;
+end;
+
+procedure TfrmJabsSorts.RadixSort(var arr: array of integer; n: integer);
+var
+exp:uint64;
+begin
+//void radixsort(int arr[], int n)
+{
+    // Find the maximum number to know number of digits
+    int m = getMax(arr, n);
+
+    // Do counting sort for every digit. Note that instead
+    // of passing digit number, exp is passed. exp is 10^i
+    // where i is current digit number
+    for (int exp = 1; m / exp > 0; exp *= 10)
+        countSort(arr, n, exp);
+}
+
+
+// int n = sizeof(arr) / sizeof(arr[0]);
+  ResetScoreBoard;
+  exp:=1;
+  //both base 10
+  while exp<irange do
+  begin
+    CountSort(arrIntegers,n,exp);
+    exp:=exp*10;
+  end;
+  UpdateScoreBoard;
+
 end;
 
 procedure TfrmJabsSorts.RainbowBar;

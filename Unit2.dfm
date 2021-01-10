@@ -40,6 +40,9 @@ object frmJabsSorts: TfrmJabsSorts
     Align = alTop
     Caption = 'Settings'
     TabOrder = 0
+    DesignSize = (
+      1055
+      185)
     object lblSorts: TLabel
       Left = 16
       Top = 125
@@ -159,7 +162,8 @@ object frmJabsSorts: TfrmJabsSorts
         'InPlace Bitonic'
         'Super InPlace Bitonic'
         'Hybrid CombInsert'
-        'Bitonic Hybrid')
+        'Bitonic Hybrid (Not working yet)'
+        'Radix Sort (Base 10)')
     end
     object seDelay: TSpinEdit
       Left = 165
@@ -434,6 +438,7 @@ object frmJabsSorts: TfrmJabsSorts
       Top = 3
       Width = 200
       Height = 150
+      Anchors = [akLeft, akTop, akRight]
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -1153,7 +1158,7 @@ object frmJabsSorts: TfrmJabsSorts
         end
         item
           Color = clGreen
-          Offset = 0.086826347305389230
+          Offset = 0.086826347305389220
         end
         item
           Color = clGreen
@@ -1199,7 +1204,7 @@ object frmJabsSorts: TfrmJabsSorts
         end
         item
           Color = clGreen
-          Offset = 0.086826347305389230
+          Offset = 0.086826347305389220
         end
         item
           Color = clGreen
@@ -1345,19 +1350,19 @@ object frmJabsSorts: TfrmJabsSorts
     OnClick = btn1Click
   end
   object WMp1: TWindowsMediaPlayer
-    Left = 677
-    Top = 122
-    Width = 245
-    Height = 240
+    Left = 809
+    Top = 33
+    Width = 220
+    Height = 95
     TabOrder = 3
     Visible = False
     ControlData = {
       0003000008000200000000000500000000000000F03F03000000000005000000
       00000000000008000200000000000300010000000B0000000300000000000B00
-      FFFF08000200000000000300320000000B00000008001400000069006E007600
-      69007300690062006C00650000000B0000000B0000000B00FFFF0B00FFFF0B00
-      0000080002000000000008000200000000000800020000000000080002000000
-      00000B00000052190000CE180000}
+      FFFF08000200000000000300320000000B00000008000A000000660075006C00
+      6C0000000B0000000B0000000B00FFFF0B00FFFF0B0000000800020000000000
+      0800020000000000080002000000000008000200000000000B000000BD160000
+      D2090000}
   end
   object tmrUpdate: TTimer
     Enabled = False
