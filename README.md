@@ -1,15 +1,22 @@
 # Sorts-Visualized
 
+# Requirements
+Python
 
-Built by JAB
+# Usage
+
+![image](https://user-images.githubusercontent.com/68183649/152675275-ebbe38c3-b41f-47ff-9df6-f94072db0241.png)
+
+1. Select sort
+2. Select input
+3. Sort
+
+
+
 
 Features as of 2020/08/22:
 
-ThatsOven providing first python sort♥
-
-Vermenthruaxx for the joke table flip sort♥
-
-Rainbow Display bar graph with a rainbow repeating every 25 elements
+Multiple graph styles
 
 Support for Custom Python Sorts
 
@@ -19,13 +26,15 @@ Support for changing Array Length
 
 Support for changing delays (delays work differently on different sorts,Swap delay becomes read delay with python sorts)
 
-Multiple input styles (Different graphs and such)
+Multiple input styles
 
 Sound support for built in sorts
 
 Support for changing array Length
 
-Timer support not really useful since you add delay anyway, so currently not in use
+Support for multiple files for custom sounds, you could sort with the sounds of the lord of rings trilogy if you so desire
+
+# Other
 
 Executable is located inside of Win32>Release(Or debug, debug is likely to be newer)>JABsVisualSorts.exe
 
