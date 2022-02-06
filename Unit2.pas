@@ -93,6 +93,7 @@ type
     procedure ChartStyle1Click(Sender: TObject);
     procedure ViewDebugLogs1Click(Sender: TObject);
     procedure UseCustomSong1Click(Sender: TObject);
+
   private
     { Private declarations }
 
@@ -181,11 +182,15 @@ type
     procedure InsertionSort();
     procedure MultiInsertionSort();
     procedure BitonicInsert();
+    procedure AnnealingSort();
+    procedure SpinTheBottleSort();
 
     //RADIX SORT BASE 10
     procedure CountSort(var arr:array of integer;n,exp:uint64);
     procedure RadixSort(var arr:array of integer;n:integer);
     //RADIX SORT
+
+
   end;
 
 var
@@ -201,6 +206,11 @@ uses
 procedure TfrmJabsSorts.AdjustPitch1Click(Sender: TObject);
 begin
   frmChangePitch.Show;
+end;
+
+procedure TfrmJabsSorts.AnnealingSort;
+begin
+
 end;
 
 procedure TfrmJabsSorts.BetterSleep(pDays: Extended);
@@ -776,6 +786,17 @@ begin
     END
     );
   end;
+
+  if cbbsorts.ItemIndex=22 then
+  begin
+    TTask.Run(
+    procedure
+    begin
+      SpinTheBottleSort;
+      UpdateScoreBoard;
+    end
+    );
+  end;
 end;
 
 procedure TfrmJabsSorts.BuildMaxHeap;
@@ -783,7 +804,7 @@ var
   i, j, itemp: integer;
 begin
 
-  for i := 1 to iArrayLength do
+  for i := 1 to iArrayLength-1 do
   begin
     //
     CompareHappened(arrIntegers[i], arrIntegers[(i - 1) div 2]);
@@ -1248,7 +1269,7 @@ var
   i, j, itemp, index: integer;
 begin
   BuildMaxHeap;
-  for i := iArrayLength - 1 downto 0 do
+  for i := iArrayLength - 1 downto 1 do
   begin
     SwapHappened(arrintegers[0], arrintegers[i]);
     //
@@ -1260,6 +1281,7 @@ begin
 
     repeat
       index := (2 * j + 1);
+      syndtDebug.Lines.Add('Index:'+ IntToStr(index));
       CompareHappened(arrIntegers[index], arrIntegers[index + 1]);
       if (arrIntegers[index] < arrIntegers[index + 1]) and (index < (i - 1)) then
       begin
@@ -1664,7 +1686,7 @@ begin
   begin
     WMp1.controls.play;//incase we reached the end
     rMusicPos:=Abs(((inote)/127)*WMp1.currentMedia.duration);
-    rMusicPos:=rMusicPos+Abs(((inote)/127)*WMp1.currentMedia.duration);
+    rMusicPos:=rMusicPos+Abs(((inote2)/127)*WMp1.currentMedia.duration);
     rMusicPos:=rMusicPos/2;
     WMp1.controls.currentPosition:=rMusicPos;
 //    WMp1.settings.volume:=((Abs(((inote)/127))+Abs(((inote)/127))) / 2)*100;
@@ -2017,6 +2039,34 @@ begin
   end;
   //scoreboard should be at the end always
   UpdateScoreBoard;
+end;
+
+procedure TfrmJabsSorts.SpinTheBottleSort;
+var
+bSorted:boolean;
+i:integer;
+s:integer;
+itemp:integer;
+begin
+  bSorted:=false;
+  while (not(bSorted)) do
+  begin
+    bsorted:=true;
+    for I := 0 to iArrayLength-1 do
+    begin
+      s:=RandomRange(0,iArrayLength);
+      CompareHappened(arrintegers[s],arrintegers[i]);
+      if (((i<s) and (arrIntegers[i]>arrIntegers[s])) or ((i>s) and (arrIntegers[i]<arrIntegers[s]))) then
+      begin
+        bsorted:=false;
+        itemp:=arrIntegers[i];
+        arrIntegers[i]:=arrIntegers[s];
+        arrIntegers[s]:=itemp;
+        SwapHappened(arrintegers[i],arrintegers[s]);
+      end;
+    end;
+
+  end;
 end;
 
 procedure TfrmJabsSorts.StyleOptions1Click(Sender: TObject);

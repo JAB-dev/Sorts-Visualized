@@ -53,7 +53,7 @@ object frmStyleChanger: TfrmStyleChanger
     MaxValue = 100
     MinValue = 10
     TabOrder = 2
-    Value = 10
+    Value = 100
     OnChange = seBarWidthChange
   end
   object chkShowActivebars: TCheckBox

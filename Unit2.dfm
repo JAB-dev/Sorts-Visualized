@@ -163,7 +163,8 @@ object frmJabsSorts: TfrmJabsSorts
         'Super InPlace Bitonic'
         'Hybrid CombInsert'
         'Bitonic Hybrid (Not working yet)'
-        'Radix Sort (Base 10)')
+        'Radix Sort (Base 10)'
+        'Spin The Bottle')
     end
     object seDelay: TSpinEdit
       Left = 165
@@ -1158,7 +1159,7 @@ object frmJabsSorts: TfrmJabsSorts
         end
         item
           Color = clGreen
-          Offset = 0.086826347305389220
+          Offset = 0.086826347305389230
         end
         item
           Color = clGreen
@@ -1204,7 +1205,7 @@ object frmJabsSorts: TfrmJabsSorts
         end
         item
           Color = clGreen
-          Offset = 0.086826347305389220
+          Offset = 0.086826347305389230
         end
         item
           Color = clGreen
